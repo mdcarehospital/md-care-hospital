@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Treatments | MD Care Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { primary: '#0d9488', secondary: '#1e293b' },
+                    animation: { 'glow-pulse': 'glow-pulse 2s infinite' },
+                    keyframes: { 'glow-pulse': { '0%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0.4)' }, '70%': { boxShadow: '0 0 0 10px rgba(13, 148, 136, 0)' }, '100%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0)' } } }
+                }
+            }
+        }
+    </script>
+    <style>body { font-family: 'Poppins', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Navigtion -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
+                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
+                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
+                </a>
+                <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
+                    <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
+                    <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
+                    <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
+                    <a href="services.html" class="text-primary transition font-bold">Services</a>
+                    <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                    <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
+                    <div id="auth-nav-container" class="flex items-center space-x-4"></div>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Home</a>
+                <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
+                <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
+                <a href="services.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Services</a>
+                <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col"></div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Our Services</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Treatments & Procedures</h2>
+                <p class="text-slate-600">Select a treatment below to view the leading specialist assigned and their availability timings.</p>
+            </div>
+            
+            <!-- Services Containr -->
+            <div class="max-w-4xl mx-auto space-y-4" id="services-container">
+                <!-- Injected form JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer view-->
+    <footer class="bg-secondary text-white pt-16 pb-8 border-t-4 border-primary mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>&copy; 2024 MD Care Hospital (MD Hospitals). All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        function updateAuthUI() {
+            const desktopAuth = document.getElementById('auth-nav-container');
+            const mobileAuth = document.getElementById('mobile-auth-container');
+            if(isLoggedIn) {
+            const picUrl = localStorage.getItem('mdcare_profilePic');
+            const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : `U`;
+            if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Profile Dashboard</a><button onclick="logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Profile Dashboard</a><button onclick="logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            } else {
+                if(desktopAuth) desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login</a><a href="index.html" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</a>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
+            }
+        }
+    window.showToast = function(title, message, type = 'success') {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
+            document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 border-teal-500 rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+        toast.innerHTML = `<div class="w-10 h-10 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-check"></i></div><div class="flex-grow pt-0.5"><h4 class="font-bold text-slate-800 text-sm">${title}</h4><p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p></div><button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>`;
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+        setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 6000);
+    };
+    function logout(btn) { 
+        if (btn) {
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
+            btn.disabled = true;
+        }
+        localStorage.removeItem('mdcare_auth'); 
+        localStorage.removeItem('mdcare_profilePic'); 
+        localStorage.removeItem('mdcare_userInitial'); 
+        isLoggedIn = false; 
+        window.showToast("Logged Out", "You have been successfully logged out.", "success"); 
+        setTimeout(() => { 
+            const menu = document.getElementById('mobile-menu');
+            if (menu) menu.classList.add('hidden');
+            window.location.href = 'index.html'; 
+        }, 1500);
+    }
+        updateAuthUI();
+
+        //  Services/Treatments
+        const servicesData = [
+            { id: 1, title: "Coronary Angioplasty", dept: "Cardiology", desc: "A minimally invasive procedure to widen narrowed or obstructed arteries or veins to treat coronary heart diseases.", doc: "Dr. Rajat Sharma", timing: "Mon, Wed, Fri | 09:00 AM - 01:00 PM" },
+            { id: 2, title: "Echocardiography", dept: "Cardiology", desc: "An ultrasound of the heart to provide detailed moving pictures and diagnose structural heart conditions.", doc: "Dr. Arjun Patel", timing: "Tue, Thu, Sat | 10:00 AM - 02:00 PM" },
+            { id: 3, title: "Brain Tumor Resection", dept: "Neurology", desc: "A highly delicate surgical procedure utilizing robotics and mapping to safely remove tumors from the brain.", doc: "Dr. Rohan Mehta", timing: "Mon - Thu | 08:00 AM - 12:00 PM" },
+            { id: 4, title: "Stroke Management & Rehab", dept: "Neurology", desc: "Immediate trauma response and continuous post-stroke rehabilitation to restore nervous functions.", doc: "Dr. Anil Kapoor", timing: "Available 24/7 (On Call)" },
+            { id: 5, title: "Total Knee Replacement", dept: "Orthopedics", desc: "Surgical replacement of knee joints worn out due to extreme arthritis or injury.", doc: "Dr. Vikram Das", timing: "Wed, Fri | 11:00 AM - 04:00 PM" },
+            { id: 6, title: "Arthroscopy", dept: "Orthopedics", desc: "Minimally invasive keyhole surgery to diagnose and treat joint problems, mostly in athletes.", doc: "Dr. Sana Khan", timing: "Mon, Tue, Thu | 09:30 AM - 01:30 PM" },
+            { id: 7, title: "Neonatal Intensive Care", dept: "Pediatrics", desc: "Specialized care for premature or ill infants utilizing advanced incubators and support systems.", doc: "Dr. Nidhi Sharma", timing: "24/7 NICU Operations" },
+            { id: 8, title: "Targeted Cancer Therapy", dept: "Oncology", desc: "Using drugs to target specific genes and proteins that help cancer cells survive and grow.", doc: "Dr. Sameer Reddy", timing: "Tue, Thu | 10:00 AM - 03:00 PM" },
+            { id: 9, title: "Laser Skin Resurfacing", dept: "Dermatology", desc: "Using advanced lasers to treat deep scars, blemishes, and extreme skin conditions effectively.", doc: "Dr. Pooja Iyer", timing: "Mon, Wed, Sat | 10:30 AM - 05:00 PM" },
+            { id: 10, title: "Cataract Surgery (Phaco)", dept: "Ophthalmology", desc: "Premium intraocular lens implants using ultrasound technology for fast recovery.", doc: "Dr. Tarun Kumar", timing: "Tue, Wed, Fri | 09:00 AM - 01:00 PM" },
+        ];
+
+        const container = document.getElementById('services-container');
+        
+        servicesData.forEach(service => {
+            const block = document.createElement('div');
+            block.className = "border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition";
+            block.innerHTML = `
+                <button onclick="toggleService(${service.id})" class="w-full px-6 py-5 flex flex-col md:flex-row md:justify-between md:items-center hover:bg-slate-50 transition text-left focus:outline-none">
+                    <div>
+                        <span class="text-xs font-bold text-primary uppercase tracking-widest">${service.dept}</span>
+                        <h3 class="font-bold text-secondary text-xl mt-1">${service.title}</h3>
+                    </div>
+                    <div class="mt-2 md:mt-0 flex items-center text-slate-400">
+                        <span class="text-sm font-medium mr-2 hidden md:inline-block">View Doctor & Timings</span>
+                        <i id="icon-${service.id}" class="fa-solid fa-chevron-down transition-transform duration-300"></i>
+                    </div>
+                </button>
+                <div id="content-${service.id}" class="hidden px-6 py-5 border-t border-gray-100 bg-teal-50/30">
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">${service.desc}</p>
+                    <div class="flex items-center gap-4 bg-white p-4 rounded-lg border border-gray-200">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-primary text-xl"><i class="fa-solid fa-user-doctor"></i></div>
+                        <div class="flex-grow">
+                            <p class="font-bold text-secondary">${service.doc}</p>
+                            <p class="text-sm text-primary font-medium mt-0.5"><i class="fa-regular fa-clock mr-1"></i> ${service.timing}</p>
+                        </div>
+                        <a href="index.html#appointment" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition">Book</a>
+                    </div>
+                </div>
+            `;
+            container.appendChild(block);
+        });
+
+        function toggleService(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
+<script src="chatbot.js"></script>
+</body>
+</html>

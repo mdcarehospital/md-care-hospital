@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD Care Hospital - Excellence in Healthcare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("lT18BxqA4wgJ-8RuJ"); })();
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0d9488', 
+                        secondary: '#1e293b', 
+                    },
+                    animation: {
+                        'glow-pulse': 'glow-pulse 2s infinite',
+                        'pop-in': 'pop-in 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        'glow-pulse': {
+                            '0%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0.4)' },
+                            '70%': { boxShadow: '0 0 0 10px rgba(13, 148, 136, 0)' },
+                            '100%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0)' },
+                        },
+                        'pop-in': {
+                            '0%': { opacity: '0', transform: 'scale(0.95) translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Navigtion -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
+                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
+                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
+                </a>
+                <!-- Mn Menu -->
+                <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
+                    <a href="#home" class="text-primary transition font-bold">Home</a>
+                    <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
+                    <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
+                    <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <button onclick="handleAppointmentClick()" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
+                    
+                    <!-- Auth butn -->
+                    <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
+                    <div id="auth-nav-container" class="flex items-center space-x-4">
+                        <!-- Injected via JS based on Auth Status -->
+                    </div>
+                </div>
+                <!-- Mobile Menu Buton -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="#home" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Home</a>
+                <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
+                <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
+                <a href="doctors.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Doctors</a>
+                <button onclick="handleAppointmentClick()" class="block w-full text-left px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Book Appointment</button>
+                <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="relative h-screen min-h-[600px] flex items-center pt-20 overflow-hidden">
+        <div id="hero-carousel" class="absolute inset-0 z-0"></div>
+        <div class="absolute inset-0 bg-slate-900/60 z-0"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center md:text-left">
+            <div class="md:w-2/3">
+                <span class="text-teal-400 font-semibold tracking-wider uppercase text-sm mb-4 block">Welcome to MD Hospitals</span>
+                <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+                    Your Health is Our <br/><span class="text-teal-400">Top Priority</span>
+                </h1>
+                <p class="text-lg text-gray-200 mb-8 max-w-xl mx-auto md:mx-0">
+                    Providing world-class healthcare with state-of-the-art facilities and compassionate medical experts at MD Care Hospital.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <button onclick="handleAppointmentClick()" class="bg-primary text-white px-8 py-3 rounded-full font-medium hover:bg-teal-700 transition text-center animate-glow-pulse">
+                        Book an Appointment
+                    </button>
+                    <a href="about.html" class="bg-white text-secondary px-8 py-3 rounded-full font-medium hover:bg-gray-100 transition text-center">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expanded About Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">About MD Care Hospital</h4>
+                <h2 class="text-3xl md:text-5xl font-bold text-secondary mb-6">Committed to Outstanding Patient Care & Medical Excellence</h2>
+                <p class="text-slate-600 text-lg leading-relaxed">Located in the heart of Basti DanishManda Jalandhar, MD Hospitals has been a cornerstone of health and wellness. We believe that everyone deserves access to top-tier medical assistance.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="MD Hospitals Building" class="rounded-3xl shadow-2xl z-10 relative">
+                    <div class="absolute -bottom-8 -right-8 bg-primary text-white p-8 rounded-3xl shadow-xl z-20 hidden md:block">
+                        <p class="font-bold text-4xl mb-1">15+</p>
+                        <p class="text-sm font-medium">Years of Excellence</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-secondary border-l-4 border-primary pl-4">Our Story & Mission</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Founded with a vision to redefine healthcare, MD Care Hospital combines the latest medical technology with compassionate, expert professionals to ensure you receive the best care possible. Our expansive facility features highly specialized departments and a robust trauma center.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                        <button onclick="openModal('labs-modal')" class="text-left bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-primary transition group">
+                            <i class="fa-solid fa-microscope text-3xl text-primary mb-4 group-hover:scale-110 transition"></i>
+                            <h4 class="font-bold text-secondary mb-2">Advanced Labs</h4>
+                            <p class="text-sm text-slate-500">Equipped with state-of-the-art diagnostic and imaging tools.</p>
+                        </button>
+                        <button onclick="openModal('emergency-modal')" class="text-left bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-red-400 transition group">
+                            <i class="fa-solid fa-truck-medical text-3xl text-primary mb-4 group-hover:text-red-500 group-hover:scale-110 transition"></i>
+                            <h4 class="font-bold text-secondary mb-2">24/7 Emergency</h4>
+                            <p class="text-sm text-slate-500">Round-the-clock trauma care and ambulance services.</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital Stats -->
+            <div class="bg-secondary rounded-3xl p-10 md:p-16 text-white grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full opacity-20 -mr-20 -mt-20 blur-2xl"></div>
+                <button onclick="openModal('beds-modal')" class="relative z-10 hover:scale-105 transition duration-300 group outline-none">
+                    <i class="fa-solid fa-bed-pulse text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">500+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Hospital Beds</p>
+                </button>
+                <a href="doctors.html" class="relative z-10 hover:scale-105 transition duration-300 group outline-none block">
+                    <i class="fa-solid fa-user-doctor text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">30+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Expert Doctors</p>
+                </a>
+                <button onclick="openModal('reviews-modal')" class="relative z-10 hover:scale-105 transition duration-300 group outline-none">
+                    <i class="fa-solid fa-face-smile text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">50k+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Happy Patients</p>
+                </button>
+                <button onclick="openModal('awards-modal')" class="relative z-10 hover:scale-105 transition duration-300 group outline-none">
+                    <i class="fa-solid fa-award text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">25+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Medical Awards</p>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Departments Section -->
+    <section id="departments" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Our Departments</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Comprehensive Medical Services</h2>
+                <p class="text-slate-600">Explore our wide range of fully-equipped departments focused on distinct areas of your well-being.</p>
+            </div>
+            <div class="relative group/slider">
+                <button id="dept-slide-left" class="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 lg:-ml-6 z-10 bg-white w-12 h-12 rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition focus:outline-none opacity-0 group-hover/slider:opacity-100"><i class="fa-solid fa-chevron-left"></i></button>
+                <div id="departments-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-6 no-scrollbar pb-8 pt-4 px-4 scroll-smooth">
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-heart-pulse text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Cardiology</h3><p class="text-slate-500 text-sm flex-grow">Comprehensive heart care, advanced diagnostics, and surgical interventions.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-brain text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Neurology</h3><p class="text-slate-500 text-sm flex-grow">Expert treatment for disorders of the nervous system and complex brain care.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-bone text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Orthopedics</h3><p class="text-slate-500 text-sm flex-grow">Specialized care for bones, joints, ligaments, tendons, and muscular tissues.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-baby text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Pediatrics</h3><p class="text-slate-500 text-sm flex-grow">Dedicated and compassionate medical care for infants, children, and teenagers.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-ribbon text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Oncology</h3><p class="text-slate-500 text-sm flex-grow">Advanced cancer care, expert tumor diagnosis, and life-saving treatments.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-microscope text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Dermatology</h3><p class="text-slate-500 text-sm flex-grow">Professional skin treatments, cosmetic dermatology, and chronic skin disease management.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-eye text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Ophthalmology</h3><p class="text-slate-500 text-sm flex-grow">Comprehensive eye tests, corrective surgeries, and complete vision care.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                        <div class="flex-none w-[280px] sm:w-[300px] snap-center bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group flex flex-col"><div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition"><i class="fa-solid fa-head-side-virus text-3xl text-primary group-hover:text-white transition"></i></div><h3 class="text-xl font-bold text-secondary mb-3">Psychiatry</h3><p class="text-slate-500 text-sm flex-grow">Clinical mental health counseling, behavioral support, and psychiatric treatments.</p><a href="departments.html" class="mt-4 text-primary font-bold hover:underline text-sm">View Treatments <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
+                </div>
+                <button id="dept-slide-right" class="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 lg:-mr-6 z-10 bg-white w-12 h-12 rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition focus:outline-none opacity-0 group-hover/slider:opacity-100"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+                <div class="text-center mt-4">
+                    <a href="departments.html" class="inline-block bg-slate-100 text-primary font-bold py-3 px-8 rounded-full hover:bg-slate-200 transition shadow-sm border border-slate-200 animate-glow-pulse">View All Departments <i class="fa-solid fa-arrow-right ml-2"></i></a>
+                </div>
+        </div>
+    </section>
+
+    <!-- Doctors Sction -->
+    <section id="doctors" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Our Doctors</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Meet Our Medical Experts</h2>
+                <p class="text-slate-600">Click on any doctor's profile to view their full biodata, qualifications, and contact information.</p>
+            </div>
+            <div class="relative group">
+                <button id="slide-left" class="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 lg:-ml-6 z-10 bg-white w-12 h-12 rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition focus:outline-none opacity-0 group-hover:opacity-100"><i class="fa-solid fa-chevron-left"></i></button>
+                <div id="doctors-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-6 no-scrollbar pb-8 pt-4 px-4 scroll-smooth"></div>
+                <button id="slide-right" class="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 lg:-mr-6 z-10 bg-white w-12 h-12 rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition focus:outline-none opacity-0 group-hover:opacity-100"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="text-center mt-4">
+                <a href="doctors.html" class="inline-block bg-slate-100 text-primary font-bold py-3 px-8 rounded-full hover:bg-slate-200 transition shadow-sm border border-slate-200 animate-glow-pulse">View All Doctors <i class="fa-solid fa-arrow-right ml-2"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section class="py-24 bg-teal-50 relative overflow-hidden border-t border-slate-200">
+        <!-- Decorative background elements -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-teal-200 rounded-full opacity-30 -ml-20 -mt-20 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-300 rounded-full opacity-20 -mr-20 -mb-20 blur-3xl pointer-events-none"></div>
+        
+        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-secondary mb-6">Ready to Prioritize Your Health?</h2>
+            <p class="text-slate-600 text-lg mb-10">Schedule a visit with our expert medical team today and experience world-class healthcare tailored just for you.</p>
+            <button onclick="handleAppointmentClick()" class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-teal-700 transition shadow-xl shadow-teal-500/30 animate-glow-pulse inline-flex items-center justify-center">
+                <i class="fa-solid fa-calendar-check mr-3 text-xl"></i> Book an Appointment Now
+            </button>
+        </div>
+    </section>
+
+    <!-- Appointment Booking Modal -->
+    <div id="appointment-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl relative overflow-hidden flex flex-col max-h-[90vh] animate-pop-in">
+            <button onclick="closeModal('appointment-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-30 bg-white/80 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-md transition"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="flex flex-col lg:flex-row w-full h-full overflow-y-auto no-scrollbar">
+                <!-- inffo Side -->
+                <div class="lg:w-2/5 bg-primary p-10 text-white flex flex-col justify-center">
+                    <h2 class="text-3xl font-bold mb-4">Book an Appointment</h2>
+                    <p class="mb-8 text-teal-100">Schedule your visit with our expert doctors. Fill out the form and our front desk will confirm your appointment shortly.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4">
+                                <i class="fa-solid fa-phone text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-teal-200 text-sm">Call us on</p>
+                                <p class="font-bold text-lg">8091919997</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4">
+                                <i class="fa-solid fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-teal-200 text-sm">Email us at</p>
+                                    <p class="font-bold text-lg">thenish9997@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4">
+                                <i class="fa-solid fa-location-dot text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-teal-200 text-sm">Visit us at</p>
+                                <p class="font-bold">Basti DanishManda Jalandhar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Side -->
+                <div class="lg:w-3/5 p-10 relative">
+                    
+                    <!-- Login buton (Hide when logged in) -->
+                    <div id="booking-auth-overlay" class="absolute inset-0 bg-white/60 backdrop-blur-md z-10 flex flex-col items-center justify-center rounded-r-3xl transition-all duration-300">
+                        <i class="fa-solid fa-lock text-5xl text-primary mb-4 drop-shadow-md"></i>
+                        <h3 class="text-2xl font-bold text-secondary mb-2">Authentication Required</h3>
+                        <p class="text-slate-700 font-medium mb-6 text-center max-w-sm">You must be logged in to book an appointment with our specialists.</p>
+                        <div class="flex gap-4">
+                            <button onclick="openModal('login-modal')" class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30">Login Now</button>
+                        </div>
+                    </div>
+
+                    <form id="booking-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
+                                <input type="tel" id="booking-phone" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="e.g., 8091919997">
+                                <div id="phone-error" class="text-sm font-bold mt-2 text-red-500 hidden"><i class="fa-solid fa-circle-xmark mr-1"></i> Phone number must be exactly 10 digits</div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Department</label>
+                                <select id="department-select" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white">
+                                    <option value="" disabled selected>Select Department</option>
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Orthopedics">Orthopedics</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                    <option value="Oncology">Oncology</option>
+                                    <option value="Dermatology">Dermatology</option>
+                                    <option value="Ophthalmology">Ophthalmology</option>
+                                    <option value="Psychiatry">Psychiatry</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Doctor</label>
+                                <select id="doctor-select" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white disabled:bg-gray-100" disabled>
+                                    <option value="" disabled selected>Select Doctor</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Appointment Date</label>
+                                <input type="date" id="date-select" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Appointment Time</label>
+                                <select id="time-select" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white">
+                                    <option value="" disabled selected>Select Time</option>
+                                    <option value="09:00 AM">09:00 AM</option>
+                                    <option value="09:30 AM">09:30 AM</option>
+                                    <option value="10:00 AM">10:00 AM</option>
+                                    <option value="10:30 AM">10:30 AM</option>
+                                    <option value="11:00 AM">11:00 AM</option>
+                                    <option value="11:30 AM">11:30 AM</option>
+                                    <option value="12:00 PM">12:00 PM</option>
+                                    <option value="12:30 PM">12:30 PM</option>
+                                    <option value="01:00 PM">01:00 PM</option>
+                                    <option value="01:30 PM">01:30 PM</option>
+                                    <option value="02:00 PM">02:00 PM</option>
+                                    <option value="02:30 PM">02:30 PM</option>
+                                    <option value="03:00 PM">03:00 PM</option>
+                                    <option value="03:30 PM">03:30 PM</option>
+                                    <option value="04:00 PM">04:00 PM</option>
+                                    <option value="04:30 PM">04:30 PM</option>
+                                </select>
+                            </div>
+                            <div id="availability-message" class="col-span-1 md:col-span-2 text-sm font-bold mt-[-10px]">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Additional Message (Optional)</label>
+                            <textarea rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="Describe your medical concern..."></textarea>
+                        </div>
+                        <button type="submit" id="confirm-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-lg">
+                            Confirm Booking
+                        </button>
+                    </form>
+                </div>
+            </div>
+            </div>
+    </div>
+
+    <div id="login-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative mx-4">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-user-circle text-4xl text-primary mb-2"></i>
+                <h2 class="text-2xl font-bold text-secondary">Welcome Back</h2>
+                <p class="text-slate-500 text-sm">Log in to manage your appointments</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="user@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <input type="password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••">
+                </div>
+                <div class="text-right mt-1">
+                    <a href="#" onclick="switchModal('login-modal', 'forgot-password-modal')" class="text-xs text-primary font-bold hover:underline">Forgot Password?</a>
+                </div>
+                <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-md mt-4">Login</button>
+                <p class="text-center text-sm text-slate-600 mt-4">Don't have an account? <a href="#" onclick="switchModal('login-modal', 'register-modal')" class="text-primary font-bold hover:underline">Register</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="register-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative mx-4">
+            <button onclick="closeModal('register-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-user-plus text-4xl text-primary mb-2"></i>
+                <h2 class="text-2xl font-bold text-secondary">Create an Account</h2>
+                <p class="text-slate-500 text-sm">Join MD Care Hospital Portal</p>
+            </div>
+            <form id="register-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                    <input type="text" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="John Doe">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="user@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <input type="password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition shadow-md mt-4">Register</button>
+                <p class="text-center text-sm text-slate-600 mt-4">Already have an account? <a href="#" onclick="switchModal('register-modal', 'login-modal')" class="text-primary font-bold hover:underline">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative mx-4">
+            <button onclick="closeModal('forgot-password-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-key text-4xl text-primary mb-2"></i>
+                <h2 class="text-2xl font-bold text-secondary">Reset Password</h2>
+                <p class="text-slate-500 text-sm">Enter your email to receive a reset link</p>
+            </div>
+            <form id="forgot-password-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" id="reset-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="user@example.com">
+                </div>
+                <button type="submit" id="reset-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-md mt-4">Send Reset Link</button>
+                <p class="text-center text-sm text-slate-600 mt-4">Remembered? <a href="#" onclick="switchModal('forgot-password-modal', 'login-modal')" class="text-primary font-bold hover:underline">Back to Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctor Biodata  -->
+    <div id="doctor-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl relative overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+            <button onclick="closeModal('doctor-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-3xl z-20 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark"></i></button>
+            <div class="md:w-2/5 h-64 md:h-auto relative">
+                <img id="doc-modal-img" src="" alt="Doctor" class="w-full h-full object-cover object-top">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+                    <span id="doc-modal-dept" class="bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg"></span>
+                </div>
+            </div>
+            <div class="md:w-3/5 p-8 md:p-10 overflow-y-auto no-scrollbar">
+                <h2 id="doc-modal-name" class="text-3xl font-bold text-secondary mb-2"></h2>
+                <p class="text-primary font-medium mb-6 border-b pb-4"><i class="fa-solid fa-graduation-cap mr-2"></i><span id="doc-modal-qual"></span></p>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start"><i class="fa-solid fa-briefcase text-slate-400 mt-1 w-6"></i><div><p class="text-xs text-slate-500 uppercase font-bold">Experience</p><p id="doc-modal-exp" class="font-medium text-slate-700"></p></div></div>
+                    <div class="flex items-start"><i class="fa-solid fa-envelope text-slate-400 mt-1 w-6"></i><div><p class="text-xs text-slate-500 uppercase font-bold">Contact Email</p><a id="doc-modal-email" href="#" class="font-medium text-primary hover:underline"></a></div></div>
+                </div>
+                <h4 class="font-bold text-secondary mb-2 uppercase tracking-wide text-sm">Professional Biography</h4>
+                <p id="doc-modal-bio" class="text-slate-600 leading-relaxed text-sm"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Labs -->
+    <div id="labs-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('labs-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <h2 class="text-2xl font-bold text-secondary mb-4"><i class="fa-solid fa-microscope text-primary mr-2"></i> Advanced Labs & Diagnostics</h2>
+                <p class="text-slate-600 mb-6">Our laboratory is fully equipped with cutting-edge technology for precise and rapid testing.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Blood Testing Lab" class="rounded-xl shadow-md w-full h-40 object-cover mb-3">
+                    <h4 class="font-bold text-secondary text-sm">Pathology & Blood Bank</h4>
+                    <p class="text-xs text-slate-500 mt-1">24/7 automated blood analyzers and hematology equipment.</p>
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Imaging Center" class="rounded-xl shadow-md w-full h-40 object-cover mb-3">
+                    <h4 class="font-bold text-secondary text-sm">Radiology & Imaging</h4>
+                    <p class="text-xs text-slate-500 mt-1">High-resolution MRI, CT scan, and digital X-Ray facilities.</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Emergency buton -->
+    <div id="emergency-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative text-center">
+            <button onclick="closeModal('emergency-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 text-3xl mx-auto mb-4"><i class="fa-solid fa-truck-medical"></i></div>
+            <h2 class="text-2xl font-bold text-secondary mb-2">24/7 Emergency Contacts</h2>
+            <p class="text-slate-500 text-sm mb-6">In case of a medical emergency, immediately contact the numbers below.</p>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-blue-500 text-xl"></i><span class="font-bold text-slate-700">Police</span></div><a href="tel:100" class="text-xl font-bold text-blue-600 hover:underline">100</a></div>
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-truck-medical text-red-500 text-xl"></i><span class="font-bold text-slate-700">Ambulance</span></div><a href="tel:108" class="text-xl font-bold text-red-600 hover:underline">108</a></div>
+                <div class="flex justify-between items-center bg-teal-50 p-4 rounded-xl border border-teal-100"><div class="flex items-center gap-3"><i class="fa-solid fa-hospital text-primary text-xl"></i><span class="font-bold text-teal-900 text-left leading-tight">MD Care<br/><span class="text-xs">Emergency</span></span></div><a href="tel:8091919997" class="text-xl font-bold text-primary hover:underline">8091919997</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beds Modal -->
+    <div id="beds-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('beds-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <h2 class="text-2xl font-bold text-secondary mb-4"><i class="fa-solid fa-bed-pulse text-primary mr-2"></i> Department-wise Hospital Beds</h2>
+                <p class="text-slate-600 mb-6">Explore our specialized wards equipped with advanced monitoring and comfortable beds for our patients.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/icu-beds.avif" alt="ICU Beds" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Intensive Care Unit (ICU)</h4>
+                        <p class="text-xs text-slate-500 mt-1">100 Beds - 24/7 Life Support</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/cardiology-ward.avif" alt="Cardiology Ward" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Cardiology Ward</h4>
+                        <p class="text-xs text-slate-500 mt-1">80 Beds - Cardiac Monitoring</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/general-ward.avif" alt="General Ward" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">General Wards</h4>
+                        <p class="text-xs text-slate-500 mt-1">200 Beds - Comfortable Care</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/nicu-ward.avif" alt="NICU" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Pediatric & NICU</h4>
+                        <p class="text-xs text-slate-500 mt-1">70 Beds - Specialized Neonatal</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/orthopedic-ward.avif" alt="Orthopedic Ward" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Orthopedics Ward</h4>
+                        <p class="text-xs text-slate-500 mt-1">50 Beds - Recovery & Rehab</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Reviews Modal -->
+    <div id="reviews-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('reviews-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-2"><i class="fa-solid fa-star text-yellow-400 mr-2"></i> Patient Reviews</h2>
+                <div class="flex items-center justify-center gap-2 mb-2">
+                    <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                    <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                    <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                    <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                    <i class="fa-solid fa-star-half-stroke text-yellow-400 text-xl"></i>
+                    <span class="text-xl font-bold text-secondary ml-2">4.8/5</span>
+                </div>
+                <p class="text-slate-600 text-sm">Based on 50,000+ happy patients</p>
+            </div>
+            
+        <div id="reviews-container" class="space-y-4">
+            <!-- Injected via JS -->
+        </div>
+        
+        <form id="write-review-form" class="hidden bg-slate-50 p-5 rounded-xl border border-slate-200 mt-6 shadow-sm text-left">
+            <h3 class="font-bold text-secondary mb-3">Share Your Experience</h3>
+            <div class="mb-3 flex items-center gap-3">
+                <label class="text-sm font-medium text-slate-700">Rating:</label>
+                <select id="review-rating" class="px-3 py-1.5 rounded-lg border border-slate-300 outline-none text-sm bg-white focus:ring-2 focus:ring-primary">
+                    <option value="5">5 Stars - Excellent</option>
+                    <option value="4">4 Stars - One More</option>
+                    <option value="3">3 Stars - Good</option>
+                    <option value="2">2 Stars - do good,have good</option>
+                    <option value="1">1 Star - Write your opinion</option>
+                </select>
+            </div>
+            <textarea id="review-text" rows="3" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none text-sm mb-3" placeholder="Tell us about your visit..."></textarea>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="toggleReviewForm()" class="px-4 py-2 text-slate-500 hover:bg-slate-200 rounded-lg text-sm font-bold transition">Cancel</button>
+                <button type="submit" id="submit-review-btn" class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition shadow">Submit</button>
+            </div>
+        </form>
+
+        <div class="flex flex-wrap justify-center items-center gap-4 mt-6">
+            <button onclick="toggleReviewForm()" class="bg-primary text-white font-bold py-2.5 px-6 rounded-full hover:bg-teal-700 transition shadow-md border border-primary">
+                Write a Review <i class="fa-solid fa-pen ml-1"></i>
+            </button>
+            <button id="load-more-reviews-btn" onclick="loadMoreReviews()" class="bg-slate-100 text-primary font-bold py-2.5 px-6 rounded-full hover:bg-slate-200 transition shadow-sm hidden border border-slate-200">
+                Load More Reviews <i class="fa-solid fa-angle-down ml-1"></i>
+            </button>
+        </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Awards Modal -->
+    <div id="awards-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('awards-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <h2 class="text-2xl font-bold text-secondary mb-2"><i class="fa-solid fa-trophy text-primary mr-2"></i> Medical Excellence Awards</h2>
+                <p class="text-slate-600 mb-6">Our doctors are recognized globally for their outstanding contributions to medical science and patient care.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award1.avif" alt="Award Ceremony 1" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">Best Cardiology Team 2023</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award2.avif" alt="Award Ceremony 2" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">National Excellence in Patient Care</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award3.avif" alt="Award Ceremony 3" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">Top Innovators in Healthcare Tech</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award4.avif" alt="Award Ceremony 4" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">Award for Highest Surgical Success</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative text-center">
+            <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center text-primary text-4xl mx-auto mb-6">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-secondary mb-2">Booking Confirmed!</h2>
+            <p class="text-slate-600 mb-8">Thank you! Your appointment request has been sent to MD Care Hospital front desk.</p>
+            <button onclick="closeModal('success-modal')" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-md">
+                Done
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer view -->
+    <footer class="bg-secondary text-white pt-16 pb-8 border-t-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
+                        <span class="font-bold text-2xl">MD Care <span class="text-primary">Hospital</span></span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Providing exceptional medical care to our community with compassion, integrity, and advanced medical expertise.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Quick Links</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="index.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Home</a></li>
+                        <li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li>
+                        <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
+                        <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary"></i>
+                            <span>Basti DanishManda<br/>Jalandhar</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-phone mr-3 text-primary"></i>
+                            <span>8091919997</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-envelope mr-3 text-primary"></i>
+                            <span>thenish9997@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest health tips and news.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2020 MD Care Hospital (MD Hospitals). All Rights Reserved. | <a href="admin.html" class="hover:text-primary transition font-medium">Admin Portal</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, query, where, getDocs, runTransaction, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
+            authDomain: "md-care-hospital.firebaseapp.com",
+            projectId: "md-care-hospital",
+            storageBucket: "md-care-hospital.firebasestorage.app",
+            messagingSenderId: "214966558089",
+            appId: "1:214966558089:web:d49f400adb427614089558",
+            measurementId: "G-K3S90QH9LT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let isLoggedIn = false;
+        let isAuthenticating = false;
+        let isLoggingOut = false;
+
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const menuLinks = menu.querySelectorAll('a');
+
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        window.openModal = function(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        window.closeModal = function(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        window.switchModal = function(closeId, openId) {
+            document.getElementById(closeId).classList.add('hidden');
+            document.getElementById(openId).classList.remove('hidden');
+        }
+
+        // Beautiful Toast Notification System
+        window.showToast = function(title, message, type = 'success') {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
+                document.body.appendChild(container);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 ${type === 'success' ? 'border-teal-500' : 'border-red-500'} rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+            
+            const icon = `<div class="w-10 h-10 rounded-full ${type === 'success' ? 'bg-teal-50 text-teal-500' : 'bg-red-50 text-red-500'} flex items-center justify-center flex-shrink-0 text-lg">
+                <i class="fa-solid ${type === 'success' ? 'fa-check' : 'fa-xmark'}"></i>
+            </div>`;
+                
+            toast.innerHTML = `
+                ${icon}
+                <div class="flex-grow pt-0.5">
+                    <h4 class="font-bold text-slate-800 text-sm">${title}</h4>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>
+            `;
+            
+            container.appendChild(toast);
+            
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+        };
+
+        window.handleAppointmentClick = function() {
+            if(!isLoggedIn) {
+                window.openModal('login-modal');
+            } else {
+                window.openModal('appointment-modal');
+            }
+        }
+
+        function updateAuthUI() {
+            const overlay = document.getElementById('booking-auth-overlay');
+            const desktopAuth = document.getElementById('auth-nav-container');
+            const mobileAuth = document.getElementById('mobile-auth-container');
+            
+            if(isLoggedIn) {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                
+                const picUrl = localStorage.getItem('mdcare_profilePic');
+                const userInitial = localStorage.getItem('mdcare_userInitial') || 'U';
+                const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : userInitial;
+
+                const loggedInHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Profile Dashboard</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+                if(desktopAuth) desktopAuth.innerHTML = loggedInHTML;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Profile Dashboard</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            } else {
+                overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+                if(desktopAuth) desktopAuth.innerHTML = `<button onclick="window.openModal('login-modal')" class="text-slate-600 hover:text-primary transition font-medium">Login</button><button onclick="window.openModal('register-modal')" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</button>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<button onclick="window.openModal('login-modal')" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</button><button onclick="window.openModal('register-modal')" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</button>`;
+            }
+        }
+
+        window.logout = function(btn) {
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
+                btn.disabled = true;
+            }
+            isLoggingOut = true;
+            localStorage.removeItem('mdcare_profilePic');
+            localStorage.removeItem('mdcare_userInitial');
+            signOut(auth).then(() => {
+                window.showToast("Logged Out", "You have been successfully logged out.", "success");
+                setTimeout(() => {
+                    const menu = document.getElementById('mobile-menu');
+                    if (menu) menu.classList.add('hidden');
+                    window.location.href = 'index.html';
+                }, 1500);
+            }).catch(err => console.error(err));
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (isAuthenticating) return;
+            if (isLoggingOut) return;
+            if (user) {
+                isLoggedIn = true;
+                localStorage.setItem('mdcare_auth', 'true');
+                localStorage.setItem('mdcare_userInitial', (user.displayName || "U").charAt(0).toUpperCase());
+                
+                // Autofill phone number from profile
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                        const phoneInput = document.getElementById('booking-phone');
+                    const secPhoneInput = document.getElementById('sec-booking-phone');
+                    if (phoneInput && !phoneInput.value && data.phone) {
+                        phoneInput.value = data.phone;
+                        }
+                    if (secPhoneInput && !secPhoneInput.value && data.phone) {
+                        secPhoneInput.value = data.phone;
+                    }
+                    if (data.profilePic) {
+                        localStorage.setItem('mdcare_profilePic', data.profilePic);
+                    } else {
+                        localStorage.removeItem('mdcare_profilePic');
+                    }
+                    updateAuthUI();
+                    }
+                } catch(e) { console.error("Error fetching profile for autofill", e); }
+                
+                if (window.location.hash === '#appointment') {
+                    history.replaceState(null, null, ' ');
+                    window.openModal('appointment-modal');
+                }
+            } else {
+                isLoggedIn = false;
+                localStorage.removeItem('mdcare_auth');
+                localStorage.removeItem('mdcare_profilePic');
+                localStorage.removeItem('mdcare_userInitial');
+                const phoneInput = document.getElementById('booking-phone');
+                if (phoneInput) phoneInput.value = '';
+                const secPhoneInput = document.getElementById('sec-booking-phone');
+                if (secPhoneInput) secPhoneInput.value = '';
+                
+                if (window.location.hash === '#appointment') {
+                    history.replaceState(null, null, ' ');
+                    window.openModal('login-modal');
+                }
+            }
+            updateAuthUI();
+        });
+
+        document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
+            btn.disabled = true;
+
+            isAuthenticating = true;
+            const email = e.target.querySelector('input[type="email"]').value;
+            const pass = e.target.querySelector('input[type="password"]').value;
+            try {
+                const userCred = await signInWithEmailAndPassword(auth, email, pass);
+                if (!userCred.user.emailVerified) {
+                    window.showToast("Verification Required", "Your email address is not verified yet. Please check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder.", "error");
+                } else {
+                    window.showToast("Login Successful", "Welcome back!", "success");
+                }
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } catch (err) {
+                isAuthenticating = false;
+                let errorMsg = err.message;
+                if (err.code === 'auth/invalid-credential') {
+                    errorMsg = '<span class="text-red-500 font-bold">Error</span> : Invalid E-mail or Password';
+                } else {
+                    errorMsg = errorMsg.replace('Firebase: ', '');
+                }
+                window.showToast("Login Failed", errorMsg, "error");
+            } finally {
+                if (!isAuthenticating) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                }
+            }
+        });
+
+        document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering...';
+            btn.disabled = true;
+
+            isAuthenticating = true;
+            const name = e.target.querySelectorAll('input[type="text"]')[0].value;
+            const email = e.target.querySelector('input[type="email"]').value;
+            const pass = e.target.querySelector('input[type="password"]').value;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                await updateProfile(userCredential.user, { displayName: name });
+                localStorage.setItem('mdcare_userInitial', name.charAt(0).toUpperCase());
+                
+                // Send Verification Email
+                await sendEmailVerification(userCredential.user);
+                
+                // Store additional user data in the "users" Firestore collection
+                await setDoc(doc(db, "users", userCredential.user.uid), {
+                    name: name,
+                    email: email,
+                    role: "patient",
+                    createdAt: serverTimestamp()
+                });
+
+                // Notify Admin via email
+                await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                    to_email: "thenish9997@gmail.com",
+                    subject: "New Patient Registration - MD Care",
+                    html_message: `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 0 auto; background-color: #f8fafc; padding: 30px; border-radius: 16px;">
+                        <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                            <div style="background-color: #1e293b; padding: 40px 20px; text-align: center; border-bottom: 6px solid #3b82f6;">
+                                <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                            </div>
+                            <div style="padding: 50px 40px; color: #334155; line-height: 1.8; font-size: 18px;">
+                                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+                                    <h3 style="margin: 0 0 5px 0; color: #1e40af;">New Patient Registration</h3>
+                                    <p style="margin: 0; color: #1e3a8a; font-size: 16px;">A new patient has created an account on the portal.</p>
+                                </div>
+                                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                                    <tr>
+                                        <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 30%;">Name:</td>
+                                        <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px 0; color: #64748b;">Email:</td>
+                                        <td style="padding: 10px 0; color: #0f172a; font-weight: 600;">${email}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="text-align: center; margin-top: 10px; margin-bottom: 30px;">
+                                <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                            </div>
+                            <div style="background-color: #f1f5f9; padding: 25px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                            </div>
+                        </div>
+                    </div>`
+                });
+
+                window.showToast("Account Created", "Registration successful! A <span class='text-blue-600 font-bold'>verification link</span> has been sent. Please check your Inbox and <span class='text-red-500 font-bold'>Spam</span> folders.", "success");
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } catch (err) {
+                isAuthenticating = false;
+                let errorMsg = err.message;
+                if (err.code === 'auth/email-already-in-use') {
+                    errorMsg = '<span class="text-red-500 font-bold">Error</span> : Email is already registered';
+                } else {
+                    errorMsg = errorMsg.replace('Firebase: ', '');
+                }
+                window.showToast("Registration Failed", errorMsg, "error");
+            } finally {
+                if (!isAuthenticating) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                }
+            }
+        });
+
+        // Forgot Password Logic
+        document.getElementById('forgot-password-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('reset-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            btn.disabled = true;
+
+            const email = document.getElementById('reset-email').value;
+            try {
+                await sendPasswordResetEmail(auth, email);
+                window.showToast("Reset Link Sent", "A reset password link sent to your e-mail. Please check <span class='text-red-500 font-bold'>SPAM</span> folders.", "success");
+                window.switchModal('forgot-password-modal', 'login-modal');
+                e.target.reset();
+            } catch (err) {
+                let errorMsg = err.message.replace('Firebase: ', '');
+                window.showToast("Reset Failed", errorMsg, "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // --- Doctors ---
+
+        const doctorsList = [
+            { name: "Dr. Rajat Sharma", dept: "Cardiology", qual: "MBBS, MD, DM (Cardiology)", exp: "15+ Years", email: "rajat.sharma@mdcare.com", img: "images/maled1.avif", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
+            { name: "Dr. Neha Verma", dept: "Cardiology", qual: "MBBS, MS, Fellowship in Cardiac Surgery", exp: "10 Years", email: "neha.verma@mdcare.com", img: "images/femaled2.avif", bio: "Expert in pediatric cardiology and minimally invasive cardiac surgeries. A leading voice in preventive cardiovascular healthcare." },
+            { name: "Dr. Arjun Patel", dept: "Cardiology", qual: "MBBS, MD (Cardiology)", exp: "8 Years", email: "arjun.patel@mdcare.com", img: "images/maled3.avif", bio: "Dedicated to echocardiography and non-invasive diagnostics. Passionate about managing chronic heart conditions." },
+            { name: "Dr. Anil Kapoor", dept: "Neurology", qual: "MBBS, DM (Neurology)", exp: "20 Years", email: "anil.kapoor@mdcare.com", img: "images/maled4.avif", bio: "Senior neurologist specializing in stroke management, epilepsy, and neurodegenerative disorders. Heads the stroke trauma unit." },
+            { name: "Dr. Priya Singh", dept: "Neurology", qual: "MBBS, MD (Medicine), DM", exp: "12 Years", email: "priya.singh@mdcare.com", img: "images/femaled5.avif", bio: "Focuses on multiple sclerosis and movement disorders. Heavily involved in clinical research and advanced neural mapping." },
+            { name: "Dr. Rohan Mehta", dept: "Neurology", qual: "MBBS, MS (Neuro Surgery)", exp: "14 Years", email: "rohan.mehta@mdcare.com", img: "images/maled6.avif", bio: "Expert neurosurgeon performing delicate brain and spinal cord surgeries with state-of-the-art robotic assistance." },
+            { name: "Dr. Vikram Das", dept: "Orthopedics", qual: "MBBS, MS (Orthopedics)", exp: "18 Years", email: "vikram.das@mdcare.com", img: "images/maled7.avif", bio: "Leading joint replacement surgeon. Pioneer in performing bilateral knee replacements and sports injury reconstruction." },
+            { name: "Dr. Sana Khan", dept: "Orthopedics", qual: "MBBS, DNB (Ortho)", exp: "9 Years", email: "sana.khan@mdcare.com", img: "images/femaled8.avif", bio: "Specializes in arthroscopy and pediatric orthopedics. Dedicated to correcting congenital bone deformities." },
+            { name: "Dr. Aditya Rao", dept: "Orthopedics", qual: "MBBS, MS", exp: "11 Years", email: "aditya.rao@mdcare.com", img: "images/maled9.avif", bio: "Trauma specialist dealing with complex fractures and spinal injuries originating from severe accidents." },
+            { name: "Dr. Amit Patel", dept: "Pediatrics", qual: "MBBS, MD (Pediatrics)", exp: "16 Years", email: "amit.patel@mdcare.com", img: "images/maled10.avif", bio: "Friendly and highly experienced pediatrician. Dedicated to child immunization, developmental milestones, and neonatal intensive care." },
+            { name: "Dr. Kavita Rao", dept: "Pediatrics", qual: "MBBS, DCH", exp: "13 Years", email: "kavita.rao@mdcare.com", img: "images/femaled11.avif", bio: "Expert in treating pediatric asthma, allergies, and nutritional disorders in growing toddlers." },
+            { name: "Dr. Nidhi Sharma", dept: "Pediatrics", qual: "MBBS, MD", exp: "7 Years", email: "nidhi.sharma@mdcare.com", img: "images/femaled12.avif", bio: "Neonatologist who runs the NICU. Passionate about saving premature babies and ensuring healthy early development." },
+            { name: "Dr. Sameer Reddy", dept: "Oncology", qual: "MBBS, DM (Medical Oncology)", exp: "19 Years", email: "sameer.reddy@mdcare.com", img: "images/maled13.avif", bio: "Pioneer in targeted therapies and immunotherapy for solid tumors. Compassionate doctor focusing on quality of life." },
+            { name: "Dr. Anjali Desai", dept: "Oncology", qual: "MBBS, MS (Surgical Oncology)", exp: "14 Years", email: "anjali.desai@mdcare.com", img: "images/femaled14.avif", bio: "Highly skilled surgical oncologist performing tumor resections, including complex breast and gastrointestinal cancer surgeries." },
+            { name: "Dr. Kabir Jain", dept: "Oncology", qual: "MBBS, MD (Radiation)", exp: "10 Years", email: "kabir.jain@mdcare.com", img: "images/maled15.avif", bio: "Expert in precision radiation oncology, utilizing CyberKnife and advanced linear accelerators." },
+            { name: "Dr. Varun Gupta", dept: "Dermatology", qual: "MBBS, MD (Dermatology)", exp: "12 Years", email: "varun.gupta@mdcare.com", img: "images/maled16.avif", bio: "Specializes in clinical dermatology, treating severe psoriasis, eczema, and complex autoimmune skin diseases." },
+            { name: "Dr. Pooja Iyer", dept: "Dermatology", qual: "MBBS, DDVL", exp: "8 Years", email: "pooja.iyer@mdcare.com", img: "images/femaled17.avif", bio: "Renowned for aesthetic dermatology, laser treatments, and advanced scar reduction therapies." },
+            { name: "Dr. Akash Singh", dept: "Dermatology", qual: "MBBS, MD", exp: "15 Years", email: "akash.singh@mdcare.com", img: "images/maled18.avif", bio: "Expert in dermato-surgery and hair transplant procedures. Leads the vitiligo research department." },
+            { name: "Dr. Tarun Kumar", dept: "Ophthalmology", qual: "MBBS, MS (Ophthalmology)", exp: "17 Years", email: "tarun.kumar@mdcare.com", img: "images/maled19.avif", bio: "Senior eye surgeon specializing in advanced cataract surgeries and premium intraocular lens implants." },
+            { name: "Dr. Sneha Nair", dept: "Ophthalmology", qual: "MBBS, DO", exp: "11 Years", email: "sneha.nair@mdcare.com", img: "images/femaled20.avif", bio: "Specialist in refractive surgeries (LASIK) and managing complex glaucoma conditions." },
+            { name: "Dr. Rahul Bose", dept: "Ophthalmology", qual: "MBBS, MS", exp: "9 Years", email: "rahul.bose@mdcare.com", img: "images/maled21.avif", bio: "Vitreoretinal surgeon dealing with diabetic retinopathy and macular degeneration." },
+            { name: "Dr. Kabir Singh", dept: "Psychiatry", qual: "MBBS, MD (Psychiatry)", exp: "14 Years", email: "kabir.singh@mdcare.com", img: "images/maled22.avif", bio: "Focuses on adult psychiatry, treating severe clinical depression, bipolar disorder, and anxiety management." },
+            { name: "Dr. Aisha Ali", dept: "Psychiatry", qual: "MBBS, DPM", exp: "10 Years", email: "aisha.ali@mdcare.com", img: "images/femaled23.avif", bio: "Child and adolescent psychiatrist. Expert in managing ADHD, autism spectrum, and behavioral issues." },
+            { name: "Dr. Manish Sen", dept: "Psychiatry", qual: "MBBS, MD", exp: "16 Years", email: "manish.sen@mdcare.com", img: "images/maled24.avif", bio: "Addiction specialist running the hospital's renowned de-addiction and rehabilitation clinic." }
+        ];
+
+        // Render Doctors
+        const slider = document.getElementById('doctors-slider');
+        doctorsList.forEach((doc, index) => {
+            const card = document.createElement('div');
+            card.className = "flex-none w-[280px] sm:w-[300px] snap-center bg-slate-50 rounded-2xl overflow-hidden hover:shadow-xl transition cursor-pointer group border border-slate-100";
+            card.onclick = () => openDoctorProfile(index);
+            card.innerHTML = `
+                <div class="relative overflow-hidden h-64">
+                    <img src="${doc.img}" alt="${doc.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-secondary/90 to-transparent p-4">
+                        <span class="text-teal-300 text-xs font-bold uppercase tracking-wider">${doc.dept}</span>
+                    </div>
+                </div>
+                <div class="p-6 text-center">
+                    <h3 class="text-xl font-bold text-secondary">${doc.name}</h3>
+                    <p class="text-slate-500 text-sm mt-1 truncate">${doc.qual}</p>
+                </div>
+            `;
+            slider.appendChild(card);
+        });
+
+        // Slider Controls
+        const btnLeft = document.getElementById('slide-left');
+        const btnRight = document.getElementById('slide-right');
+        btnLeft.addEventListener('click', () => {
+            slider.scrollBy({ left: -320, behavior: 'smooth' });
+        });
+        btnRight.addEventListener('click', () => {
+            slider.scrollBy({ left: 320, behavior: 'smooth' });
+        });
+
+        // Departments Slider Controls
+        const deptSlider = document.getElementById('departments-slider');
+        const btnDeptLeft = document.getElementById('dept-slide-left');
+        const btnDeptRight = document.getElementById('dept-slide-right');
+        if (btnDeptLeft && deptSlider) {
+            btnDeptLeft.addEventListener('click', () => { deptSlider.scrollBy({ left: -320, behavior: 'smooth' }); });
+            btnDeptRight.addEventListener('click', () => { deptSlider.scrollBy({ left: 320, behavior: 'smooth' }); });
+        }
+
+        function openDoctorProfile(idx) {
+            const doc = doctorsList[idx];
+            document.getElementById('doc-modal-img').src = doc.img;
+            document.getElementById('doc-modal-dept').textContent = doc.dept;
+            document.getElementById('doc-modal-name').textContent = doc.name;
+            document.getElementById('doc-modal-qual').textContent = doc.qual;
+            document.getElementById('doc-modal-exp').textContent = doc.exp;
+            document.getElementById('doc-modal-email').textContent = doc.email;
+            document.getElementById('doc-modal-email').href = `mailto:${doc.email}`;
+            document.getElementById('doc-modal-bio').textContent = doc.bio;
+            openModal('doctor-modal');
+        }
+
+        function setupBookingForm(prefix) {
+            const deptSelect = document.getElementById(prefix + 'department-select');
+            const docSelect = document.getElementById(prefix + 'doctor-select');
+            const dateSel = document.getElementById(prefix + 'date-select');
+            const timeSel = document.getElementById(prefix + 'time-select');
+            const avlMsg = document.getElementById(prefix + 'availability-message');
+            const subBtn = document.getElementById(prefix + 'confirm-btn');
+            const bookingForm = document.getElementById(prefix + 'booking-form');
+            
+            if (!bookingForm) return;
+
+            deptSelect.addEventListener('change', function() {
+                const dept = this.value;
+                docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
+                
+                const filteredDocs = doctorsList.filter(d => d.dept === dept);
+                if (filteredDocs.length > 0) {
+                    docSelect.disabled = false;
+                    filteredDocs.forEach(doc => {
+                        const option = document.createElement('option');
+                        option.value = doc.name;
+                        option.textContent = doc.name;
+                        docSelect.appendChild(option);
+                    });
+                } else {
+                    docSelect.disabled = true;
+                }
+                checkAvailability();
+            });
+
+            async function checkAvailability() {
+                if(!dateSel.value || !docSelect.value) {
+                    avlMsg.innerHTML = "";
+                    return;
+                }
+
+                Array.from(timeSel.options).forEach(opt => {
+                    if(opt.value !== "") {
+                        opt.disabled = false;
+                        opt.textContent = opt.value;
+                    }
+                });
+
+                const d = new Date(dateSel.value);
+                if(d.getDay() === 0) {
+                    avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> Sunday is closed. Please select another date.</span>";
+                    subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    timeSel.disabled = true;
+                    return;
+                } else {
+                    timeSel.disabled = false;
+                }
+
+                avlMsg.innerHTML = "<span class='text-slate-500'><i class='fa-solid fa-spinner fa-spin mr-1'></i> Checking available slots...</span>";
+                subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                try {
+                    const q = query(collection(db, "appointments"), where("date", "==", dateSel.value));
+                    const snapshot = await getDocs(q);
+                    
+                    const bookedTimes = [];
+                    snapshot.forEach(documentSnapshot => {
+                        const data = documentSnapshot.data();
+                        if (data.doctor === docSelect.value && data.status !== 'Cancelled') {
+                            bookedTimes.push(data.time);
+                        }
+                    });
+
+                    Array.from(timeSel.options).forEach(opt => {
+                        if(bookedTimes.includes(opt.value)) {
+                            opt.disabled = true;
+                            opt.textContent = opt.value + " (Booked)";
+                        }
+                    });
+
+                    if(bookedTimes.includes(timeSel.value)) {
+                        timeSel.value = "";
+                    }
+
+                    if(timeSel.value) {
+                        avlMsg.innerHTML = "<span class='text-primary'><i class='fa-solid fa-circle-check mr-1'></i> This slot is available!</span>";
+                        subBtn.disabled = false; subBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        avlMsg.innerHTML = "<span class='text-slate-500'><i class='fa-solid fa-circle-info mr-1'></i> Please select an available time.</span>";
+                        subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                } catch (error) {
+                    console.error("Error checking availability:", error);
+                    if(timeSel.value) {
+                        avlMsg.innerHTML = "<span class='text-primary'><i class='fa-solid fa-circle-check mr-1'></i> Ready to book!</span>";
+                        subBtn.disabled = false; subBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        avlMsg.innerHTML = "";
+                    }
+                }
+            }
+            
+            dateSel.addEventListener('change', checkAvailability);
+            timeSel.addEventListener('change', checkAvailability);
+            docSelect.addEventListener('change', checkAvailability);
+
+            bookingForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                if(!isLoggedIn) {
+                    window.openModal('login-modal');
+                    return;
+                }
+                
+                const originalBtnText = subBtn.innerHTML;
+                subBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...';
+                subBtn.disabled = true;
+
+                const patientName = e.target.querySelectorAll('input[type="text"]')[0].value;
+                const slotId = `${dateSel.value}_${docSelect.value}_${timeSel.value}`.replace(/[^a-zA-Z0-9]/g, '_');
+                const appointmentRef = doc(db, "appointments", slotId);
+
+                try {
+                    await runTransaction(db, async (transaction) => {
+                        const docSnap = await transaction.get(appointmentRef);
+                        if (docSnap.exists() && docSnap.data().status !== 'Cancelled') {
+                            throw new Error("SLOT_ALREADY_BOOKED");
+                        }
+                        
+                        transaction.set(appointmentRef, {
+                            userId: auth.currentUser.uid,
+                            patientName: patientName,
+                            email: auth.currentUser.email,
+                            emailVerified: auth.currentUser.emailVerified,
+                            phone: e.target.querySelector('input[type="tel"]').value,
+                            department: deptSelect.value,
+                            doctor: docSelect.value,
+                            date: dateSel.value,
+                            time: timeSel.value,
+                            message: e.target.querySelector('textarea').value,
+                            status: "Pending",
+                            createdAt: serverTimestamp()
+                        });
+                    });
+                    
+                    await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                        to_email: "thenish9997@gmail.com",
+                        subject: "New Appointment Booking - MD Care",
+                        html_message: `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                                </div>
+                                <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                    <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                        <h3 style="margin: 0 0 5px 0; color: #115e59;">New Appointment Request</h3>
+                                        <p style="margin: 0; color: #134e4a; font-size: 16px;">A patient has requested a new consultation.</p>
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${patientName}</td></tr>
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Patient Email:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${auth.currentUser.email}</td></tr>
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Department:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${deptSelect.value}</td></tr>
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Doctor:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0d9488; font-weight: 600;">${docSelect.value}</td></tr>
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Date:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${dateSel.value}</td></tr>
+                                        <tr><td style="padding: 12px 0; color: #64748b;">Time:</td><td style="padding: 12px 0; color: #0f172a; font-weight: 600;">${timeSel.value}</td></tr>
+                                    </table>
+                                </div>
+                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                    <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                                </div>
+                            </div>
+                        </div>`
+                    });
+                    
+                    if(prefix === '') window.closeModal('appointment-modal');
+                    window.openModal('success-modal');
+                    e.target.reset();
+                    docSelect.disabled = true;
+                    docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
+                    avlMsg.innerHTML = '';
+                } catch (error) {
+                    if (error.message === "SLOT_ALREADY_BOOKED") {
+                        window.showToast("Slot Unavailable", "Sorry, this exact slot was just booked by someone else. Please select a different time.", "error");
+                        checkAvailability(); 
+                    } else {
+                        window.showToast("Booking Failed", error.message, "error");
+                    }
+                } finally {
+                    subBtn.innerHTML = originalBtnText;
+                    subBtn.disabled = false;
+                }
+            });
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            dateSel.setAttribute('min', `${year}-${month}-${day}`);
+        }
+
+        setupBookingForm('');
+        setupBookingForm('sec-');
+
+        // Hero Carousel Logc
+        const heroImages = [
+            "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80",
+            "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80",
+            "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80"
+        ];
+        const carouselContainer = document.getElementById('hero-carousel');
+        heroImages.forEach((src, index) => {
+            const div = document.createElement('div');
+            div.className = `absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
+            div.style.backgroundImage = `url('${src}')`;
+            carouselContainer.appendChild(div);
+        });
+
+        let currentHeroIndex = 0;
+        setInterval(() => {
+            const slides = carouselContainer.children;
+            slides[currentHeroIndex].classList.replace('opacity-100', 'opacity-0');
+            currentHeroIndex = (currentHeroIndex + 1) % slides.length;
+            slides[currentHeroIndex].classList.replace('opacity-0', 'opacity-100');
+        }, 5000);
+
+        // Populate 45 Reviews Dynamically
+        const reviewsContainer = document.getElementById('reviews-container');
+        if (reviewsContainer) {
+            const reviews = [
+                { name: "Rajesh Kumar", rating: 5, text: "The cardiology department is top-notch. Dr. Rajat Sharma saved my father's life. The hospital staff is extremely polite and the facilities are world-class." },
+                { name: "Simran Kaur", rating: 4.5, text: "Very clean wards and timely service. The pediatric unit handled my child's case with so much care. Highly recommend MD Care to everyone in Jalandhar." },
+                { name: "Amit Verma", rating: 5, text: "The booking process was seamless and the wait times were minimal. Excellent orthopedics team. Helped me recover fully from a sports injury." }
+            ];
+
+            const extraNames = ["Priya Sharma", "Rahul Singh", "Neha Gupta", "Vikram Malhotra", "Sneha Desai", "Anil Kapoor", "Kavita Reddy", "Sanjay Patel", "Pooja Jain", "Arjun Bose", "Anjali Nair", "Rohan Rao", "Ritu Das", "Vivek Iyer", "Nisha Sen", "Manish Shah", "Kiran Yadav", "Deepak Chopra", "Aarti Tiwari", "Karan Johar", "Roshni Agarwal", "Tarun Banerjee", "Kriti Sanon", "Manoj Bajpayee", "Sunita Williams", "Rajiv Bhatia", "Smriti Irani", "Ramesh Tendulkar", "Geeta Phogat", "Suresh Raina", "Meera Rajput", "Nitin Gadkari", "Preeti Zinta", "Alok Nath", "Shilpa Shetty", "Gaurav Khanna", "Divya Dutta", "Harish Salve", "Ravi Teja", "Kapil Sharma", "Shreya Ghoshal", "Anushka Sharma"];
+            
+            const extraTexts = [
+                "Outstanding medical care and very compassionate nurses. I felt very well taken care of.",
+                "State-of-the-art facilities and experienced doctors. The diagnosis was quick and accurate.",
+                "I visited for a routine checkup and was impressed by the efficiency of the staff.",
+                "Emergency services are truly 24/7 and very responsive. The doctors act fast.",
+                "The oncology department provided excellent support and advanced treatment options.",
+                "Very reasonable pricing for the quality of care provided. Transparent billing.",
+                "The dermatology department helped me cure a chronic skin issue I've had for years.",
+                "Excellent maternity care. The nurses were so helpful and the pediatricians are wonderful.",
+                "The doctors here take the time to listen to your concerns. You never feel rushed.",
+                "Highly skilled surgeons. My knee replacement surgery went flawlessly.",
+                "The neurology team is fantastic. They accurately diagnosed my migraines.",
+                "Good hospital with modern infrastructure. The waiting areas are comfortable.",
+                "Best hospital in Jalandhar. The staff goes above and beyond to help patients.",
+                "I'm very satisfied with the ophthalmology department. My cataract surgery was painless.",
+                "Great psychiatric counseling. The doctors maintain strict confidentiality and are supportive.",
+                "The rehabilitation center is excellent. They helped my father walk again.",
+                "Everything from admission to discharge was perfectly organized.",
+                "I highly recommend the ENT specialists here. Very thorough checkups."
+            ];
+
+            extraNames.forEach((name, i) => {
+                reviews.push({ name: name, rating: (Math.random() > 0.2 ? 5 : 4.5), text: extraTexts[i % extraTexts.length] });
+            });
+
+            // Fetch real user reviews from Firestore and prepend them
+            getDocs(collection(db, "reviews")).then(snapshot => {
+                const firestoreReviews = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    firestoreReviews.push({ name: data.name, rating: data.rating, text: data.text, adminReply: data.adminReply, createdAt: data.createdAt?.toMillis() || 0, userId: data.userId });
+                });
+                firestoreReviews.sort((a,b) => b.createdAt - a.createdAt);
+                reviews.unshift(...firestoreReviews); // Add Firestore reviews to the beginning
+                reviewsContainer.innerHTML = '';
+                currentReviewIndex = 0;
+                window.loadMoreReviews();
+            }).catch(e => console.log("No firestore reviews yet"));
+
+            let currentReviewIndex = 0;
+            const loadMoreBtn = document.getElementById('load-more-reviews-btn');
+
+            window.loadMoreReviews = function() {
+                const end = Math.min(currentReviewIndex + 5, reviews.length);
+                let htmlStr = '';
+                
+                for (let i = currentReviewIndex; i < end; i++) {
+                    const review = reviews[i];
+                    let starsHtml = '';
+                    const fullStars = Math.floor(review.rating);
+                    const halfStar = review.rating % 1 !== 0;
+                    for(let j=0; j<fullStars; j++) starsHtml += '<i class="fa-solid fa-star"></i>';
+                    if(halfStar) starsHtml += '<i class="fa-solid fa-star-half-stroke"></i>';
+                    
+                    let adminReplyHtml = '';
+                    if (review.adminReply) {
+                        adminReplyHtml = `
+                            <div class="mt-4 bg-teal-50 p-4 rounded-xl border border-teal-100 ml-4 md:ml-8 relative shadow-sm border-l-4 border-l-primary">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-[10px] shadow-sm">
+                                        <i class="fa-solid fa-hospital"></i>
+                                    </div>
+                                    <span class="font-bold text-primary text-xs uppercase tracking-wider">MD Care Response</span>
+                                </div>
+                                <p class="text-sm text-slate-700 leading-relaxed ml-8 italic">"${review.adminReply}"</p>
+                            </div>
+                        `;
+                    }
+
+                    let verifiedBadgeHtml = '';
+                    if (review.userId && review.userId !== "unknown") {
+                        verifiedBadgeHtml = `<span class="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100" title="Verified Patient"><i class="fa-solid fa-circle-check"></i> Verified Patient</span>`;
+                    }
+
+                    htmlStr += `
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-secondary flex items-center flex-wrap">${review.name} ${verifiedBadgeHtml}</h4>
+                                <div class="text-yellow-400 text-xs">${starsHtml}</div>
+                            </div>
+                            <p class="text-sm text-slate-600">"${review.text}"</p>
+                            ${adminReplyHtml}
+                        </div>
+                    `;
+                }
+                
+                reviewsContainer.innerHTML += htmlStr;
+                currentReviewIndex = end;
+
+                if (currentReviewIndex >= reviews.length) {
+                    loadMoreBtn.classList.add('hidden');
+                } else {
+                    loadMoreBtn.classList.remove('hidden');
+                }
+            };
+
+            // Load initial 5 reviews
+            window.loadMoreReviews();
+
+            // Review Form Toggle and Authentication Check
+            window.toggleReviewForm = function() {
+                if (!isLoggedIn) {
+                    window.closeModal('reviews-modal');
+                    window.openModal('login-modal');
+                    return;
+                }
+                if (!auth.currentUser?.emailVerified) {
+                    window.showToast("Verification Required", "Please verify your email address to write a review. Check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder for the link.", "error");
+                    return;
+                }
+                document.getElementById('write-review-form').classList.toggle('hidden');
+            };
+
+            // Handle Review Submission
+            document.getElementById('write-review-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!isLoggedIn) return;
+                if (!auth.currentUser?.emailVerified) {
+                    window.showToast("Verification Required", "Please verify your email address to submit a review.", "error");
+                    return;
+                }
+
+                const btn = document.getElementById('submit-review-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+                btn.disabled = true;
+
+                const text = document.getElementById('review-text').value;
+                const rating = parseFloat(document.getElementById('review-rating').value);
+                const name = auth.currentUser?.displayName || "Patient";
+
+                try {
+                    await addDoc(collection(db, "reviews"), {
+                        userId: auth.currentUser?.uid || "unknown",
+                        name: name,
+                        rating: rating,
+                        text: text,
+                        createdAt: serverTimestamp()
+                    });
+
+                    // Notify Admin via email
+                    await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                        to_email: "thenish9997@gmail.com",
+                        subject: "New Patient Review - MD Care",
+                        html_message: `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #eab308;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #eab308;">Admin Alerts</span></h1>
+                                </div>
+                                <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                    <div style="background-color: #fefce8; border-left: 4px solid #eab308; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                        <h3 style="margin: 0 0 5px 0; color: #854d0e;">New Patient Review</h3>
+                                        <p style="margin: 0; color: #713f12; font-size: 16px;">A patient has just left a review on the portal.</p>
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Rating:</td>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${rating} / 5</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 0; color: #64748b;">Review:</td>
+                                            <td style="padding: 12px 0; color: #0f172a; font-weight: 600; font-style: italic;">"${text}"</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                    <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                                </div>
+                            </div>
+                        </div>`
+                    });
+
+                    reviews.unshift({ name, rating, text, userId: auth.currentUser?.uid || "unknown" });
+                    reviewsContainer.innerHTML = '';
+                    currentReviewIndex = 0;
+                    window.loadMoreReviews();
+                    window.showToast("Review Submitted", "Thank you for your feedback!", "success");
+                    window.toggleReviewForm();
+                    e.target.reset();
+                } catch (err) {
+                    window.showToast("Error", "Could not submit review: " + err.message, "error");
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        updateAuthUI();
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | MD Care Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("lT18BxqA4wgJ-8RuJ"); })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#0d9488', secondary: '#1e293b' } } }
+        }
+    </script>
+    <style>body { font-family: 'Poppins', sans-serif; }</style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Admin Navbar -->
+    <nav class="bg-secondary shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
+                    <i class="fa-solid fa-house-medical text-2xl text-primary"></i>
+                    <span class="font-bold text-xl text-white">MD Care <span class="text-primary">Admin</span></span>
+                </a>
+                <div id="admin-controls" class="hidden flex items-center gap-4">
+                    <span class="text-slate-300 text-sm hidden sm:inline-block"><i class="fa-solid fa-user-shield mr-1"></i> thenish9997@gmail.com</span>
+                    <button onclick="adminLogout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div id="admin-login-section" class="flex-grow flex items-center justify-center pt-16">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-4 border-t-4 border-primary">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-secondary">Admin Login</h2>
+                <p class="text-slate-500 text-sm mt-1">Authorized personnel only</p>
+            </div>
+            <form id="admin-login-form" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Admin Email</label>
+                    <input type="email" id="admin-email" value="thenish9997@gmail.com" readonly class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-slate-50 text-slate-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <input type="password" id="admin-pass" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none transition" placeholder="Enter admin password">
+                </div>
+                <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition shadow-lg mt-2">
+                    Secure Login <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="admin-dashboard-section" class="hidden flex-grow pt-24 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- All Bookings Table -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 bg-slate-50">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-secondary flex items-center flex-wrap gap-2">
+                                <span><i class="fa-solid fa-list-check text-primary mr-2"></i> All Bookings</span>
+                                <div class="flex gap-2 ml-2">
+                                    <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-1 rounded border border-slate-200">Total: <span id="bookings-count">0</span></span>
+                                    <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2 py-1 rounded border border-teal-200">Confirmed: <span id="confirmed-count">0</span></span>
+                                    <span class="bg-yellow-50 text-yellow-700 text-xs font-bold px-2 py-1 rounded border border-yellow-200">Pending: <span id="pending-count">0</span></span>
+                                </div>
+                            </h2>
+                            <div class="flex gap-3">
+                                <button id="bulk-delete-btn" onclick="deleteSelectedAppointments()" class="hidden text-sm font-bold text-red-500 hover:text-red-700 transition bg-red-50 px-3 py-1.5 rounded-lg border border-red-100"><i class="fa-solid fa-trash-can mr-1"></i> Delete Selected</button>
+                                <button onclick="exportToExcel()" class="text-sm font-bold text-slate-500 hover:text-secondary transition"><i class="fa-solid fa-file-excel mr-1 text-green-600"></i> Export Excel</button>
+                                <button onclick="clearFilters()" class="text-sm font-bold text-slate-500 hover:text-secondary transition"><i class="fa-solid fa-filter-circle-xmark mr-1"></i> Clear Filters</button>
+                                <button onclick="loadAppointments()" class="text-sm font-bold text-primary hover:text-teal-700 transition"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
+                                <input type="text" id="filter-search" placeholder="Search Ref, Patient, Doctor..." class="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                            </div>
+                            <select id="filter-dept" class="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Departments</option>
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Orthopedics">Orthopedics</option>
+                                <option value="Pediatrics">Pediatrics</option>
+                                <option value="Oncology">Oncology</option>
+                                <option value="Dermatology">Dermatology</option>
+                                <option value="Ophthalmology">Ophthalmology</option>
+                                <option value="Psychiatry">Psychiatry</option>
+                            </select>
+                            <select id="filter-doc" class="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Doctors</option>
+                            </select>
+                            <input type="date" id="filter-date" class="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white" title="Filter by Date">
+                            <select id="filter-status" class="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="Expired">Expired</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="overflow-auto max-h-[600px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 z-20 shadow-sm">
+                                <tr class="bg-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-bold border-b w-12 text-center"><input type="checkbox" id="select-all-appointments" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" onchange="toggleAllAppointments(this)"></th>
+                                    <th class="p-4 font-bold border-b">Patient Info</th>
+                                    <th class="p-4 font-bold border-b">Doctor & Dept</th>
+                                    <th class="p-4 font-bold border-b">Schedule</th>
+                                    <th class="p-4 font-bold border-b text-center">Status</th>
+                                    <th class="p-4 font-bold border-b text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-appointments-list" class="text-sm text-slate-700 divide-y divide-slate-100">
+                                <tr><td colspan="6" class="p-8 text-center text-slate-400">Loading appointments...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            <!-- Add New Booking (Admin End) -->
+            <div class="lg:col-span-3 w-full max-w-4xl mx-auto mt-4">
+                <button onclick="document.getElementById('admin-booking-wrapper').classList.toggle('hidden')" class="w-full bg-primary text-white font-bold text-lg py-4 rounded-xl shadow-md hover:bg-teal-700 transition flex items-center justify-center gap-2 animate-glow-pulse">
+                    <i class="fa-solid fa-calendar-plus"></i> Book an Appointment
+                </button>
+                <div id="admin-booking-wrapper" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-4 hidden transition-all">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h3 class="font-bold text-secondary text-lg"><i class="fa-solid fa-pen-to-square text-primary mr-2"></i> Booking Details</h3>
+                        <button type="button" onclick="document.getElementById('admin-booking-wrapper').classList.add('hidden')" class="text-slate-400 hover:text-red-500 transition text-xl"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <form id="admin-booking-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Patient Name</label>
+                                <input type="text" id="add-name" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Phone Number</label>
+                                <input type="tel" id="add-phone" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                                <div id="admin-phone-error" class="text-xs font-bold mt-1 text-red-500 hidden"><i class="fa-solid fa-circle-xmark mr-1"></i> Must be exactly 10 digits</div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Department</label>
+                                <select id="department-select" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                    <option value="" disabled selected>Select Dept</option>
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Orthopedics">Orthopedics</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                    <option value="Oncology">Oncology</option>
+                                    <option value="Dermatology">Dermatology</option>
+                                    <option value="Ophthalmology">Ophthalmology</option>
+                                    <option value="Psychiatry">Psychiatry</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Doctor</label>
+                                <select id="doctor-select" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white disabled:bg-gray-100" disabled>
+                                    <option value="" disabled selected>Select Doctor</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Date</label>
+                                <input type="date" id="add-date" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Time</label>
+                                <select id="add-time" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                    <option value="" disabled selected>Time</option>
+                                    <option value="09:00 AM">09:00 AM</option><option value="09:30 AM">09:30 AM</option>
+                                    <option value="10:00 AM">10:00 AM</option><option value="10:30 AM">10:30 AM</option>
+                                    <option value="11:00 AM">11:00 AM</option><option value="11:30 AM">11:30 AM</option>
+                                    <option value="12:00 PM">12:00 PM</option><option value="12:30 PM">12:30 PM</option>
+                                    <option value="01:00 PM">01:00 PM</option><option value="01:30 PM">01:30 PM</option>
+                                    <option value="02:00 PM">02:00 PM</option><option value="02:30 PM">02:30 PM</option>
+                                    <option value="03:00 PM">03:00 PM</option><option value="03:30 PM">03:30 PM</option>
+                                    <option value="04:00 PM">04:00 PM</option><option value="04:30 PM">04:30 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="admin-availability-message" class="text-xs font-bold mt-1"></div>
+                        <button type="submit" class="w-full bg-primary text-white font-bold py-2.5 rounded-lg hover:bg-teal-700 transition shadow text-sm mt-2">
+                            Add Booking
+                        </button>
+                    </form>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Reviews Management Section -->
+            <div class="lg:col-span-3 mt-4">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 bg-slate-50 flex flex-wrap gap-4 justify-between items-center">
+                        <h2 class="text-xl font-bold text-secondary flex items-center gap-2">
+                            <i class="fa-solid fa-star text-yellow-400 mr-2"></i> Patient Reviews
+                            <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-1 rounded border border-slate-200 ml-2">Total: <span id="reviews-count">0</span></span>
+                        </h2>
+                        <div class="flex items-center gap-3">
+                            <button id="bulk-delete-reviews-btn" onclick="deleteSelectedReviews()" class="hidden text-sm font-bold text-red-500 hover:text-red-700 transition bg-red-50 px-3 py-1.5 rounded-lg border border-red-100"><i class="fa-solid fa-trash-can mr-1"></i> Delete Selected</button>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
+                                <input type="text" id="filter-review-search" oninput="renderAdminReviews()" placeholder="Search reviews..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[160px]">
+                            </div>
+                            <select id="filter-review-rating" onchange="renderAdminReviews()" class="px-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Ratings</option>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                            </select>
+                            <button onclick="clearReviewFilters()" class="text-sm font-bold text-slate-500 hover:text-secondary transition"><i class="fa-solid fa-filter-circle-xmark mr-1"></i> Clear Filters</button>
+                            <button onclick="loadAdminReviews()" class="text-sm font-bold text-primary hover:text-teal-700 transition"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="overflow-auto max-h-[1000px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 z-20 shadow-sm">
+                                <tr class="bg-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-bold border-b w-12 text-center"><input type="checkbox" id="select-all-reviews" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" onchange="toggleAllReviews(this)"></th>
+                                    <th class="p-4 font-bold border-b w-1/4">Patient Info</th>
+                                    <th class="p-4 font-bold border-b w-1/6">Rating</th>
+                                    <th class="p-4 font-bold border-b w-1/2">Review</th>
+                                    <th class="p-4 font-bold border-b text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-reviews-list" class="text-sm text-slate-700 divide-y divide-slate-100">
+                                <tr><td colspan="5" class="p-8 text-center text-slate-400">Loading reviews...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Success Modal -->
+    <div id="admin-success-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm relative text-center">
+            <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center text-primary text-3xl mx-auto mb-4">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-xl font-bold text-secondary mb-2">Booking Added!</h2>
+            <p class="text-slate-500 text-sm mb-6">The new booking was successfully added to the database.</p>
+            <button onclick="document.getElementById('admin-success-modal').classList.add('hidden')" class="w-full bg-primary text-white font-bold py-2.5 rounded-lg hover:bg-teal-700 transition shadow-sm">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm relative text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 text-3xl mx-auto mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h2 id="confirm-modal-title" class="text-xl font-bold text-secondary mb-2">Are you sure?</h2>
+            <p id="confirm-modal-message" class="text-slate-500 text-sm mb-6">This action cannot be undone.</p>
+            <div class="flex gap-3">
+                <button onclick="document.getElementById('confirm-modal').classList.add('hidden')" class="w-full bg-slate-100 text-slate-600 font-bold py-2.5 rounded-lg hover:bg-slate-200 transition shadow-sm">
+                    Cancel
+                </button>
+                <button id="confirm-modal-btn" class="w-full bg-red-500 text-white font-bold py-2.5 rounded-lg hover:bg-red-600 transition shadow-sm">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div id="reply-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg relative">
+            <button onclick="document.getElementById('reply-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-xl font-bold text-secondary mb-4"><i class="fa-solid fa-reply text-primary mr-2"></i> Reply to Review</h2>
+            <textarea id="reply-text" rows="4" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none text-sm mb-4" placeholder="Type your response here. To remove a response, leave this blank."></textarea>
+            <input type="hidden" id="reply-review-id">
+            <div class="flex justify-end gap-3">
+                <button onclick="document.getElementById('reply-modal').classList.add('hidden')" class="px-4 py-2 text-slate-500 hover:bg-slate-200 rounded-lg text-sm font-bold transition">Cancel</button>
+                <button onclick="submitReviewReply()" id="submit-reply-btn" class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition shadow">Submit Reply</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy, where, runTransaction, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
+            authDomain: "md-care-hospital.firebaseapp.com",
+            projectId: "md-care-hospital",
+            storageBucket: "md-care-hospital.firebasestorage.app",
+            messagingSenderId: "214966558089",
+            appId: "1:214966558089:web:d49f400adb427614089558",
+            measurementId: "G-K3S90QH9LT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginSection = document.getElementById('admin-login-section');
+        const dashboardSection = document.getElementById('admin-dashboard-section');
+        const adminControls = document.getElementById('admin-controls');
+        const tbody = document.getElementById('admin-appointments-list');
+
+        // Beautiful Toast Notification System
+        window.showToast = function(title, message, type = 'success') {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
+                document.body.appendChild(container);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 ${type === 'success' ? 'border-teal-500' : 'border-red-500'} rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+            
+            const icon = `<div class="w-10 h-10 rounded-full ${type === 'success' ? 'bg-teal-50 text-teal-500' : 'bg-red-50 text-red-500'} flex items-center justify-center flex-shrink-0 text-lg">
+                <i class="fa-solid ${type === 'success' ? 'fa-check' : 'fa-xmark'}"></i>
+            </div>`;
+                
+            toast.innerHTML = `
+                ${icon}
+                <div class="flex-grow pt-0.5">
+                    <h4 class="font-bold text-slate-800 text-sm">${title}</h4>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>
+            `;
+            
+            container.appendChild(toast);
+            
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+        };
+
+    window.showConfirmModal = function(title, message, confirmCallback) {
+        document.getElementById('confirm-modal-title').textContent = title;
+        document.getElementById('confirm-modal-message').textContent = message;
+        const confirmBtn = document.getElementById('confirm-modal-btn');
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+        newBtn.addEventListener('click', () => {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            confirmCallback();
+        });
+        document.getElementById('confirm-modal').classList.remove('hidden');
+    };
+
+    let isLoggingOut = false;
+
+        // Auth Listener
+        onAuthStateChanged(auth, (user) => {
+            if (isLoggingOut) return;
+            if (user && user.email === 'thenish9997@gmail.com') {
+                loginSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+                adminControls.classList.remove('hidden');
+                loadAppointments();
+                loadAdminReviews();
+            } else {
+                if(user) { signOut(auth); window.showToast("Unauthorized Access", "Admin only. You have been automatically signed out.", "error"); }
+                loginSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+                adminControls.classList.add('hidden');
+            }
+        });
+
+        // Admin Login
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                // If not admin, the onAuthStateChanged will kick them out
+            } catch (err) {
+                window.showToast("Login Failed", "Incorrect Admin Email or Password.", "error");
+            }
+        });
+
+        window.adminLogout = function() {
+            isLoggingOut = true;
+            signOut(auth).then(() => {
+                window.location.href = 'index.html';
+            });
+        };
+
+        let allAppointmentsData = [];
+        let currentFilteredData = [];
+
+        // Fetch Appointments
+        window.loadAppointments = async function() {
+            tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching...</td></tr>';
+            try {
+                const q = query(collection(db, "appointments"), orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                
+                allAppointmentsData = [];
+                if (snapshot.empty) {
+                    renderAdminAppointments();
+                    return;
+                }
+
+                snapshot.forEach((document) => {
+                    const data = document.data();
+                    const id = document.id;
+                    
+                    // Generate 12-digit mathematical reference from Date and Time
+                    let refNumber = id;
+                    if (data.date && data.time) {
+                        try {
+                            const dStr = data.date.replace(/-/g, ''); // YYYYMMDD
+                            const [tStr, mod] = data.time.split(' ');
+                            let [hr, mn] = tStr.split(':');
+                            let hrNum = parseInt(hr, 10);
+                            if (mod === 'PM' && hrNum !== 12) hrNum += 12;
+                            if (mod === 'AM' && hrNum === 12) hrNum = 0;
+                            refNumber = dStr + hrNum.toString().padStart(2, '0') + mn;
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+
+                    let displayStatus = data.status || "Pending";
+                    if (data.date && data.time && displayStatus !== 'Cancelled' && displayStatus !== 'Expired') {
+                        try {
+                            const [timeStr, modifier] = data.time.split(' ');
+                            let [hours, minutes] = timeStr.split(':');
+                            hours = parseInt(hours, 10);
+                            if (modifier === 'PM' && hours !== 12) hours += 12;
+                            if (modifier === 'AM' && hours === 12) hours = 0;
+                            
+                            const [year, month, day] = data.date.split('-');
+                            const aptDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                            aptDate.setHours(hours, parseInt(minutes, 10), 0, 0);
+                            
+                            if (aptDate < now) {
+                                displayStatus = "Expired";
+                                updateDoc(doc(db, "appointments", id), { status: "Expired" }).then(() => {
+                                    if (data.email) {
+                                        emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                                            to_email: data.email,
+                                            subject: "Appointment Expired - MD Care Hospital",
+                                            html_message: `
+                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                                <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #64748b;">
+                                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #94a3b8;">Hospital</span></h1>
+                                                    </div>
+                                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                                        <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
+                                                        <div style="background-color: #f8fafc; border-left: 4px solid #94a3b8; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                                            <h3 style="margin: 0 0 5px 0; color: #475569;">Appointment Expired</h3>
+                                                            <p style="margin: 0; color: #64748b; font-size: 16px;">The scheduled time for your appointment has passed.</p>
+                                                        </div>
+                                                        <p>Your appointment on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong> is now marked as <span style="display: inline-block; background-color: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 16px; border: 1px solid #e2e8f0;">Expired</span>.</p>
+                                                        <p>If you missed this appointment and still need medical assistance, please book a new slot through your patient dashboard.</p>
+                                                    </div>
+                                                    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+                                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Book New Appointment</a>
+                                                    </div>
+                                                    <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                                    </div>
+                                                </div>
+                                            </div>`
+                                        });
+                                    }
+                                }).catch(e => console.error("Auto-expire update failed:", e));
+                            } else if (displayStatus === 'Confirmed' && !data.reminderSent && (aptDate - now) <= 6 * 60 * 60 * 1000) {
+                                updateDoc(doc(db, "appointments", id), { reminderSent: true }).then(() => {
+                                    if (data.email) {
+                                        emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                                            to_email: data.email,
+                                            subject: "Upcoming Appointment Reminder - MD Care",
+                                            html_message: `
+                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                                <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0ea5e9;">
+                                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #38bdf8;">Hospital</span></h1>
+                                                    </div>
+                                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                                        <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
+                                                        <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                                            <h3 style="margin: 0 0 5px 0; color: #0369a1;">Appointment Reminder</h3>
+                                                            <p style="margin: 0; color: #0c4a6e; font-size: 16px;">This is a friendly reminder for your upcoming appointment in less than 6 hours.</p>
+                                                        </div>
+                                                        <p>Your appointment is scheduled on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong>.</p>
+                                                        <p>Please ensure you arrive at least 15 minutes early. If you need to cancel or reschedule, please do so from your patient dashboard or contact the front desk.</p>
+                                                    </div>
+                                                    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+                                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">View Dashboard</a>
+                                                    </div>
+                                                    <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                                    </div>
+                                                </div>
+                                            </div>`
+                                        });
+                                    }
+                                }).catch(e => console.error("Auto-reminder update failed:", e));
+                                data.reminderSent = true;
+                            }
+                        } catch(e) {}
+                    }
+                    data.displayStatus = displayStatus;
+
+                    data.id = id;
+                    data.refNumber = refNumber;
+                    allAppointmentsData.push(data);
+                });
+
+                renderAdminAppointments();
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-medium">Error loading data: ${err.message}<br><span class="text-sm font-normal text-slate-500 mt-2 block">If the error says "Missing or insufficient permissions", your Firestore Rules have not updated yet.</span></td></tr>`;
+                console.error(err);
+            }
+        };
+
+        window.renderAdminAppointments = function() {
+            const searchText = document.getElementById('filter-search').value.toLowerCase();
+            const filterDept = document.getElementById('filter-dept').value;
+            const filterDoc = document.getElementById('filter-doc').value;
+            const filterDate = document.getElementById('filter-date').value;
+            const filterStatus = document.getElementById('filter-status').value;
+
+            const filtered = allAppointmentsData.filter(data => {
+                const matchSearch = !searchText || 
+                    (data.refNumber && data.refNumber.toLowerCase().includes(searchText)) ||
+                    (data.patientName && data.patientName.toLowerCase().includes(searchText)) ||
+                    (data.doctor && data.doctor.toLowerCase().includes(searchText));
+                
+                const matchDept = !filterDept || data.department === filterDept;
+                const matchDoc = !filterDoc || data.doctor === filterDoc;
+                const matchDate = !filterDate || data.date === filterDate;
+                const matchStatus = !filterStatus || data.displayStatus === filterStatus;
+
+                return matchSearch && matchDept && matchDoc && matchDate && matchStatus;
+            });
+
+            currentFilteredData = filtered;
+
+            document.getElementById('bookings-count').textContent = filtered.length;
+            document.getElementById('confirmed-count').textContent = filtered.filter(d => d.displayStatus === 'Confirmed').length;
+            document.getElementById('pending-count').textContent = filtered.filter(d => d.displayStatus === 'Pending').length;
+
+            tbody.innerHTML = '';
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">No bookings found matching your criteria.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(data => {
+                const currentStatus = data.displayStatus;
+                let statusColor = currentStatus === 'Pending' ? 'text-yellow-600 bg-yellow-50 border-yellow-200' : (currentStatus === 'Confirmed' ? 'text-teal-600 bg-teal-50 border-teal-200' : (currentStatus === 'Cancelled' ? 'text-red-600 bg-red-50 border-red-200' : 'text-slate-600 bg-slate-100 border-slate-300'));
+                
+                let statusSelect = currentStatus === 'Expired' ? 
+                    `<span class="${statusColor} text-xs font-bold px-2 py-1.5 rounded inline-block text-center border">Expired</span>` :
+                    `<select onchange="updateBookingStatus('${data.id}', this.value, '${data.email || ''}', '${data.patientName || 'Patient'}')" class="${statusColor} text-xs font-bold px-2 py-1 rounded outline-none cursor-pointer border hover:border-gray-300 transition">
+                        <option value="Pending" ${currentStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <option value="Confirmed" ${currentStatus === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="Cancelled" ${currentStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>`;
+
+            let verifiedBadge = data.emailVerified ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-600 text-[10px] font-bold uppercase tracking-wider border border-teal-100 shadow-sm" title="Verified E-mail"><i class="fa-solid fa-circle-check"></i></span>` : '';
+
+                tbody.innerHTML += `
+                <tr class="even:bg-slate-100 hover:bg-slate-200 transition">
+                        <td class="px-4 py-2.5 text-center">
+                            <input type="checkbox" class="appointment-checkbox w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" value="${data.id}" onchange="updateBulkDeleteBtn()">
+                        </td>
+                        <td class="px-4 py-2.5">
+                        <p class="font-bold text-secondary flex items-center flex-wrap gap-1.5">${data.patientName || 'N/A'} ${verifiedBadge}</p>
+                        ${data.email ? `<p class="text-xs text-slate-500 mt-1 truncate max-w-[160px]" title="${data.email}"><i class="fa-solid fa-envelope mr-1 w-3 text-center"></i> ${data.email}</p>` : ''}
+                        <p class="text-xs text-slate-500 mt-0.5"><i class="fa-solid fa-phone mr-1 w-3 text-center"></i> ${data.phone || 'N/A'}</p>
+                        <p class="text-xs text-slate-500 mt-1"><span class="font-bold text-slate-600">Ref:</span> <span class="font-mono text-primary bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">${data.refNumber}</span></p>
+                        </td>
+                        <td class="px-4 py-2.5">
+                            <p class="font-bold text-primary">${data.doctor}</p>
+                            <p class="text-xs text-slate-500 bg-slate-200 inline-block px-2 py-0.5 rounded mt-1">${data.department}</p>
+                        </td>
+                        <td class="px-4 py-2.5">
+                            <p class="font-medium text-slate-700"><i class="fa-regular fa-calendar text-primary mr-1"></i> ${data.date}</p>
+                            <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-clock text-primary mr-1"></i> ${data.time}</p>
+                        </td>
+                        <td class="px-4 py-2.5 text-center">
+                            ${statusSelect}
+                        </td>
+                        <td class="px-4 py-2.5 text-center">
+                            <button onclick="deleteAppointment('${data.id}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition" title="Delete Booking">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Reset bulk delete UI state
+            document.getElementById('select-all-appointments').checked = false;
+            window.updateBulkDeleteBtn();
+        };
+
+        window.clearFilters = function() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-dept').value = '';
+            document.getElementById('filter-date').value = '';
+            document.getElementById('filter-status').value = '';
+            
+            const filterDocSelect = document.getElementById('filter-doc');
+            filterDocSelect.innerHTML = '<option value="">All Doctors</option>';
+            doctorsList.forEach(doc => {
+                filterDocSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
+            });
+            filterDocSelect.value = '';
+
+            renderAdminAppointments();
+        };
+
+        // Export to Excel
+        window.exportToExcel = function() {
+            if (!currentFilteredData || currentFilteredData.length === 0) {
+                window.showToast("Export Failed", "No data available to export right now.", "error");
+                return;
+            }
+
+            const exportData = currentFilteredData.map(data => ({
+                "Reference": data.refNumber || '',
+                "Patient Name": data.patientName || 'N/A',
+                "Phone": data.phone || 'N/A',
+                "Email": data.email || 'N/A',
+                "Department": data.department || '',
+                "Doctor": data.doctor || '',
+                "Date": data.date || '',
+                "Time": data.time || '',
+                "Status": data.displayStatus || 'Pending',
+                "Message": data.message || ''
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Auto-size columns to fit content
+            const colWidths = Object.keys(exportData[0]).map(key => {
+                let max = key.length;
+                exportData.forEach(row => {
+                    const valStr = row[key] ? String(row[key]) : '';
+                    if (valStr.length > max) max = valStr.length;
+                });
+                return { wch: max + 2 }; // Added +2 for a little extra padding
+            });
+            ws['!cols'] = colWidths;
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Bookings");
+            XLSX.writeFile(wb, `MD_Care_Bookings_${new Date().toISOString().slice(0,10)}.xlsx`);
+        };
+
+        // Update Booking Status
+        window.updateBookingStatus = async function(id, newStatus, patientEmail, patientName) {
+            try {
+                await updateDoc(doc(db, "appointments", id), { status: newStatus });
+                loadAppointments(); // Refresh to update the colors
+                
+                // Notify Patient via email
+                if (patientEmail) {
+                    await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                        to_email: patientEmail,
+                        subject: `Appointment ${newStatus} - MD Care Hospital`,
+                        html_message: `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #14b8a6;">Hospital</span></h1>
+                                </div>
+                                <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                    <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${patientName}</strong>,</p>
+                                    <p>We are writing to inform you that your appointment status at MD Care Hospital has been updated to: <span style="display: inline-block; background-color: #f0fdfa; color: #0d9488; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 16px; margin-left: 5px; border: 1px solid #ccfbf1;">${newStatus}</span></p>
+                                    <p>If you have any questions or need to reschedule, please contact our front desk at your earliest convenience.</p>
+                                    <p style="margin-bottom: 0;">Thank you for choosing MD Care Hospital for your healthcare needs.</p>
+                                </div>
+                                <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+                                    <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                                </div>
+                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                    <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar<br>Phone: 8091919997 | Email: thenish9997@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>`
+                    });
+                }
+            } catch (err) {
+                window.showToast("Update Failed", "Could not update the status: " + err.message, "error");
+            }
+        };
+
+        // Bulk Delete Selection
+        window.toggleAllAppointments = function(source) {
+            const checkboxes = document.querySelectorAll('.appointment-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+            window.updateBulkDeleteBtn();
+        };
+
+        window.updateBulkDeleteBtn = function() {
+            const checkboxes = document.querySelectorAll('.appointment-checkbox:checked');
+            const btn = document.getElementById('bulk-delete-btn');
+            if (checkboxes.length > 0) {
+                btn.classList.remove('hidden');
+                btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected (${checkboxes.length})`;
+            } else {
+                btn.classList.add('hidden');
+            }
+            
+            const allCheckboxes = document.querySelectorAll('.appointment-checkbox');
+            const selectAllCb = document.getElementById('select-all-appointments');
+            if (allCheckboxes.length > 0) {
+                selectAllCb.checked = allCheckboxes.length === checkboxes.length;
+            } else {
+                selectAllCb.checked = false;
+            }
+        };
+
+        window.deleteSelectedAppointments = function() {
+            const checkboxes = document.querySelectorAll('.appointment-checkbox:checked');
+            if (checkboxes.length === 0) return;
+            
+            window.showConfirmModal(
+                "Delete Selected Bookings?",
+                `Are you sure you want to completely delete ${checkboxes.length} booking(s)? This action cannot be undone.`,
+                async () => {
+                    try {
+                        const btn = document.getElementById('bulk-delete-btn');
+                        const originalHtml = btn.innerHTML;
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Deleting...';
+                        btn.disabled = true;
+                        
+                        const deletePromises = Array.from(checkboxes).map(cb => deleteDoc(doc(db, "appointments", cb.value)));
+                        await Promise.all(deletePromises);
+                        
+                        window.showToast("Deleted", `${checkboxes.length} booking(s) deleted successfully.`, "success");
+                        loadAppointments(); // Refresh
+                    } catch (err) {
+                        window.showToast("Delete Failed", "Could not delete some bookings: " + err.message, "error");
+                    } finally {
+                        const btn = document.getElementById('bulk-delete-btn');
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected`;
+                        }
+                    }
+                }
+            );
+        };
+
+        // Delete Appointment
+    window.deleteAppointment = function(id) {
+        window.showConfirmModal(
+            "Delete Booking?",
+            "Are you sure you want to completely delete this booking? This action cannot be undone.",
+            async () => {
+                try {
+                    await deleteDoc(doc(db, "appointments", id));
+                    window.showToast("Deleted", "Booking deleted successfully.", "success");
+                    loadAppointments(); // Refresh
+                } catch (err) {
+                    window.showToast("Delete Failed", "Could not delete booking: " + err.message, "error");
+                }
+            }
+        );
+        };
+
+        // Setup Doctor Dropdown mapping (Reused from frontend)
+        const doctorsList = [
+            { name: "Dr. Rajat Sharma", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
+            { name: "Dr. Anil Kapoor", dept: "Neurology" }, { name: "Dr. Priya Singh", dept: "Neurology" }, { name: "Dr. Rohan Mehta", dept: "Neurology" },
+            { name: "Dr. Vikram Das", dept: "Orthopedics" }, { name: "Dr. Sana Khan", dept: "Orthopedics" }, { name: "Dr. Aditya Rao", dept: "Orthopedics" },
+            { name: "Dr. Amit Patel", dept: "Pediatrics" }, { name: "Dr. Kavita Rao", dept: "Pediatrics" }, { name: "Dr. Nidhi Sharma", dept: "Pediatrics" },
+            { name: "Dr. Sameer Reddy", dept: "Oncology" }, { name: "Dr. Anjali Desai", dept: "Oncology" }, { name: "Dr. Kabir Jain", dept: "Oncology" },
+            { name: "Dr. Varun Gupta", dept: "Dermatology" }, { name: "Dr. Pooja Iyer", dept: "Dermatology" }, { name: "Dr. Akash Singh", dept: "Dermatology" },
+            { name: "Dr. Tarun Kumar", dept: "Ophthalmology" }, { name: "Dr. Sneha Nair", dept: "Ophthalmology" }, { name: "Dr. Rahul Bose", dept: "Ophthalmology" },
+            { name: "Dr. Kabir Singh", dept: "Psychiatry" }, { name: "Dr. Aisha Ali", dept: "Psychiatry" }, { name: "Dr. Manish Sen", dept: "Psychiatry" }
+        ];
+
+        const deptSelect = document.getElementById('department-select');
+        const docSelect = document.getElementById('doctor-select');
+
+        deptSelect.addEventListener('change', function() {
+            const dept = this.value;
+            docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
+            const filteredDocs = doctorsList.filter(d => d.dept === dept);
+            if (filteredDocs.length > 0) {
+                docSelect.disabled = false;
+                filteredDocs.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.name; option.textContent = doc.name;
+                    docSelect.appendChild(option);
+                });
+            } else { docSelect.disabled = true; }
+            checkAdminAvailability();
+        });
+
+        // Setup Filter Dropdowns and Search Events
+        const filterDocSelect = document.getElementById('filter-doc');
+        doctorsList.forEach(doc => {
+            filterDocSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
+        });
+
+        document.getElementById('filter-search').addEventListener('input', window.renderAdminAppointments);
+        document.getElementById('filter-date').addEventListener('change', window.renderAdminAppointments);
+        document.getElementById('filter-status').addEventListener('change', window.renderAdminAppointments);
+        filterDocSelect.addEventListener('change', window.renderAdminAppointments);
+        document.getElementById('filter-dept').addEventListener('change', (e) => {
+            const dept = e.target.value;
+            filterDocSelect.innerHTML = '<option value="">All Doctors</option>';
+            const docsToPopulate = dept ? doctorsList.filter(d => d.dept === dept) : doctorsList;
+            docsToPopulate.forEach(doc => {
+                filterDocSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
+            });
+            window.renderAdminAppointments();
+        });
+
+        const adminDateSel = document.getElementById('add-date');
+        const adminTimeSel = document.getElementById('add-time');
+        const adminAvlMsg = document.getElementById('admin-availability-message');
+        const adminSubBtn = document.querySelector('#admin-booking-form button[type="submit"]');
+
+        async function checkAdminAvailability() {
+            if(!adminDateSel.value || !docSelect.value) {
+                adminAvlMsg.innerHTML = "";
+                return;
+            }
+            
+            // Reset time options
+            Array.from(adminTimeSel.options).forEach(opt => {
+                if(opt.value !== "") {
+                    opt.disabled = false;
+                    opt.textContent = opt.value;
+                }
+            });
+
+            const d = new Date(adminDateSel.value);
+            if(d.getDay() === 0) {
+                adminAvlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> Sunday is closed.</span>";
+                adminSubBtn.disabled = true; adminSubBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                adminTimeSel.disabled = true;
+                return;
+            } else {
+                adminTimeSel.disabled = false;
+            }
+
+            adminAvlMsg.innerHTML = "<span class='text-slate-500'><i class='fa-solid fa-spinner fa-spin mr-1'></i> Checking slots...</span>";
+            adminSubBtn.disabled = true; adminSubBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const q = query(collection(db, "appointments"), where("date", "==", adminDateSel.value));
+                const snapshot = await getDocs(q);
+                
+                const bookedTimes = [];
+                snapshot.forEach(documentSnapshot => {
+                    const data = documentSnapshot.data();
+                    if (data.doctor === docSelect.value && data.status !== 'Cancelled') {
+                        bookedTimes.push(data.time);
+                    }
+                });
+
+                Array.from(adminTimeSel.options).forEach(opt => {
+                    if(bookedTimes.includes(opt.value)) {
+                        opt.disabled = true;
+                        opt.textContent = opt.value + " (Booked)";
+                    }
+                });
+
+                if(bookedTimes.includes(adminTimeSel.value)) {
+                    adminTimeSel.value = "";
+                }
+
+                if(adminTimeSel.value) {
+                    adminAvlMsg.innerHTML = "<span class='text-primary'><i class='fa-solid fa-circle-check mr-1'></i> Slot available!</span>";
+                    adminSubBtn.disabled = false; adminSubBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    adminAvlMsg.innerHTML = "<span class='text-slate-500'><i class='fa-solid fa-circle-info mr-1'></i> Please select an available time.</span>";
+                    adminSubBtn.disabled = true; adminSubBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            } catch (error) {
+                console.error("Error checking availability:", error);
+                if(adminTimeSel.value) {
+                    adminAvlMsg.innerHTML = "<span class='text-primary'><i class='fa-solid fa-circle-check mr-1'></i> Ready to book!</span>";
+                    adminSubBtn.disabled = false; adminSubBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    adminAvlMsg.innerHTML = "";
+                }
+            }
+        }
+
+        adminDateSel.addEventListener('change', checkAdminAvailability);
+        adminTimeSel.addEventListener('change', checkAdminAvailability);
+        docSelect.addEventListener('change', checkAdminAvailability);
+
+        // Add New Booking via Admin
+        document.getElementById('admin-booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+            
+            const slotId = `${document.getElementById('add-date').value}_${docSelect.value}_${document.getElementById('add-time').value}`.replace(/[^a-zA-Z0-9]/g, '_');
+            const appointmentRef = doc(db, "appointments", slotId);
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const docSnap = await transaction.get(appointmentRef);
+                    if (docSnap.exists() && docSnap.data().status !== 'Cancelled') {
+                        throw new Error("SLOT_ALREADY_BOOKED");
+                    }
+                    
+                    transaction.set(appointmentRef, {
+                        userId: "admin_created_record",
+                        patientName: document.getElementById('add-name').value,
+                        phone: document.getElementById('add-phone').value,
+                        department: deptSelect.value,
+                        doctor: docSelect.value,
+                        date: document.getElementById('add-date').value,
+                        time: document.getElementById('add-time').value,
+                        message: "Added manually by Admin",
+                        status: "Confirmed",
+                        createdAt: serverTimestamp()
+                    });
+                });
+                e.target.reset();
+                docSelect.disabled = true;
+                docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
+                adminAvlMsg.innerHTML = '';
+                document.getElementById('admin-booking-wrapper').classList.add('hidden');
+                loadAppointments(); // Refresh table
+                document.getElementById('admin-success-modal').classList.remove('hidden');
+            } catch (err) {
+                if (err.message === "SLOT_ALREADY_BOOKED") {
+                    window.showToast("Slot Unavailable", "Sorry, this slot was just booked. Please select a different time.", "error");
+                    checkAdminAvailability();
+                } else {
+                    window.showToast("Booking Error", "Could not add booking: " + err.message, "error");
+                }
+            } finally {
+                btn.innerHTML = 'Add Booking';
+                btn.disabled = false;
+            }
+        });
+
+        // Admin Phone Validation
+        const adminPhoneInput = document.getElementById('add-phone');
+        const adminPhoneError = document.getElementById('admin-phone-error');
+        adminPhoneInput.addEventListener('input', function() {
+            if (this.value && !/^[0-9]{10}$/.test(this.value)) {
+                adminPhoneError.classList.remove('hidden');
+            } else {
+                adminPhoneError.classList.add('hidden');
+            }
+        });
+
+    let allReviewsData = [];
+
+    // Fetch and Manage Reviews
+    window.loadAdminReviews = async function() {
+        const reviewsTbody = document.getElementById('admin-reviews-list');
+        reviewsTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching reviews...</td></tr>';
+        try {
+            const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+            const snapshot = await getDocs(q);
+            
+            allReviewsData = [];
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                data.id = docSnap.id;
+                allReviewsData.push(data);
+            });
+
+            renderAdminReviews();
+        } catch (err) {
+            reviewsTbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-medium">Error loading reviews: ${err.message}</td></tr>`;
+            console.error(err);
+        }
+    };
+
+    window.renderAdminReviews = function() {
+        const filterRating = document.getElementById('filter-review-rating').value;
+        const filterSearch = document.getElementById('filter-review-search').value.toLowerCase();
+        const reviewsTbody = document.getElementById('admin-reviews-list');
+        
+        const filteredReviews = allReviewsData.filter(data => {
+            const matchRating = !filterRating || Math.floor(data.rating || 5) === parseInt(filterRating);
+            const matchSearch = !filterSearch || 
+                (data.name && data.name.toLowerCase().includes(filterSearch)) || 
+                (data.text && data.text.toLowerCase().includes(filterSearch));
+            
+            return matchRating && matchSearch;
+        });
+
+        document.getElementById('reviews-count').textContent = filteredReviews.length;
+
+        reviewsTbody.innerHTML = '';
+        if (filteredReviews.length === 0) {
+            reviewsTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400">No reviews found matching your criteria.</td></tr>';
+            return;
+        }
+
+        filteredReviews.forEach(data => {
+                let starsHtml = '';
+                const fullStars = Math.floor(data.rating || 5);
+                const halfStar = (data.rating || 5) % 1 !== 0;
+                for(let j=0; j<fullStars; j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+                if(halfStar) starsHtml += '<i class="fa-solid fa-star-half-stroke text-yellow-400"></i>';
+
+                let dateStr = 'Unknown Date';
+                if (data.createdAt) {
+                    const date = new Date(data.createdAt.toMillis ? data.createdAt.toMillis() : data.createdAt);
+                    if(!isNaN(date)) dateStr = date.toLocaleDateString();
+                }
+
+                let replyHtml = '';
+                if (data.adminReply) {
+                    replyHtml = `
+                        <div class="mt-3 bg-teal-50/80 p-3 rounded-lg border border-teal-200 text-sm shadow-sm border-l-4 border-l-primary">
+                            <div class="flex items-center gap-1.5 mb-1.5 text-primary font-bold text-xs uppercase tracking-wider"><i class="fa-solid fa-reply"></i> MD Care Response</div>
+                            <span class="text-slate-700 italic">"${data.adminReply}"</span>
+                        </div>
+                    `;
+                }
+
+                reviewsTbody.innerHTML += `
+                    <tr class="even:bg-slate-100 hover:bg-slate-200 transition">
+                        <td class="px-4 py-2.5 text-center">
+                            <input type="checkbox" class="review-checkbox w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" value="${data.id}" onchange="updateReviewBulkDeleteBtn()">
+                        </td>
+                        <td class="px-4 py-2.5">
+                        <p class="font-bold text-secondary flex items-center flex-wrap gap-1.5">${data.name || 'Anonymous'} ${data.userId && data.userId !== "unknown" ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-600 text-[10px] font-bold uppercase tracking-wider border border-teal-100 shadow-sm" title="Verified E-mail"><i class="fa-solid fa-circle-check"></i></span>` : ''}</p>
+                            <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i> ${dateStr}</p>
+                        </td>
+                        <td class="px-4 py-2.5">
+                            <div class="text-xs">${starsHtml}</div>
+                            <p class="text-xs font-bold text-slate-500 mt-1">${data.rating} / 5</p>
+                        </td>
+                        <td class="px-4 py-2.5">
+                            <p class="text-slate-600 text-sm italic">"${data.text || ''}"</p>
+                            ${replyHtml}
+                        </td>
+                        <td class="px-4 py-2.5 text-center space-x-1 whitespace-nowrap">
+                            <button onclick="openReplyModal('${data.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-md transition" title="Reply to Review">
+                                <i class="fa-solid fa-reply"></i>
+                            </button>
+                            <button onclick="deleteReview('${data.id}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition" title="Delete Review">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+        // Reset bulk delete UI state
+        document.getElementById('select-all-reviews').checked = false;
+        window.updateReviewBulkDeleteBtn();
+    };
+
+    window.clearReviewFilters = function() {
+        document.getElementById('filter-review-search').value = '';
+        document.getElementById('filter-review-rating').value = '';
+        renderAdminReviews();
+    };
+
+    window.openReplyModal = function(id) {
+        const review = allReviewsData.find(r => r.id === id);
+        document.getElementById('reply-review-id').value = id;
+        document.getElementById('reply-text').value = review.adminReply || '';
+        document.getElementById('reply-modal').classList.remove('hidden');
+    };
+
+    window.submitReviewReply = async function() {
+        const id = document.getElementById('reply-review-id').value;
+        const text = document.getElementById('reply-text').value.trim();
+        const btn = document.getElementById('submit-reply-btn');
+        
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        btn.disabled = true;
+
+        try {
+            await updateDoc(doc(db, "reviews", id), { adminReply: text });
+            
+            // If the admin actually wrote a reply, fetch the patient's email and notify them
+            const review = allReviewsData.find(r => r.id === id);
+            if (text !== '' && review && review.userId && review.userId !== "unknown") {
+                const userSnap = await getDoc(doc(db, "users", review.userId));
+                if (userSnap.exists()) {
+                    const patientEmail = userSnap.data().email;
+                    if (patientEmail) {
+                        await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                            to_email: patientEmail,
+                            subject: "MD Care Hospital - Reply to your review",
+                            html_message: `
+                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #14b8a6;">Hospital</span></h1>
+                                    </div>
+                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                        <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${review.name || 'Patient'}</strong>,</p>
+                                        <p>An administrator has responded to your recent review on the MD Care Hospital portal.</p>
+                                        <div style="background-color: #f8fafc; border-left: 4px solid #cbd5e1; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; font-style: italic;">
+                                            "${review.text || ''}"
+                                        </div>
+                                        <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+                                            <h4 style="margin: 0 0 8px 0; color: #0f766e;">Admin Reply:</h4>
+                                            <p style="margin: 0; color: #115e59;">"${text}"</p>
+                                        </div>
+                                        <p style="margin-bottom: 0;">Thank you for your valuable feedback.</p>
+                                    </div>
+                                    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                                    </div>
+                                    <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                    </div>
+                                </div>
+                            </div>`
+                        });
+                    }
+                }
+            }
+
+            window.showToast("Success", "Reply saved successfully.", "success");
+            document.getElementById('reply-modal').classList.add('hidden');
+            loadAdminReviews();
+        } catch (err) {
+            window.showToast("Error", "Could not save reply: " + err.message, "error");
+        } finally {
+            btn.innerHTML = 'Submit Reply';
+            btn.disabled = false;
+        }
+    };
+
+    window.deleteReview = function(id) {
+        window.showConfirmModal(
+            "Delete Review?",
+            "Are you sure you want to completely delete this review? This action cannot be undone.",
+            async () => {
+                try {
+                    await deleteDoc(doc(db, "reviews", id));
+                    window.showToast("Deleted", "Review deleted successfully.", "success");
+                    loadAdminReviews();
+                } catch (err) {
+                    window.showToast("Delete Failed", "Could not delete review: " + err.message, "error");
+                }
+            }
+        );
+    };
+
+    // Bulk Delete Selection for Reviews
+    window.toggleAllReviews = function(source) {
+        const checkboxes = document.querySelectorAll('.review-checkbox');
+        checkboxes.forEach(cb => cb.checked = source.checked);
+        window.updateReviewBulkDeleteBtn();
+    };
+
+    window.updateReviewBulkDeleteBtn = function() {
+        const checkboxes = document.querySelectorAll('.review-checkbox:checked');
+        const btn = document.getElementById('bulk-delete-reviews-btn');
+        if (checkboxes.length > 0) {
+            btn.classList.remove('hidden');
+            btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected (${checkboxes.length})`;
+        } else {
+            btn.classList.add('hidden');
+        }
+        
+        const allCheckboxes = document.querySelectorAll('.review-checkbox');
+        const selectAllCb = document.getElementById('select-all-reviews');
+        if (allCheckboxes.length > 0) {
+            selectAllCb.checked = allCheckboxes.length === checkboxes.length;
+        } else {
+            selectAllCb.checked = false;
+        }
+    };
+
+    window.deleteSelectedReviews = function() {
+        const checkboxes = document.querySelectorAll('.review-checkbox:checked');
+        if (checkboxes.length === 0) return;
+        
+        window.showConfirmModal(
+            "Delete Selected Reviews?",
+            `Are you sure you want to completely delete ${checkboxes.length} review(s)? This action cannot be undone.`,
+            async () => {
+                try {
+                    const btn = document.getElementById('bulk-delete-reviews-btn');
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Deleting...';
+                    btn.disabled = true;
+                    
+                    const deletePromises = Array.from(checkboxes).map(cb => deleteDoc(doc(db, "reviews", cb.value)));
+                    await Promise.all(deletePromises);
+                    
+                    window.showToast("Deleted", `${checkboxes.length} review(s) deleted successfully.`, "success");
+                    loadAdminReviews(); // Refresh
+                } catch (err) {
+                    window.showToast("Delete Failed", "Could not delete some reviews: " + err.message, "error");
+                } finally {
+                    const btn = document.getElementById('bulk-delete-reviews-btn');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected`;
+                    }
+                }
+            }
+        );
+    };
+
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        document.getElementById('add-date').setAttribute('min', `${year}-${month}-${day}`);
+    </script>
+<script src="chatbot.js"></script>
+</body>
+</html>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | MD Care Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { primary: '#0d9488', secondary: '#1e293b' },
+                    animation: { 'glow-pulse': 'glow-pulse 2s infinite' },
+                    keyframes: { 'glow-pulse': { '0%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0.4)' }, '70%': { boxShadow: '0 0 0 10px rgba(13, 148, 136, 0)' }, '100%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0)' } } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
+                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
+                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
+                </a>
+                <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
+                    <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
+                    <a href="about.html" class="text-primary transition font-bold">About</a>
+                    <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
+                    <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                    
+                    <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
+                    <div id="auth-nav-container" class="flex items-center space-x-4">
+                    </div>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Home</a>
+                <a href="about.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">About</a>
+                <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
+                <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="index.html#appointment" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Book Appointment</a>
+                <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="pt-32 pb-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-12 items-center mb-16">
+                <div class="lg:w-1/2">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="MD Hospitals Building" class="rounded-2xl shadow-xl z-10 relative">
+                        <div class="absolute -bottom-6 -right-6 bg-primary text-white p-6 rounded-2xl shadow-lg z-20 hidden md:block">
+                            <p class="font-bold text-3xl">15+</p>
+                            <p class="text-sm">Years of Excellence</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">About MD Care Hospital</h4>
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-6">Committed to Outstanding Patient Care</h2>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        Located in the heart of Basti DanishManda Jalandhar, <strong>MD Hospitals</strong> has been a cornerstone of health and wellness for the community. We combine the latest medical technology with expert professionals to ensure you receive the best care possible.
+                    </p>
+                    <p class="text-slate-600 mb-8 leading-relaxed">
+                        Our expansive facility features specialized departments, round-the-clock emergency services, and a patient-first approach that makes us a trusted name in regional healthcare. We strongly believe that everyone deserves top-tier medical assistance.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center text-slate-700"><i class="fa-solid fa-check-circle text-primary mr-3 text-xl"></i> Modern infrastructure and advanced labs</li>
+                        <li class="flex items-center text-slate-700"><i class="fa-solid fa-check-circle text-primary mr-3 text-xl"></i> 24/7 Emergency and Trauma care</li>
+                        <li class="flex items-center text-slate-700"><i class="fa-solid fa-check-circle text-primary mr-3 text-xl"></i> Experienced and specialized medical staff</li>
+                        <li class="flex items-center text-slate-700"><i class="fa-solid fa-check-circle text-primary mr-3 text-xl"></i> Comprehensive rehabilitation services</li>
+                    </ul>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+                        <button onclick="openModal('labs-modal')" class="text-left bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-primary transition group">
+                            <i class="fa-solid fa-microscope text-3xl text-primary mb-4 group-hover:scale-110 transition"></i>
+                            <h4 class="font-bold text-secondary mb-2">Advanced Labs</h4>
+                            <p class="text-sm text-slate-500">Equipped with state-of-the-art diagnostic and imaging tools.</p>
+                        </button>
+                        <button onclick="openModal('emergency-modal')" class="text-left bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-red-400 transition group">
+                            <i class="fa-solid fa-truck-medical text-3xl text-primary mb-4 group-hover:text-red-500 group-hover:scale-110 transition"></i>
+                            <h4 class="font-bold text-secondary mb-2">24/7 Emergency</h4>
+                            <p class="text-sm text-slate-500">Round-the-clock trauma care and ambulance services.</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Labs -->
+    <div id="labs-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('labs-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <h2 class="text-2xl font-bold text-secondary mb-4"><i class="fa-solid fa-microscope text-primary mr-2"></i> Advanced Labs & Diagnostics</h2>
+                <p class="text-slate-600 mb-6">Our laboratory is fully equipped with cutting-edge technology for precise and rapid testing.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Blood Testing Lab" class="rounded-xl shadow-md w-full h-40 object-cover mb-3">
+                    <h4 class="font-bold text-secondary text-sm">Pathology & Blood Bank</h4>
+                    <p class="text-xs text-slate-500 mt-1">24/7 automated blood analyzers and hematology equipment.</p>
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Imaging Center" class="rounded-xl shadow-md w-full h-40 object-cover mb-3">
+                    <h4 class="font-bold text-secondary text-sm">Radiology & Imaging</h4>
+                    <p class="text-xs text-slate-500 mt-1">High-resolution MRI, CT scan, and digital X-Ray facilities.</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Emergency buton -->
+    <div id="emergency-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative text-center">
+            <button onclick="closeModal('emergency-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 text-3xl mx-auto mb-4"><i class="fa-solid fa-truck-medical"></i></div>
+            <h2 class="text-2xl font-bold text-secondary mb-2">24/7 Emergency Contacts</h2>
+            <p class="text-slate-500 text-sm mb-6">In case of a medical emergency, immediately contact the numbers below.</p>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-blue-500 text-xl"></i><span class="font-bold text-slate-700">Police</span></div><a href="tel:100" class="text-xl font-bold text-blue-600 hover:underline">100</a></div>
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-truck-medical text-red-500 text-xl"></i><span class="font-bold text-slate-700">Ambulance</span></div><a href="tel:108" class="text-xl font-bold text-red-600 hover:underline">108</a></div>
+                <div class="flex justify-between items-center bg-teal-50 p-4 rounded-xl border border-teal-100"><div class="flex items-center gap-3"><i class="fa-solid fa-hospital text-primary text-xl"></i><span class="font-bold text-teal-900 text-left leading-tight">MD Care<br/><span class="text-xs">Emergency</span></span></div><a href="tel:8091919997" class="text-xl font-bold text-primary hover:underline">8091919997</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white pt-16 pb-8 border-t-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
+                        <span class="font-bold text-2xl">MD Care <span class="text-primary">Hospital</span></span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Providing exceptional medical care to our community with compassion, integrity, and advanced medical expertise.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Quick Links</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="index.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Home</a></li>
+                        <li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li>
+                        <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
+                        <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary"></i>
+                            <span>Basti DanishManda<br/>Jalandhar</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-phone mr-3 text-primary"></i>
+                            <span>8091919997</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-envelope mr-3 text-primary"></i>
+                            <span>thenish9997@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest health tips and news.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 MD Care Hospital (MD Hospitals). All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        function updateAuthUI() {
+            const desktopAuth = document.getElementById('auth-nav-container');
+            const mobileAuth = document.getElementById('mobile-auth-container');
+            if(isLoggedIn) {
+            const picUrl = localStorage.getItem('mdcare_profilePic');
+            const userInitial = localStorage.getItem('mdcare_userInitial') || 'U';
+            const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : userInitial;
+        if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Profile Dashboard</a><button onclick="logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+            if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Profile Dashboard</a><button onclick="logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            } else {
+                if(desktopAuth) desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login</a><a href="index.html" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</a>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
+            }
+        }
+    window.showToast = function(title, message, type = 'success') {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
+            document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 border-teal-500 rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+        toast.innerHTML = `<div class="w-10 h-10 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-check"></i></div><div class="flex-grow pt-0.5"><h4 class="font-bold text-slate-800 text-sm">${title}</h4><p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p></div><button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>`;
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+        setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 6000);
+    };
+    function logout(btn) { 
+        if (btn) {
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
+            btn.disabled = true;
+        }
+        localStorage.removeItem('mdcare_auth'); 
+        localStorage.removeItem('mdcare_profilePic'); 
+        localStorage.removeItem('mdcare_userInitial'); 
+        isLoggedIn = false; 
+        window.showToast("Logged Out", "You have been successfully logged out.", "success"); 
+        setTimeout(() => { 
+            const menu = document.getElementById('mobile-menu');
+            if (menu) menu.classList.add('hidden');
+            window.location.href = 'index.html'; 
+        }, 1500);
+    }
+        updateAuthUI();
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+<script src="chatbot.js"></script>
+</body>
+</html>
