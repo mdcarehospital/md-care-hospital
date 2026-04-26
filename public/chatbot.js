@@ -118,7 +118,9 @@
                 let errorDetails = await response.text();
                 try {
                     const jsonError = JSON.parse(errorDetails);
-                    if (jsonError.error) errorDetails = jsonError.error;
+                    if (jsonError.error) {
+                        errorDetails = jsonError.error.message || JSON.stringify(jsonError.error);
+                    }
                 } catch(e) {}
                 console.error("Backend Error Details:", errorDetails);
                 throw new Error(errorDetails || `Status: ${response.status}`);
