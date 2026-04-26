@@ -993,7 +993,7 @@
         const password = document.getElementById('delete-password').value;
 
         try {
-            // Re-authenticate user to bypass the "requires-recent-login" security check
+            // Re-authenticate user to confirm identity before deleton
             const credential = EmailAuthProvider.credential(user.email, password);
             await reauthenticateWithCredential(user, credential);
             
@@ -1129,7 +1129,7 @@
                 
             });
             
-            // Notify Admin via email
+            // Notify Admin viia email
             await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
                 to_email: "thenish9997@gmail.com",
                 subject: "New Appointment Booking - MD Care",

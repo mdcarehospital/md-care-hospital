@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
     if (!apiKey) return res.status(500).json({ error: 'API key not configured on server' });
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
     try {
         const aiResponse = await fetch(endpoint, {

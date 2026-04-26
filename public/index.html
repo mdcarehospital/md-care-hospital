@@ -56,7 +56,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
-    <!-- Navigtion -->
+    <!-- Navigstion -->
     <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-4">
@@ -64,7 +64,7 @@
                     <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
                     <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
                 </a>
-                <!-- Mn Menu -->
+                <!-- Maoin Menu -->
                 <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
                     <a href="#home" class="text-primary transition font-bold">Home</a>
                     <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
@@ -72,13 +72,13 @@
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
                     <button onclick="handleAppointmentClick()" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
                     
-                    <!-- Auth butn -->
+                    <!-- Auth buton -->
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
                     <div id="auth-nav-container" class="flex items-center space-x-4">
                         <!-- Injected via JS based on Auth Status -->
                     </div>
                 </div>
-                <!-- Mobile Menu Buton -->
+                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
                     <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
                         <i class="fa-solid fa-bars text-2xl"></i>
@@ -432,7 +432,7 @@
         </div>
     </div>
 
-    <!-- Forgot Password Modal -->
+    <!-- Forgot password -->
     <div id="forgot-password-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative mx-4">
             <button onclick="closeModal('forgot-password-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
@@ -452,7 +452,7 @@
         </div>
     </div>
 
-    <!-- Doctor Biodata  -->
+    <!-- Doctor biodata  -->
     <div id="doctor-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl relative overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
             <button onclick="closeModal('doctor-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-3xl z-20 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark"></i></button>
@@ -498,7 +498,7 @@
         </div>
     </div>
 
-    <!-- Emergency buton -->
+    <!-- Emergency butyon -->
     <div id="emergency-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative text-center">
             <button onclick="closeModal('emergency-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
@@ -513,7 +513,7 @@
         </div>
     </div>
 
-    <!-- Beds Modal -->
+    <!-- Beds Model -->
     <div id="beds-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative flex flex-col max-h-[90vh] overflow-hidden">
             <button onclick="closeModal('beds-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
