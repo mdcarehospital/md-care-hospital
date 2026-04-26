@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
     if (!apiKey) return res.status(500).json({ error: 'API key not configured on server' });
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     try {
         const aiResponse = await fetch(endpoint, {
@@ -21,7 +21,12 @@ export default async function handler(req, res) {
         });
         
         const data = await aiResponse.json();
-        res.status(200).json(data); // Send the Gemini response back to your chatbot.js
+        
+        if (!aiResponse.ok) {
+            return res.status(aiResponse.status).json(data);
+        }
+        
+        res.status(200).json(data);
     } catch (error) {
         console.error("Backend Error:", error);
         res.status(500).json({ error: 'Failed to communicate with AI provider' });
