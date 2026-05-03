@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-        (function() { emailjs.init("lT18BxqA4wgJ-8RuJ"); })();
+        (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
@@ -30,7 +30,55 @@
             }
         }
     </script>
-    <style>body { font-family: 'Poppins', sans-serif; }</style>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
+    </style>
+    <style>
+        /* Dark Mode Auto-Overrides */
+        * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+        html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+        html.dark .bg-white { background-color: #1e293b !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; }
+        html.dark .bg-slate-100 { background-color: #334155 !important; }
+        html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+        html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+        html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        html.dark .bg-secondary { background-color: #020617 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .theme-icon-moon { display: none !important; }
+        html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+        html.dark { scrollbar-color: #334155 #0f172a; }
+    </style>
+    <script>
+        function adaptTheme() {
+            const savedTheme = localStorage.getItem('mdcare_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
+            else { document.documentElement.classList.remove('dark'); }
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
+        adaptTheme();
+
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('mdcare_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('mdcare_theme', 'dark');
+            }
+        };
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -38,10 +86,18 @@
     <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-4">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
-                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
-                </a>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Hospital</span></span>
+                    </a>
+                </div>
                 <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
                     <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
@@ -49,11 +105,6 @@
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
                     <div id="nav-user-avatar" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md overflow-hidden">U</div>
                     <button onclick="window.logout(this)" class="text-red-500 hover:text-red-700 font-bold transition">Logout</button>
-                </div>
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
                 </div>
             </div>
         </div>
@@ -107,6 +158,7 @@
                         <div><p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-0.5">Name</p><p id="profile-name" class="font-medium text-slate-700">Loading...</p></div>
                         <div class="grid grid-cols-2 gap-5">
                             <div><p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-0.5">Age</p><p id="profile-age" class="font-medium text-slate-700">Loading...</p></div>
+                            <div><p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-0.5">Sex</p><p id="profile-sex" class="font-medium text-slate-700">Loading...</p></div>
                             <div><p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-0.5">Blood Group</p><p id="profile-blood-group" class="font-medium text-slate-700">Loading...</p></div>
                             <div><p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-0.5">Phone Number</p><p id="profile-phone" class="font-medium text-slate-700">Loading...</p></div>
                             <div><p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-0.5">Address</p><p id="profile-address" class="font-medium text-slate-700">Loading...</p></div>
@@ -124,8 +176,13 @@
                 
                 <div>
                     <h2 class="text-2xl font-bold text-secondary mb-4 flex items-center"><i class="fa-solid fa-calendar-check text-primary mr-3"></i> Upcoming Appointments</h2>
-                    <div id="appointments-list" class="space-y-4">
+                    <div id="appointments-list" class="space-y-4 scroll-mt-28">
                         <p class="text-slate-500">Loading your appointments...</p>
+                    </div>
+                    <div class="text-center mt-6 hidden" id="load-more-appointments-container">
+                        <button onclick="window.renderAppointmentsChunk()" class="bg-slate-100 text-primary font-bold py-2.5 px-6 rounded-full hover:bg-slate-200 transition shadow-sm border border-slate-200">
+                            View More Appointments <i class="fa-solid fa-angle-down ml-1"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -174,6 +231,15 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Age</label>
                     <input type="number" id="edit-age" min="0" max="150" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. 35">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Sex</label>
+                    <select id="edit-sex" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none bg-white">
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Others">Others</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Blood Group</label>
@@ -249,8 +315,8 @@
             
             <div class="space-y-6">
                 <div class="flex items-center"><div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4"><i class="fa-solid fa-phone text-xl"></i></div><div><p class="text-teal-200 text-sm">Call us on</p><p class="font-bold text-lg">8091919997</p></div></div>
-                <div class="flex items-center"><div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4"><i class="fa-solid fa-envelope text-xl"></i></div><div><p class="text-teal-200 text-sm">Email us at</p><p class="font-bold text-lg">thenish9997@gmail.com</p></div></div>
-                <div class="flex items-center"><div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4"><i class="fa-solid fa-location-dot text-xl"></i></div><div><p class="text-teal-200 text-sm">Visit us at</p><p class="font-bold">Basti DanishManda Jalandhar</p></div></div>
+                <div class="flex items-center"><div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4"><i class="fa-solid fa-envelope text-xl"></i></div><div><p class="text-teal-200 text-sm">Email us at</p><p class="font-bold text-lg">mdcareadmin@gmail.com</p></div></div>
+                    <div class="flex items-center"><div class="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center mr-4"><i class="fa-solid fa-location-dot text-xl"></i></div><div><p class="text-teal-200 text-sm">Visit us at</p><p class="font-bold text-sm">Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p></div></div>
             </div>
         </div>
 
@@ -260,8 +326,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
-                        <input type="text" id="booking-name" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="John Doe">
-                    </div>
+                        <input type="text" id="booking-name" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
                         <input type="tel" id="booking-phone" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="e.g., 8091919997">
@@ -354,11 +419,18 @@
         const mobileMenu = document.getElementById('mobile-menu');
         if (mobileMenuBtn && mobileMenu) {
             mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            document.addEventListener('click', (event) => {
+                if (!mobileMenu.classList.contains('hidden') && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
         }
 
         window.userAppointmentsMap = {};
         window.currentUserData = null;
         window.currentProfilePicBase64 = null;
+        window.allUserAppointments = [];
+        window.currentApptIndex = 0;
 
         // Beautiful Toast Notification System
         window.showToast = function(title, message, type = 'success') {
@@ -413,12 +485,8 @@
                 localStorage.removeItem('mdcare_auth');
                 localStorage.removeItem('mdcare_profilePic');
                 localStorage.removeItem('mdcare_userInitial');
-            window.showToast("Logged Out", "You have been successfully logged out.", "success");
-            setTimeout(() => {
-                const menu = document.getElementById('mobile-menu');
-                if (menu) menu.classList.add('hidden');
+                sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
                 window.location.href = 'index.html';
-            }, 1500);
             });
         }
 
@@ -462,6 +530,7 @@
 
             document.getElementById('profile-name').textContent = displayName;
             window.setProfileField('profile-age', null, 'Add Age');
+            window.setProfileField('profile-sex', null, 'Add Sex');
             window.setProfileField('profile-blood-group', null, 'Add Blood Group');
             window.setProfileField('profile-phone', null, 'Add Phone Number');
             window.setProfileField('profile-address', null, 'Add Address');
@@ -476,6 +545,7 @@
                 if (userDoc.exists()) {
                     window.currentUserData = userDoc.data();
                     window.setProfileField('profile-age', window.currentUserData.age, 'Add Age');
+                    window.setProfileField('profile-sex', window.currentUserData.sex, 'Add Sex');
                     window.setProfileField('profile-blood-group', window.currentUserData.bloodGroup, 'Add Blood Group');
                     window.setProfileField('profile-phone', window.currentUserData.phone, 'Add Phone Number');
                     window.setProfileField('profile-address', window.currentUserData.address, 'Add Address');
@@ -510,13 +580,41 @@
                 
                 if (snapshot.empty) {
                     list.innerHTML = '<p class="text-slate-500">You have no upcoming appointments.</p>';
+                    const loadMoreContainer = document.getElementById('load-more-appointments-container');
+                    if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
                     return;
                 }
 
+                let fetchedAppointments = [];
+                snapshot.forEach((docSnap) => {
+                    fetchedAppointments.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Sort appointments: newest booked first
+                fetchedAppointments.sort((a, b) => {
+                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.now();
+                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Date.now();
+                    return timeB - timeA;
+                });
+
                 list.innerHTML = '';
-                snapshot.forEach((documentSnapshot) => {
-                    const data = documentSnapshot.data();
-                    const id = documentSnapshot.id;
+                window.allUserAppointments = fetchedAppointments;
+                window.currentApptIndex = 0;
+                window.renderAppointmentsChunk();
+                
+            } catch (err) {
+                list.innerHTML = '<p class="text-red-500">Error loading appointments.</p>';
+                console.error(err);
+            }
+        };
+
+        window.renderAppointmentsChunk = function() {
+            const list = document.getElementById('appointments-list');
+            const end = Math.min(window.currentApptIndex + 3, window.allUserAppointments.length);
+            
+            for (let i = window.currentApptIndex; i < end; i++) {
+                const data = window.allUserAppointments[i];
+                const id = data.id;
 
                     // Generate 12-digit mathematical reference from Date and Time
                     let refNumber = id;
@@ -553,29 +651,29 @@
                                 currentStatus = "Expired";
                                 updateDoc(doc(db, "appointments", id), { status: "Expired" }).then(() => {
                                     if (data.email) {
-                                        emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                                            emailjs.send("service_iyt09jj", "template_xyclksp", {
                                             to_email: data.email,
-                                            subject: "Appointment Expired - MD Care Hospital",
+                                                subject: `Appointment Expired: ${data.date} at ${data.time} - MD Care Hospital`,
                                             html_message: `
-                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                                                 <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #64748b;">
-                                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #94a3b8;">Hospital</span></h1>
+                                                    <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #64748b;">
+                                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #94a3b8;">Hospital</span></h1>
                                                     </div>
-                                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                                    <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                                         <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
                                                         <div style="background-color: #f8fafc; border-left: 4px solid #94a3b8; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                                            <h3 style="margin: 0 0 5px 0; color: #475569;">Appointment Expired</h3>
-                                                            <p style="margin: 0; color: #64748b; font-size: 16px;">The scheduled time for your appointment has passed.</p>
+                                                            <h3 style="margin: 0 0 5px 0; color: #475569; font-size: 16px;">Appointment Expired</h3>
+                                                            <p style="margin: 0; color: #64748b; font-size: 14px;">The scheduled time for your appointment has passed.</p>
                                                         </div>
                                                         <p>Your appointment on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong> is now marked as <span style="display: inline-block; background-color: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 16px; border: 1px solid #e2e8f0;">Expired</span>.</p>
                                                         <p>If you missed this appointment and still need medical assistance, please book a new slot through your patient dashboard.</p>
                                                     </div>
                                                     <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Book New Appointment</a>
+                                                        <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Book New Appointment</a>
                                                     </div>
                                                     <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p>
                                                     </div>
                                                 </div>
                                             </div>`
@@ -585,29 +683,29 @@
                             } else if (currentStatus === 'Confirmed' && !data.reminderSent && (aptDate - now) <= 6 * 60 * 60 * 1000) {
                                 updateDoc(doc(db, "appointments", id), { reminderSent: true }).then(() => {
                                     if (data.email) {
-                                        emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                                            emailjs.send("service_iyt09jj", "template_xyclksp", {
                                             to_email: data.email,
-                                            subject: "Upcoming Appointment Reminder - MD Care",
+                                                subject: `Upcoming Appointment Reminder: ${data.date} at ${data.time} - MD Care`,
                                             html_message: `
-                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                                                 <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0ea5e9;">
-                                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #38bdf8;">Hospital</span></h1>
+                                                    <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0ea5e9;">
+                                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #38bdf8;">Hospital</span></h1>
                                                     </div>
-                                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                                    <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                                         <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
                                                         <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                                            <h3 style="margin: 0 0 5px 0; color: #0369a1;">Appointment Reminder</h3>
-                                                            <p style="margin: 0; color: #0c4a6e; font-size: 16px;">This is a friendly reminder for your upcoming appointment in less than 6 hours.</p>
+                                                            <h3 style="margin: 0 0 5px 0; color: #0369a1; font-size: 16px;">Appointment Reminder</h3>
+                                                            <p style="margin: 0; color: #0c4a6e; font-size: 14px;">This is a friendly reminder for your upcoming appointment in less than 6 hours.</p>
                                                         </div>
                                                         <p>Your appointment is scheduled on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong>.</p>
                                                         <p>Please ensure you arrive at least 15 minutes early. If you need to cancel or reschedule, please do so from your patient dashboard or contact the front desk.</p>
                                                     </div>
                                                     <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">View Dashboard</a>
+                                                        <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">View Dashboard</a>
                                                     </div>
                                                     <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p>
                                                     </div>
                                                 </div>
                                             </div>`
@@ -661,10 +759,17 @@
                             </div>
                         </div>
                     `;
-                });
-            } catch (err) {
-                list.innerHTML = '<p class="text-red-500">Error loading appointments.</p>';
-                console.error(err);
+            }
+            
+            window.currentApptIndex = end;
+            
+            const loadMoreContainer = document.getElementById('load-more-appointments-container');
+            if (loadMoreContainer) {
+                if (window.currentApptIndex >= window.allUserAppointments.length) {
+                    loadMoreContainer.classList.add('hidden');
+                } else {
+                    loadMoreContainer.classList.remove('hidden');
+                }
             }
         };
 
@@ -701,7 +806,7 @@
             doc.text("MD Care Hospital", 105, 18, null, null, "center");
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            doc.text("Basti DanishManda Jalandhar | Contact: 8091919997", 105, 26, null, null, "center");
+                doc.text("Street-3, Danishmandan, Basti Bawa khel, Jalandhar | Contact: 8091919997", 105, 26, null, null, "center");
             doc.setFontSize(12);
             doc.setFont("helvetica", "bold");
             doc.text("Confirmed Booking Receipt", 105, 36, null, null, "center");
@@ -768,19 +873,19 @@
                 
                 // Notify Admin via email
                 const user = auth.currentUser;
-                await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
-                    to_email: "thenish9997@gmail.com",
+                await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                    to_email: "mdcareadmin@gmail.com",
                     subject: "Appointment Cancelled by Patient - MD Care",
                     html_message: `
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                         <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                            <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #ef4444;">
-                                <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                            <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #ef4444;">
+                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
                             </div>
-                            <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                            <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                 <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
-                                    <h3 style="margin: 0 0 5px 0; color: #991b1b;">Appointment Cancelled</h3>
-                                    <p style="margin: 0; color: #7f1d1d; font-size: 16px;">A patient has just cancelled their upcoming appointment.</p>
+                                    <h3 style="margin: 0 0 5px 0; color: #991b1b; font-size: 16px;">Appointment Cancelled</h3>
+                                    <p style="margin: 0; color: #7f1d1d; font-size: 14px;">A patient has just cancelled their upcoming appointment. <strong style="color: #991b1b;">They convey their sincere apologies for any inconvenience this may cause.</strong></p>
                                 </div>
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                                     <tr>
@@ -798,7 +903,7 @@
                                 </table>
                             </div>
                             <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                                <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
                             </div>
                             <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
                                 <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
@@ -850,6 +955,7 @@
         window.openEditProfileModal = function() {
             document.getElementById('edit-name').value = auth.currentUser?.displayName || '';
             document.getElementById('edit-age').value = window.currentUserData?.age || '';
+            document.getElementById('edit-sex').value = window.currentUserData?.sex || '';
             document.getElementById('edit-blood-group').value = window.currentUserData?.bloodGroup || '';
             document.getElementById('edit-phone').value = window.currentUserData?.phone || '';
             document.getElementById('edit-address').value = window.currentUserData?.address || '';
@@ -871,6 +977,7 @@
 
             const newName = document.getElementById('edit-name').value.trim();
             const newAge = document.getElementById('edit-age').value.trim();
+            const newSex = document.getElementById('edit-sex').value;
             const newBloodGroup = document.getElementById('edit-blood-group').value;
             const newPhone = document.getElementById('edit-phone').value.trim();
             const newAddress = document.getElementById('edit-address').value.trim();
@@ -881,7 +988,7 @@
             try {
                 await updateProfile(user, { displayName: newName });
                 
-                const updateData = { name: newName, age: newAge, bloodGroup: newBloodGroup, phone: newPhone, address: newAddress, emergencyName: newEmergencyName, emergencyPhone: newEmergencyPhone };
+                const updateData = { name: newName, age: newAge, sex: newSex, bloodGroup: newBloodGroup, phone: newPhone, address: newAddress, emergencyName: newEmergencyName, emergencyPhone: newEmergencyPhone };
                 if (window.currentProfilePicBase64) {
                     updateData.profilePic = window.currentProfilePicBase64;
                 }
@@ -912,6 +1019,7 @@
                 }
 
                 window.setProfileField('profile-age', newAge, 'Add Age');
+                window.setProfileField('profile-sex', newSex, 'Add Sex');
                 window.setProfileField('profile-blood-group', newBloodGroup, 'Add Blood Group');
                 window.setProfileField('profile-phone', newPhone, 'Add Phone Number');
                 window.setProfileField('profile-address', newAddress, 'Add Address');
@@ -1030,7 +1138,8 @@
     };
 
     const doctorsList = [
-        { name: "Dr. Rajat Sharma", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
+        { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry" },
+        { name: "Dr. M D Sheikh", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
         { name: "Dr. Anil Kapoor", dept: "Neurology" }, { name: "Dr. Priya Singh", dept: "Neurology" }, { name: "Dr. Rohan Mehta", dept: "Neurology" },
         { name: "Dr. Vikram Das", dept: "Orthopedics" }, { name: "Dr. Sana Khan", dept: "Orthopedics" }, { name: "Dr. Aditya Rao", dept: "Orthopedics" },
         { name: "Dr. Amit Patel", dept: "Pediatrics" }, { name: "Dr. Kavita Rao", dept: "Pediatrics" }, { name: "Dr. Nidhi Sharma", dept: "Pediatrics" },
@@ -1119,30 +1228,44 @@
         const patientName = document.getElementById('booking-name').value;
         const phone = document.getElementById('booking-phone').value;
         const message = document.getElementById('booking-message').value;
-        const slotId = `${dateSel.value}_${docSelect.value}_${timeSel.value}`.replace(/[^a-zA-Z0-9]/g, '_');
         
         try {
-            await runTransaction(db, async (transaction) => {
-                const appointmentRef = doc(db, "appointments", slotId);
-                const docSnap = await transaction.get(appointmentRef);
-                if (docSnap.exists() && docSnap.data().status !== 'Cancelled') throw new Error("SLOT_ALREADY_BOOKED");
-                
-            });
+            const qCheck = query(collection(db, "appointments"), where("date", "==", dateSel.value), where("doctor", "==", docSelect.value), where("time", "==", timeSel.value));
+            const snapCheck = await getDocs(qCheck);
+            let isBooked = false;
+            snapCheck.forEach(d => { if (d.data().status !== 'Cancelled' && d.data().status !== 'Expired') isBooked = true; });
+            if (isBooked) throw new Error("SLOT_ALREADY_BOOKED");
+            
+            const serialDocId = (9999999999999 - Date.now()).toString();
+            await setDoc(doc(db, "appointments", serialDocId), {
+                    userId: auth.currentUser.uid,
+                    patientName: patientName,
+                    email: auth.currentUser.email,
+                    emailVerified: auth.currentUser.emailVerified,
+                    phone: phone,
+                    department: deptSelect.value,
+                    doctor: docSelect.value,
+                    date: dateSel.value,
+                    time: timeSel.value,
+                    message: message,
+                    status: "Pending",
+                    createdAt: serverTimestamp()
+                });
             
             // Notify Admin viia email
-            await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
-                to_email: "thenish9997@gmail.com",
-                subject: "New Appointment Booking - MD Care",
+            await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                to_email: "mdcareadmin@gmail.com",
+                subject: `New Appointment Booking: ${dateSel.value} at ${timeSel.value} - MD Care`,
                 html_message: `
-                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                     <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                        <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                        <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
                         </div>
-                        <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                        <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                             <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                <h3 style="margin: 0 0 5px 0; color: #115e59;">New Appointment Request</h3>
-                                <p style="margin: 0; color: #134e4a; font-size: 16px;">A patient has requested a new consultation.</p>
+                                <h3 style="margin: 0 0 5px 0; color: #115e59; font-size: 16px;">New Appointment Request</h3>
+                                <p style="margin: 0; color: #134e4a; font-size: 14px;">A patient has requested a new consultation.</p>
                             </div>
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${patientName}</td></tr>

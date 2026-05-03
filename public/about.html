@@ -7,6 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -21,10 +25,56 @@
     </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     </style>
+        <style>
+            /* Dark Mode Auto-Overrides */
+            * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+            html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+            html.dark .bg-white { background-color: #1e293b !important; }
+            html.dark .bg-slate-50 { background-color: #0f172a !important; }
+            html.dark .bg-slate-100 { background-color: #334155 !important; }
+            html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+            html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+            html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+            html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+            html.dark .bg-secondary { background-color: #020617 !important; }
+            html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+            html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+            html.dark .theme-icon-moon { display: none !important; }
+            html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+        html.dark { scrollbar-color: #334155 #0f172a; }
+        </style>
+        <script>
+            function adaptTheme() {
+                const savedTheme = localStorage.getItem('mdcare_theme');
+                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
+                else { document.documentElement.classList.remove('dark'); }
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
+            adaptTheme();
+
+            window.toggleTheme = function() {
+                const html = document.documentElement;
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('mdcare_theme', 'light');
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('mdcare_theme', 'dark');
+                }
+            };
+        </script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -32,10 +82,18 @@
     <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-4">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
-                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
-                </a>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Hospital</span></span>
+                    </a>
+                </div>
                 <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
                     <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
                     <a href="about.html" class="text-primary transition font-bold">About</a>
@@ -47,11 +105,6 @@
                     <div id="auth-nav-container" class="flex items-center space-x-4">
                     </div>
                 </div>
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
-                </div>
             </div>
         </div>
         
@@ -61,7 +114,7 @@
                 <a href="about.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">About</a>
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
-                <a href="index.html#appointment" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Book Appointment</a>
+                <a href="index.html#appointment" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
             </div>
@@ -83,12 +136,12 @@
                 </div>
                 <div class="lg:w-1/2">
                     <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">About MD Care Hospital</h4>
-                    <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-6">Committed to Outstanding Patient Care</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-6">A Legacy of Clinical Excellence & Compassion</h2>
                     <p class="text-slate-600 mb-6 leading-relaxed">
-                        Located in the heart of Basti DanishManda Jalandhar, <strong>MD Hospitals</strong> has been a cornerstone of health and wellness for the community. We combine the latest medical technology with expert professionals to ensure you receive the best care possible.
+                    Strategically located at Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021, <strong>MD Care Hospital</strong> stands as a premier institution dedicated to transformative health and wellness. We harmonize state-of-the-art medical innovations with a multidisciplinary team of distinguished professionals to deliver unparalleled patient outcomes.
                     </p>
                     <p class="text-slate-600 mb-8 leading-relaxed">
-                        Our expansive facility features specialized departments, round-the-clock emergency services, and a patient-first approach that makes us a trusted name in regional healthcare. We strongly believe that everyone deserves top-tier medical assistance.
+                    Spanning multiple specialized centers of excellence, our robust facility features a 24/7 comprehensive emergency response unit and a resolute patient-first philosophy. Driven by the core belief that world-class healthcare is a universal right, we continue to set regional benchmarks in medical proficiency and empathetic care.
                     </p>
                     <ul class="space-y-4">
                         <li class="flex items-center text-slate-700"><i class="fa-solid fa-check-circle text-primary mr-3 text-xl"></i> Modern infrastructure and advanced labs</li>
@@ -107,6 +160,129 @@
                             <h4 class="font-bold text-secondary mb-2">24/7 Emergency</h4>
                             <p class="text-sm text-slate-500">Round-the-clock trauma care and ambulance services.</p>
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital Stats -->
+            <div class="bg-secondary rounded-3xl p-10 md:p-16 text-white grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full opacity-20 -mr-20 -mt-20 blur-2xl"></div>
+                <button onclick="openModal('beds-modal')" class="relative z-10 hover:scale-105 transition duration-300 group outline-none">
+                    <i class="fa-solid fa-bed-pulse text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">500+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Hospital Beds</p>
+                </button>
+                <a href="doctors.html" class="relative z-10 hover:scale-105 transition duration-300 group outline-none block">
+                    <i class="fa-solid fa-user-doctor text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">30+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Expert Doctors</p>
+                </a>
+                <button onclick="openModal('reviews-modal')" class="relative z-10 hover:scale-105 transition duration-300 group outline-none">
+                    <i class="fa-solid fa-face-smile text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">50k+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Happy Patients</p>
+                </button>
+                <button onclick="openModal('awards-modal')" class="relative z-10 hover:scale-105 transition duration-300 group outline-none">
+                    <i class="fa-solid fa-award text-4xl text-primary mb-4 group-hover:text-teal-400 transition"></i>
+                    <h3 class="text-4xl font-bold mb-2">25+</h3>
+                    <p class="text-slate-300 group-hover:text-white transition">Medical Awards</p>
+                </button>
+            </div>
+
+        <!-- Our History Timeline -->
+        <div class="mt-24">
+            <div class="text-center mb-12">
+                <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Our Journey</h4>
+                <h2 class="text-3xl font-bold text-secondary">The History of MD Care</h2>
+                <p class="text-slate-600 mt-4 max-w-2xl mx-auto">From a modest clinic to a multi-specialty healthcare leader, our journey is defined by continuous growth, innovation, and an unwavering commitment to our patients.</p>
+            </div>
+            
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Vertical Line -->
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 -translate-x-1/2 rounded-full"></div>
+                
+                <div class="space-y-12">
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white border-4 border-white shadow-sm flex items-center justify-center absolute left-4 md:left-1/2 -translate-x-1/2 z-10 transition-transform duration-300 group-hover:scale-125"><div class="w-2 h-2 bg-white rounded-full"></div></div>
+                        <div class="ml-12 md:ml-0 md:w-1/2 md:px-10">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 group-hover:shadow-md transition">
+                                <span class="text-primary font-bold text-xl block mb-1">2008</span>
+                                <h4 class="font-bold text-secondary text-lg mb-2">The Foundation</h4>
+                                <p class="text-slate-600 text-sm">MD Care Hospital opened its doors as a dedicated 50-bed community clinic, laying the groundwork for accessible, high-quality medical care in Jalandhar.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white border-4 border-white shadow-sm flex items-center justify-center absolute left-4 md:left-1/2 -translate-x-1/2 z-10 transition-transform duration-300 group-hover:scale-125"><div class="w-2 h-2 bg-white rounded-full"></div></div>
+                        <div class="ml-12 md:ml-0 md:w-1/2 md:px-10">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 group-hover:shadow-md transition">
+                                <span class="text-primary font-bold text-xl block mb-1">2015</span>
+                                <h4 class="font-bold text-secondary text-lg mb-2">Expansion & Specialization</h4>
+                                <p class="text-slate-600 text-sm">Transformed into a multi-specialty institution with the launch of our advanced Cardiology and Oncology wings, integrating state-of-the-art diagnostic imaging.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white border-4 border-white shadow-sm flex items-center justify-center absolute left-4 md:left-1/2 -translate-x-1/2 z-10 transition-transform duration-300 group-hover:scale-125"><div class="w-2 h-2 bg-white rounded-full"></div></div>
+                        <div class="ml-12 md:ml-0 md:w-1/2 md:px-10">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 group-hover:shadow-md transition">
+                                <span class="text-primary font-bold text-xl block mb-1">2020</span>
+                                <h4 class="font-bold text-secondary text-lg mb-2">Level 1 Trauma Center</h4>
+                                <p class="text-slate-600 text-sm">Inaugurated our specialized Trauma Center and NICU, establishing a robust, round-the-clock emergency response network equipped for critical care.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- Core Values -->
+        <div class="mt-24">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-secondary">Our Core Values</h2>
+                    <p class="text-slate-600 mt-4 max-w-2xl mx-auto">We are driven by a commitment to quality, compassion, and innovation in everything we do.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                        <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center text-primary text-2xl mb-4">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-secondary mb-3">Compassion</h3>
+                        <p class="text-slate-600 text-sm">We treat every patient with the utmost empathy, understanding, and respect, ensuring a supportive healing environment.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                        <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center text-primary text-2xl mb-4">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-secondary mb-3">Excellence</h3>
+                        <p class="text-slate-600 text-sm">We strive for the highest standards of medical care, continuously improving our practices and embracing innovation.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                        <div class="w-16 h-16 mx-auto bg-teal-50 rounded-full flex items-center justify-center text-primary text-2xl mb-4">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-secondary mb-3">Integrity</h3>
+                        <p class="text-slate-600 text-sm">We uphold transparency, honesty, and ethical principles in all our interactions with patients and their families.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Director's Message -->
+            <div class="mt-24 bg-teal-50 rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-sm">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-teal-200 rounded-full opacity-30 -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
+                <div class="flex flex-col md:flex-row gap-10 items-center relative z-10">
+                    <div class="md:w-1/3 flex-shrink-0 text-center">
+                    <img src="images/nadim.jpeg" alt="Dr Mohd Nadim Ansari" class="w-full h-80 object-cover object-top rounded-2xl shadow-xl border-4 border-white">
+                        <h3 class="font-bold text-2xl text-secondary mt-6">Dr. Mohd Nadim Ansari</h3>
+                        <p class="text-primary font-bold">VNGP <span class="text-slate-400 font-medium ml-1">| Psychiatry</span></p>
+                        <p class="text-slate-500 text-sm uppercase tracking-wider font-bold mt-1">Hospital Director</p>
+                    </div>
+                    <div class="md:w-2/3">
+                        <i class="fa-solid fa-quote-left text-5xl text-teal-200 mb-4 block"></i>
+                        <h2 class="text-3xl font-bold text-secondary mb-4">A Message from the Director</h2>
+                        <p class="text-slate-600 text-lg leading-relaxed mb-6 italic">
+                            "At MD Care Hospital, our mission has always been to provide world-class healthcare with a human touch. We believe that true medical excellence is achieved not just through advanced technology, but through the compassion, dedication, and integrity of our medical professionals. Your health, comfort, and recovery remain our absolute highest priorities."
+                        </p>
                     </div>
                 </div>
             </div>
@@ -144,12 +320,185 @@
             <h2 class="text-2xl font-bold text-secondary mb-2">24/7 Emergency Contacts</h2>
             <p class="text-slate-500 text-sm mb-6">In case of a medical emergency, immediately contact the numbers below.</p>
             <div class="space-y-4">
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-blue-500 text-xl"></i><span class="font-bold text-slate-700">Police</span></div><a href="tel:100" class="text-xl font-bold text-blue-600 hover:underline">100</a></div>
                 <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-truck-medical text-red-500 text-xl"></i><span class="font-bold text-slate-700">Ambulance</span></div><a href="tel:108" class="text-xl font-bold text-red-600 hover:underline">108</a></div>
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-blue-500 text-xl"></i><span class="font-bold text-slate-700">Police</span></div><a href="tel:100" class="text-xl font-bold text-blue-600 hover:underline">100</a></div>
                 <div class="flex justify-between items-center bg-teal-50 p-4 rounded-xl border border-teal-100"><div class="flex items-center gap-3"><i class="fa-solid fa-hospital text-primary text-xl"></i><span class="font-bold text-teal-900 text-left leading-tight">MD Care<br/><span class="text-xs">Emergency</span></span></div><a href="tel:8091919997" class="text-xl font-bold text-primary hover:underline">8091919997</a></div>
             </div>
         </div>
     </div>
+
+    <!-- Beds Modal -->
+    <div id="beds-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('beds-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <h2 class="text-2xl font-bold text-secondary mb-4"><i class="fa-solid fa-bed-pulse text-primary mr-2"></i> Department-wise Hospital Beds</h2>
+                <p class="text-slate-600 mb-6">Explore our specialized wards equipped with advanced monitoring and comfortable beds for our patients.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/icu-beds.avif" alt="ICU Beds" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Intensive Care Unit (ICU)</h4>
+                        <p class="text-xs text-slate-500 mt-1">100 Beds - 24/7 Life Support</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/cardiology-ward.avif" alt="Cardiology Ward" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Cardiology Ward</h4>
+                        <p class="text-xs text-slate-500 mt-1">80 Beds - Cardiac Monitoring</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/general-ward.avif" alt="General Ward" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">General Wards</h4>
+                        <p class="text-xs text-slate-500 mt-1">200 Beds - Comfortable Care</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/nicu-ward.avif" alt="NICU" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Pediatric & NICU</h4>
+                        <p class="text-xs text-slate-500 mt-1">70 Beds - Specialized Neonatal</p>
+                    </div>
+                </div>
+                <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+                    <img src="images/orthopedic-ward.avif" alt="Orthopedic Ward" class="w-full h-40 object-cover">
+                    <div class="p-4 bg-slate-50 text-center">
+                        <h4 class="font-bold text-secondary">Orthopedics Ward</h4>
+                        <p class="text-xs text-slate-500 mt-1">50 Beds - Recovery & Rehab</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Awards Modal -->
+    <div id="awards-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('awards-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+                <h2 class="text-2xl font-bold text-secondary mb-2"><i class="fa-solid fa-trophy text-primary mr-2"></i> Medical Excellence Awards</h2>
+                <p class="text-slate-600 mb-6">Our doctors are recognized globally for their outstanding contributions to medical science and patient care.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award1.avif" alt="Award Ceremony 1" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">Best Cardiology Team 2023</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award2.avif" alt="Award Ceremony 2" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">National Excellence in Patient Care</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award3.avif" alt="Award Ceremony 3" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">Top Innovators in Healthcare Tech</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl">
+                    <img src="images/award4.avif" alt="Award Ceremony 4" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
+                        <p class="text-white font-bold text-sm">Award for Highest Surgical Success</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Reviews Modal -->
+    <div id="reviews-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl relative flex flex-col max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('reviews-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            <div class="p-8 overflow-y-auto flex-grow">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-secondary mb-2"><i class="fa-solid fa-star text-yellow-400 mr-2"></i> Patient Reviews</h2>
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                        <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                        <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                        <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                        <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                        <i class="fa-solid fa-star-half-stroke text-yellow-400 text-xl"></i>
+                        <span class="text-xl font-bold text-secondary ml-2">4.8/5</span>
+                    </div>
+                    <p class="text-slate-600 text-sm">Based on 50,000+ happy patients</p>
+                <div class="mt-4 flex justify-center">
+                    <select id="modal-review-filter" onchange="filterModalReviews()" class="px-4 py-2 rounded-full border border-slate-300 outline-none text-sm bg-white focus:ring-2 focus:ring-primary shadow-sm text-slate-600 font-medium">
+                        <option value="">All Ratings</option>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="2">2 Stars</option>
+                        <option value="1">1 Star</option>
+                    </select>
+                </div>
+                </div>
+                
+                <div id="reviews-container" class="space-y-4">
+                    <!-- Injected via JS -->
+                </div>
+                
+                <form id="write-review-form" class="hidden bg-slate-50 p-5 rounded-xl border border-slate-200 mt-6 shadow-sm text-left">
+                    <h3 class="font-bold text-secondary mb-3">Share Your Experience</h3>
+                    <div class="mb-3 flex items-center gap-3">
+                        <label class="text-sm font-medium text-slate-700">Rating:</label>
+                        <select id="review-rating" class="px-3 py-1.5 rounded-lg border border-slate-300 outline-none text-sm bg-white focus:ring-2 focus:ring-primary">
+                            <option value="5">5 Stars - Excellent</option>
+                            <option value="4">4 Stars - One More</option>
+                            <option value="3">3 Stars - Good</option>
+                            <option value="2">2 Stars - do good,have good</option>
+                            <option value="1">1 Star - Write your opinion</option>
+                        </select>
+                    </div>
+                    <textarea id="review-text" rows="3" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none text-sm mb-3" placeholder="Tell us about your visit..."></textarea>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="toggleReviewForm()" class="px-4 py-2 text-slate-500 hover:bg-slate-200 rounded-lg text-sm font-bold transition">Cancel</button>
+                        <button type="submit" id="submit-review-btn" class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition shadow">Submit</button>
+                    </div>
+                </form>
+
+                <div class="flex flex-wrap justify-center items-center gap-4 mt-6">
+                    <button onclick="toggleReviewForm()" class="bg-primary text-white font-bold py-2.5 px-6 rounded-full hover:bg-teal-700 transition shadow-md border border-primary">
+                        Write a Review <i class="fa-solid fa-pen ml-1"></i>
+                    </button>
+                    <button id="load-more-reviews-btn" onclick="loadMoreReviews()" class="bg-slate-100 text-primary font-bold py-2.5 px-6 rounded-full hover:bg-slate-200 transition shadow-sm hidden border border-slate-200">
+                        Load More Reviews <i class="fa-solid fa-angle-down ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hospital Reviews in footr -->
+    <section class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Patient Feedback</h4>
+                <h2 class="text-3xl font-bold text-secondary mb-4">What Our Patients Say</h2>
+                <p class="text-slate-600">Read the experiences and stories from our valued patients about the care they received at MD Care Hospital.</p>
+            </div>
+            
+            <div id="general-reviews-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JS -->
+                <div class="col-span-full text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading reviews...</div>
+            </div>
+
+            <div class="flex flex-wrap justify-center items-center gap-4 mt-10">
+                <button onclick="openWriteReview()" class="bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-teal-700 transition shadow-md border border-primary flex items-center">
+                    Write a Review <i class="fa-solid fa-pen ml-2"></i>
+                </button>
+                <button onclick="openModal('reviews-modal')" class="bg-white border border-slate-200 text-primary font-bold py-3 px-8 rounded-full hover:bg-slate-50 transition shadow-sm inline-flex items-center">
+                    View More Reviews <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="bg-secondary text-white pt-16 pb-8 border-t-4 border-primary">
@@ -177,16 +526,22 @@
                     <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
                     <ul class="space-y-4 text-gray-400">
                         <li class="flex items-start">
-                            <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary"></i>
-                            <span>Basti DanishManda<br/>Jalandhar</span>
+                            <a href="https://maps.app.goo.gl/VHmDEL9wXsqcp3o66?g_st=aw" target="_blank" rel="noopener noreferrer" class="flex items-start hover:text-primary transition group">
+                                <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span class="text-sm">Street-3, Danishmandan,<br/>Basti Bawa khel, JALANDHAR,<br/>PUNJAB, Pincode: 144021</span>
+                            </a>
                         </li>
                         <li class="flex items-center">
-                            <i class="fa-solid fa-phone mr-3 text-primary"></i>
-                            <span>8091919997</span>
+                            <a href="tel:8091919997" class="flex items-center hover:text-primary transition group">
+                                <i class="fa-solid fa-phone mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span>8091919997</span>
+                            </a>
                         </li>
                         <li class="flex items-center">
-                            <i class="fa-solid fa-envelope mr-3 text-primary"></i>
-                            <span>thenish9997@gmail.com</span>
+                            <a href="mailto:mdcareadmin@gmail.com" class="flex items-center hover:text-primary transition group">
+                                <i class="fa-solid fa-envelope mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span>mdcareadmin@gmail.com</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -195,11 +550,14 @@
                     <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
                     <p class="text-gray-400 mb-4">Stay updated with our latest health tips and news.</p>
                     <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#E1306C] transition text-2xl text-[#E1306C] hover:text-white">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition text-2xl text-[#25D366] hover:text-white">
                             <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.facebook.com/share/1GAU4bhogt/" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition text-2xl text-[#1877F2] hover:text-white">
+                            <i class="fa-brands fa-facebook-f"></i>
                         </a>
                     </div>
                 </div>
@@ -210,21 +568,45 @@
         </div>
     </footer>
 
-    <script>
-        let isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
+            authDomain: "md-care-hospital.firebaseapp.com",
+            projectId: "md-care-hospital",
+            storageBucket: "md-care-hospital.firebasestorage.app",
+            messagingSenderId: "214966558089",
+            appId: "1:214966558089:web:d49f400adb427614089558",
+            measurementId: "G-K3S90QH9LT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         btn.addEventListener('click', () => menu.classList.toggle('hidden'));
 
+        document.addEventListener('click', (event) => {
+            if (!menu.classList.contains('hidden') && !menu.contains(event.target) && !btn.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
         function updateAuthUI() {
             const desktopAuth = document.getElementById('auth-nav-container');
             const mobileAuth = document.getElementById('mobile-auth-container');
-            if(isLoggedIn) {
+            if(window.isLoggedIn) {
             const picUrl = localStorage.getItem('mdcare_profilePic');
             const userInitial = localStorage.getItem('mdcare_userInitial') || 'U';
             const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : userInitial;
-        if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Profile Dashboard</a><button onclick="logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
-            if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Profile Dashboard</a><button onclick="logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+        if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Profile Dashboard</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+            if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Profile Dashboard</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
             } else {
                 if(desktopAuth) desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login</a><a href="index.html" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</a>`;
                 if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
@@ -245,31 +627,306 @@
         requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
         setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 6000);
     };
-    function logout(btn) { 
+    window.logout = function(btn) { 
         if (btn) {
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
             btn.disabled = true;
         }
-        localStorage.removeItem('mdcare_auth'); 
-        localStorage.removeItem('mdcare_profilePic'); 
-        localStorage.removeItem('mdcare_userInitial'); 
-        isLoggedIn = false; 
-        window.showToast("Logged Out", "You have been successfully logged out.", "success"); 
-        setTimeout(() => { 
-            const menu = document.getElementById('mobile-menu');
-            if (menu) menu.classList.add('hidden');
+        signOut(auth).then(() => {
+            localStorage.removeItem('mdcare_auth'); 
+            localStorage.removeItem('mdcare_profilePic'); 
+            localStorage.removeItem('mdcare_userInitial'); 
+            window.isLoggedIn = false; 
+            sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
             window.location.href = 'index.html'; 
-        }, 1500);
-    }
+        });
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        window.isLoggedIn = !!user;
+        if (user) {
+            localStorage.setItem('mdcare_auth', 'true');
+            localStorage.setItem('mdcare_userInitial', (user.displayName || "U").charAt(0).toUpperCase());
+        }
+        updateAuthUI();
+    });
+
         updateAuthUI();
 
-        function openModal(id) {
+        window.openModal = function(id) {
             document.getElementById(id).classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-        }
-        function closeModal(id) {
+        };
+        window.closeModal = function(id) {
             document.getElementById(id).classList.add('hidden');
             document.body.style.overflow = 'auto';
+        };
+
+        window.openWriteReview = function() {
+            window.openModal('reviews-modal');
+            if (document.getElementById('write-review-form').classList.contains('hidden')) {
+                window.toggleReviewForm();
+            }
+        };
+
+        async function loadGeneralReviews() {
+            const grid = document.getElementById('general-reviews-grid');
+            if(!grid) return;
+            
+            try {
+                const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"), limit(3));
+                const snapshot = await getDocs(q);
+                
+                grid.innerHTML = '';
+                
+                if(snapshot.empty) {
+                    grid.innerHTML = '<div class="col-span-full text-center text-slate-500">No reviews found.</div>';
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    let starsHtml = '';
+                    const fullStars = Math.floor(data.rating || 5);
+                    const halfStar = (data.rating || 5) % 1 !== 0;
+                    for(let j=0; j<fullStars; j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+                    if(halfStar) starsHtml += '<i class="fa-solid fa-star-half-stroke text-yellow-400"></i>';
+                    
+                    let adminReplyHtml = '';
+                    if (data.adminReply) {
+                        adminReplyHtml = `<div class="mt-4 bg-teal-50/50 p-3 rounded-lg border border-teal-100 relative shadow-sm border-l-2 border-l-primary"><div class="flex items-center gap-2 mb-1"><i class="fa-solid fa-hospital text-primary text-xs"></i><span class="font-bold text-primary text-[10px] uppercase tracking-wider">MD Care Response</span></div><p class="text-xs text-slate-600 italic">"${data.adminReply}"</p></div>`;
+                    }
+
+                    let verifiedBadgeHtml = '';
+                    if (data.userId && data.userId !== "unknown") {
+                        verifiedBadgeHtml = `<span class="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100" title="Verified Patient"><i class="fa-solid fa-circle-check"></i></span>`;
+                    }
+
+                    grid.innerHTML += `<div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col justify-between"><div><div class="flex justify-between items-start mb-3"><h4 class="font-bold text-secondary flex items-center">${data.name || 'Anonymous'} ${verifiedBadgeHtml}</h4><div class="text-xs">${starsHtml}</div></div><p class="text-sm text-slate-600 leading-relaxed mb-2">"${data.text}"</p></div>${adminReplyHtml}</div>`;
+                });
+            } catch(e) {
+                console.error(e);
+                grid.innerHTML = '<div class="col-span-full text-center text-red-500">Failed to load reviews.</div>';
+            }
+        }
+        
+        loadGeneralReviews();
+
+        // Populate 45 Reviews Dynamically in the Modal
+        const reviewsContainer = document.getElementById('reviews-container');
+        if (reviewsContainer) {
+            const reviews = [
+                { name: "Rajesh Kumar", rating: 5, text: "The cardiology department is top-notch. Dr. M D Sheikh saved my father's life. The hospital staff is extremely polite and the facilities are world-class." },
+                { name: "Simran Kaur", rating: 4.5, text: "Very clean wards and timely service. The pediatric unit handled my child's case with so much care. Highly recommend MD Care to everyone in Jalandhar." },
+                { name: "Amit Verma", rating: 5, text: "The booking process was seamless and the wait times were minimal. Excellent orthopedics team. Helped me recover fully from a sports injury." }
+            ];
+
+            const extraNames = ["Priya Sharma", "Rahul Singh", "Neha Gupta", "Vikram Malhotra", "Sneha Desai", "Anil Kapoor", "Kavita Reddy", "Sanjay Patel", "Pooja Jain", "Arjun Bose", "Anjali Nair", "Rohan Rao", "Ritu Das", "Vivek Iyer", "Nisha Sen", "Manish Shah", "Kiran Yadav", "Deepak Chopra", "Aarti Tiwari", "Karan Johar", "Roshni Agarwal", "Tarun Banerjee", "Kriti Sanon", "Manoj Bajpayee", "Sunita Williams", "Rajiv Bhatia", "Smriti Irani", "Ramesh Tendulkar", "Geeta Phogat", "Suresh Raina", "Meera Rajput", "Nitin Gadkari", "Preeti Zinta", "Alok Nath", "Shilpa Shetty", "Gaurav Khanna", "Divya Dutta", "Harish Salve", "Ravi Teja", "Kapil Sharma", "Shreya Ghoshal", "Anushka Sharma"];
+            
+            const extraTexts = [
+                "Outstanding medical care and very compassionate nurses. I felt very well taken care of.",
+                "State-of-the-art facilities and experienced doctors. The diagnosis was quick and accurate.",
+                "I visited for a routine checkup and was impressed by the efficiency of the staff.",
+                "Emergency services are truly 24/7 and very responsive. The doctors act fast.",
+                "The oncology department provided excellent support and advanced treatment options.",
+                "Very reasonable pricing for the quality of care provided. Transparent billing.",
+                "The dermatology department helped me cure a chronic skin issue I've had for years.",
+                "Excellent maternity care. The nurses were so helpful and the pediatricians are wonderful.",
+                "The doctors here take the time to listen to your concerns. You never feel rushed.",
+                "Highly skilled surgeons. My knee replacement surgery went flawlessly.",
+                "The neurology team is fantastic. They accurately diagnosed my migraines.",
+                "Good hospital with modern infrastructure. The waiting areas are comfortable.",
+                "Best hospital in Jalandhar. The staff goes above and beyond to help patients.",
+                "I'm very satisfied with the ophthalmology department. My cataract surgery was painless.",
+                "Great psychiatric counseling. The doctors maintain strict confidentiality and are supportive.",
+                "The rehabilitation center is excellent. They helped my father walk again.",
+                "Everything from admission to discharge was perfectly organized.",
+                "I highly recommend the ENT specialists here. Very thorough checkups."
+            ];
+
+            extraNames.forEach((name, i) => {
+                reviews.push({ name: name, rating: (Math.random() > 0.2 ? 5 : 4.5), text: extraTexts[i % extraTexts.length] });
+            });
+
+            // Fetch real user reviews from Firestore and prepend them
+            getDocs(collection(db, "reviews")).then(snapshot => {
+                const firestoreReviews = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    firestoreReviews.push({ name: data.name, rating: data.rating, text: data.text, adminReply: data.adminReply, createdAt: data.createdAt?.toMillis() || 0, userId: data.userId });
+                });
+                firestoreReviews.sort((a,b) => b.createdAt - a.createdAt);
+                reviews.unshift(...firestoreReviews); 
+                reviewsContainer.innerHTML = '';
+                currentReviewIndex = 0;
+                window.loadMoreReviews();
+            }).catch(e => console.log("No firestore reviews yet"));
+
+            let currentReviewIndex = 0;
+            const loadMoreBtn = document.getElementById('load-more-reviews-btn');
+
+            window.currentReviewFilter = '';
+            window.filterModalReviews = function() {
+                window.currentReviewFilter = document.getElementById('modal-review-filter').value;
+                reviewsContainer.innerHTML = '';
+                currentReviewIndex = 0;
+                window.loadMoreReviews();
+            };
+
+            window.loadMoreReviews = function() {
+                const filteredReviews = window.currentReviewFilter ? reviews.filter(r => Math.floor(r.rating) === parseInt(window.currentReviewFilter)) : reviews;
+                const end = Math.min(currentReviewIndex + 5, filteredReviews.length);
+                let htmlStr = '';
+                
+                for (let i = currentReviewIndex; i < end; i++) {
+                    const review = filteredReviews[i];
+                    let starsHtml = '';
+                    const fullStars = Math.floor(review.rating);
+                    const halfStar = review.rating % 1 !== 0;
+                    for(let j=0; j<fullStars; j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+                    if(halfStar) starsHtml += '<i class="fa-solid fa-star-half-stroke text-yellow-400"></i>';
+                    
+                    let adminReplyHtml = '';
+                    if (review.adminReply) {
+                        adminReplyHtml = `
+                            <div class="mt-4 bg-teal-50 p-4 rounded-xl border border-teal-100 ml-4 md:ml-8 relative shadow-sm border-l-4 border-l-primary">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-[10px] shadow-sm">
+                                        <i class="fa-solid fa-hospital"></i>
+                                    </div>
+                                    <span class="font-bold text-primary text-xs uppercase tracking-wider">MD Care Response</span>
+                                </div>
+                                <p class="text-sm text-slate-700 leading-relaxed ml-8 italic">"${review.adminReply}"</p>
+                            </div>
+                        `;
+                    }
+
+                    let verifiedBadgeHtml = '';
+                    if (review.userId && review.userId !== "unknown") {
+                        verifiedBadgeHtml = `<span class="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100" title="Verified Patient"><i class="fa-solid fa-circle-check"></i> Verified Patient</span>`;
+                    }
+
+                    htmlStr += `
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-secondary flex items-center flex-wrap">${review.name} ${verifiedBadgeHtml}</h4>
+                                <div class="text-xs">${starsHtml}</div>
+                            </div>
+                            <p class="text-sm text-slate-600">"${review.text}"</p>
+                            ${adminReplyHtml}
+                        </div>
+                    `;
+                }
+                
+                reviewsContainer.innerHTML += htmlStr;
+                currentReviewIndex = end;
+
+                if (currentReviewIndex >= filteredReviews.length) {
+                    loadMoreBtn.classList.add('hidden');
+                } else {
+                    loadMoreBtn.classList.remove('hidden');
+                }
+
+                if (filteredReviews.length === 0 && currentReviewIndex === 0) {
+                    reviewsContainer.innerHTML = '<p class="text-center text-slate-500 py-6">No reviews found for this rating.</p>';
+                }
+            };
+
+            // Load initial 5 reviews
+            window.loadMoreReviews();
+
+            // Review Form Toggle and Authentication Check
+            window.toggleReviewForm = function() {
+                if (!window.isLoggedIn) {
+                    window.closeModal('reviews-modal');
+                    window.showToast("Login Required", "Please login from the home page to write a review.", "error");
+                    return;
+                }
+                if (!auth.currentUser?.emailVerified) {
+                    window.showToast("Verification Required", "Please verify your email address to write a review. Check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder for the link.", "error");
+                    return;
+                }
+                document.getElementById('write-review-form').classList.toggle('hidden');
+            };
+
+            // Handle Review Submission
+            document.getElementById('write-review-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!window.isLoggedIn) return;
+                if (!auth.currentUser?.emailVerified) {
+                    window.showToast("Verification Required", "Please verify your email address to submit a review.", "error");
+                    return;
+                }
+
+                const btn = document.getElementById('submit-review-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+                btn.disabled = true;
+
+                const text = document.getElementById('review-text').value;
+                const rating = parseFloat(document.getElementById('review-rating').value);
+                const name = auth.currentUser?.displayName || "Patient";
+
+                try {
+                    await addDoc(collection(db, "reviews"), {
+                        userId: auth.currentUser?.uid || "unknown",
+                        name: name,
+                        rating: rating,
+                        text: text,
+                        createdAt: serverTimestamp()
+                    });
+
+                    // Notify Admin via email
+                    await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                        to_email: "mdcareadmin@gmail.com",
+                        subject: "New Patient Review - MD Care",
+                        html_message: `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
+                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #eab308;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #eab308;">Admin Alerts</span></h1>
+                                </div>
+                                <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
+                                    <div style="background-color: #fefce8; border-left: 4px solid #eab308; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                        <h3 style="margin: 0 0 5px 0; color: #854d0e; font-size: 16px;">New Patient Review</h3>
+                                        <p style="margin: 0; color: #713f12; font-size: 14px;">A patient has just left a review on the portal.</p>
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Rating:</td>
+                                            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${rating} / 5</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 0; color: #64748b;">Review:</td>
+                                            <td style="padding: 12px 0; color: #0f172a; font-weight: 600; font-style: italic;">"${text}"</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                    <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                                </div>
+                            </div>
+                        </div>`
+                    });
+
+                    reviews.unshift({ name, rating, text, userId: auth.currentUser?.uid || "unknown" });
+                    reviewsContainer.innerHTML = '';
+                    currentReviewIndex = 0;
+                    window.loadMoreReviews();
+                    window.showToast("Review Submitted", "Thank you for your feedback!", "success");
+                    window.toggleReviewForm();
+                    e.target.reset();
+                } catch (err) {
+                    window.showToast("Error", "Could not submit review: " + err.message, "error");
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
         }
     </script>
 <script src="chatbot.js"></script>

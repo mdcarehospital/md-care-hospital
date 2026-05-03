@@ -19,7 +19,55 @@
             }
         }
     </script>
-    <style>body { font-family: 'Poppins', sans-serif; }</style>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
+    </style>
+    <style>
+        /* Dark Mode Auto-Overrides */
+        * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+        html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+        html.dark .bg-white { background-color: #1e293b !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; }
+        html.dark .bg-slate-100 { background-color: #334155 !important; }
+        html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+        html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+        html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        html.dark .bg-secondary { background-color: #020617 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .theme-icon-moon { display: none !important; }
+        html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+        html.dark { scrollbar-color: #334155 #0f172a; }
+    </style>
+    <script>
+        function adaptTheme() {
+            const savedTheme = localStorage.getItem('mdcare_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
+            else { document.documentElement.classList.remove('dark'); }
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
+        adaptTheme();
+
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('mdcare_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('mdcare_theme', 'dark');
+            }
+        };
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -27,10 +75,18 @@
     <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-4">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
-                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
-                </a>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Hospital</span></span>
+                    </a>
+                </div>
                 <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
                     <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
                     <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
@@ -43,11 +99,6 @@
                     <div id="auth-nav-container" class="flex items-center space-x-4">
                     </div>
                 </div>
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
-                </div>
             </div>
         </div>
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
@@ -56,7 +107,7 @@
                 <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
                 <a href="departments.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
-                <a href="index.html#appointment" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Book Appointment</a>
+                <a href="index.html#appointment" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
             </div>
@@ -70,6 +121,12 @@
                 <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Our Departments</h4>
                 <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Comprehensive Medical Services</h2>
                 <p class="text-slate-600">Select a department below to explore the specialized treatments and services offered by our leading experts.</p>
+                <div class="relative max-w-md mx-auto mt-8">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                    </div>
+                    <input type="text" id="dept-search" class="block w-full pl-11 pr-4 py-3 border border-slate-300 rounded-full leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary sm:text-sm transition shadow-sm" placeholder="Search departments or treatments...">
+                </div>
             </div>
             
             <div id="departments-container" class="max-w-5xl mx-auto space-y-6">
@@ -98,17 +155,18 @@
                 <div>
                     <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
                     <ul class="space-y-4 text-gray-400">
-                        <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 mr-3 text-primary"></i><span>Basti DanishManda<br/>Jalandhar</span></li>
-                        <li class="flex items-center"><i class="fa-solid fa-phone mr-3 text-primary"></i><span>8091919997</span></li>
-                        <li class="flex items-center"><i class="fa-solid fa-envelope mr-3 text-primary"></i><span>thenish9997@gmail.com</span></li>
+                        <li class="flex items-start"><a href="https://maps.app.goo.gl/VHmDEL9wXsqcp3o66?g_st=aw" target="_blank" rel="noopener noreferrer" class="flex items-start hover:text-primary transition group"><i class="fa-solid fa-location-dot mt-1 mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span class="text-sm">Street-3, Danishmandan,<br/>Basti Bawa khel, JALANDHAR,<br/>PUNJAB, Pincode: 144021</span></a></li>
+                        <li class="flex items-center"><a href="tel:8091919997" class="flex items-center hover:text-primary transition group"><i class="fa-solid fa-phone mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span>8091919997</span></a></li>
+                        <li class="flex items-center"><a href="mailto:mdcareadmin@gmail.com" class="flex items-center hover:text-primary transition group"><i class="fa-solid fa-envelope mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span>mdcareadmin@gmail.com</span></a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
                     <p class="text-gray-400 mb-4">Stay updated with our latest health tips and news.</p>
                     <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#E1306C] transition text-2xl text-[#E1306C] hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition text-2xl text-[#25D366] hover:text-white"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/share/1GAU4bhogt/" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition text-2xl text-[#1877F2] hover:text-white"><i class="fa-brands fa-facebook-f"></i></a>
                     </div>
                 </div>
             </div>
@@ -123,6 +181,12 @@
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        document.addEventListener('click', (event) => {
+            if (!menu.classList.contains('hidden') && !menu.contains(event.target) && !btn.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
 
         function updateAuthUI() {
             const desktopAuth = document.getElementById('auth-nav-container');
@@ -161,12 +225,8 @@
         localStorage.removeItem('mdcare_profilePic'); 
         localStorage.removeItem('mdcare_userInitial'); 
         isLoggedIn = false; 
-        window.showToast("Logged Out", "You have been successfully logged out.", "success"); 
-        setTimeout(() => { 
-            const menu = document.getElementById('mobile-menu');
-            if (menu) menu.classList.add('hidden');
-            window.location.href = 'index.html'; 
-        }, 1500);
+        sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
+        window.location.href = 'index.html'; 
     }
         updateAuthUI();
 
@@ -178,7 +238,7 @@
                 icon: "fa-heart-pulse",
                 desc: "Comprehensive heart care, advanced diagnostics, and surgical interventions.",
                 services: [
-                    { title: "Coronary Angioplasty", desc: "A minimally invasive procedure to widen narrowed or obstructed arteries or veins to treat coronary heart diseases.", doc: "Dr. Rajat Sharma", timing: "Mon, Wed, Fri | 09:00 AM - 01:00 PM" },
+                    { title: "Coronary Angioplasty", desc: "A minimally invasive procedure to widen narrowed or obstructed arteries or veins to treat coronary heart diseases.", doc: "Dr. M D Sheikh", timing: "Mon, Wed, Fri | 09:00 AM - 01:00 PM" },
                     { title: "Echocardiography", desc: "An ultrasound of the heart to provide detailed moving pictures and diagnose structural heart conditions.", doc: "Dr. Arjun Patel", timing: "Tue, Thu, Sat | 10:00 AM - 02:00 PM" },
                     { title: "Pacemaker Implantation", desc: "Surgical placement of a small electronic device in the chest to help regulate slow electrical problems with the heart.", doc: "Dr. Neha Verma", timing: "Thu, Sat | 11:00 AM - 03:00 PM" }
                 ]
@@ -264,51 +324,84 @@
 
         const container = document.getElementById('departments-container');
 
-        departmentsData.forEach(dept => {
-            let servicesHtml = '';
-            dept.services.forEach(srv => {
-                servicesHtml += `
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col h-full">
-                        <h4 class="font-bold text-secondary text-lg mb-2">${srv.title}</h4>
-                        <p class="text-slate-600 text-sm mb-4 line-clamp-2">${srv.desc}</p>
-                        <div class="flex items-center justify-between border-t border-slate-100 pt-3 mt-auto">
-                            <div>
-                                <p class="text-sm font-bold text-secondary"><i class="fa-solid fa-user-doctor text-primary mr-1"></i> ${srv.doc}</p>
-                                <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-clock text-primary mr-1"></i> ${srv.timing}</p>
+        window.renderDepartments = function(searchTerm = '') {
+            container.innerHTML = '';
+            const term = searchTerm.toLowerCase().trim();
+            let foundAny = false;
+
+            departmentsData.forEach(dept => {
+                const deptMatches = dept.name.toLowerCase().includes(term) || dept.desc.toLowerCase().includes(term);
+                
+                let filteredServices = dept.services;
+                if (!deptMatches && term !== '') {
+                    filteredServices = dept.services.filter(srv => 
+                        srv.title.toLowerCase().includes(term) || 
+                        srv.desc.toLowerCase().includes(term) ||
+                        srv.doc.toLowerCase().includes(term)
+                    );
+                }
+
+                if (deptMatches || filteredServices.length > 0) {
+                    foundAny = true;
+                    let servicesHtml = '';
+                    filteredServices.forEach(srv => {
+                        servicesHtml += `
+                            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col h-full">
+                                <h4 class="font-bold text-secondary text-lg mb-2">${srv.title}</h4>
+                                <p class="text-slate-600 text-sm mb-4 line-clamp-2">${srv.desc}</p>
+                                <div class="flex items-center justify-between border-t border-slate-100 pt-3 mt-auto">
+                                    <div>
+                                        <p class="text-sm font-bold text-secondary"><i class="fa-solid fa-user-doctor text-primary mr-1"></i> ${srv.doc}</p>
+                                        <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-clock text-primary mr-1"></i> ${srv.timing}</p>
+                                    </div>
+                                    <a href="index.html#appointment" class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-teal-700 transition shadow-sm">Book</a>
+                                </div>
                             </div>
-                            <a href="index.html#appointment" class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-teal-700 transition shadow-sm">Book</a>
+                        `;
+                    });
+
+                    const autoExpandClass = term !== '' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]';
+                    const iconClass = term !== '' ? 'rotate-180' : '';
+
+                    const block = document.createElement('div');
+                    block.className = "bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden";
+                    block.innerHTML = `
+                        <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between cursor-pointer hover:bg-slate-50 transition group" onclick="toggleDept('${dept.id}')">
+                            <div class="flex items-center gap-6">
+                                <div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition"><i class="fa-solid ${dept.icon} text-3xl text-primary group-hover:text-white transition"></i></div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-secondary mb-1">${dept.name}</h3>
+                                    <p class="text-slate-500 text-sm">${dept.desc}</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex-shrink-0 flex items-center text-primary font-bold bg-teal-50 px-4 py-2 rounded-full group-hover:bg-teal-100 transition">
+                                <span class="mr-2">View Services</span>
+                                <i id="icon-${dept.id}" class="fa-solid fa-chevron-down transition-transform duration-300 ${iconClass}"></i>
+                            </div>
                         </div>
-                    </div>
-                `;
+                        <div id="wrapper-${dept.id}" class="grid ${autoExpandClass} transition-all duration-300 ease-in-out">
+                            <div class="overflow-hidden">
+                                <div class="border-t border-slate-100 bg-slate-50 p-6 md:p-8">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        ${servicesHtml}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(block);
+                }
             });
 
-            const block = document.createElement('div');
-            block.className = "bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden";
-            block.innerHTML = `
-                <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between cursor-pointer hover:bg-slate-50 transition group" onclick="toggleDept('${dept.id}')">
-                    <div class="flex items-center gap-6">
-                        <div class="w-16 h-16 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition"><i class="fa-solid ${dept.icon} text-3xl text-primary group-hover:text-white transition"></i></div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-secondary mb-1">${dept.name}</h3>
-                            <p class="text-slate-500 text-sm">${dept.desc}</p>
-                        </div>
-                    </div>
-                    <div class="mt-4 md:mt-0 flex-shrink-0 flex items-center text-primary font-bold bg-teal-50 px-4 py-2 rounded-full group-hover:bg-teal-100 transition">
-                        <span class="mr-2">View Services</span>
-                        <i id="icon-${dept.id}" class="fa-solid fa-chevron-down transition-transform duration-300"></i>
-                    </div>
-                </div>
-                <div id="wrapper-${dept.id}" class="grid grid-rows-[0fr] transition-all duration-300 ease-in-out">
-                    <div class="overflow-hidden">
-                        <div class="border-t border-slate-100 bg-slate-50 p-6 md:p-8">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                ${servicesHtml}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.appendChild(block);
+            if (!foundAny) {
+                container.innerHTML = '<div class="text-center text-slate-500 py-10">No departments or treatments found matching your search.</div>';
+            }
+        };
+
+        window.renderDepartments();
+        
+        document.getElementById('dept-search')?.addEventListener('input', (e) => {
+            window.renderDepartments(e.target.value);
         });
 
         window.toggleDept = function(id) {

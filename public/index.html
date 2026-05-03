@@ -10,7 +10,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-        (function() { emailjs.init("lT18BxqA4wgJ-8RuJ"); })();
+        (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
     </script>
     <script>
         tailwind.config = {
@@ -44,6 +44,12 @@
     </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -53,6 +59,46 @@
         }
         .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     </style>
+        <style>
+            /* Dark Mode Auto-Overrides */
+            * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+            html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+            html.dark .bg-white { background-color: #1e293b !important; }
+            html.dark .bg-slate-50 { background-color: #0f172a !important; }
+            html.dark .bg-slate-100 { background-color: #334155 !important; }
+            html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+            html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+            html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+            html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+            html.dark .bg-secondary { background-color: #020617 !important; }
+            html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+            html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+            html.dark .theme-icon-moon { display: none !important; }
+            html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+        html.dark { scrollbar-color: #334155 #0f172a; }
+        </style>
+        <script>
+            function adaptTheme() {
+                const savedTheme = localStorage.getItem('mdcare_theme');
+                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
+                else { document.documentElement.classList.remove('dark'); }
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
+            adaptTheme();
+
+            window.toggleTheme = function() {
+                const html = document.documentElement;
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('mdcare_theme', 'light');
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('mdcare_theme', 'dark');
+                }
+            };
+        </script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -60,13 +106,21 @@
     <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-4">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-                    <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
-                    <span class="font-bold text-2xl text-secondary">MD Care <span class="text-primary">Hospital</span></span>
-                </a>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Hospital</span></span>
+                    </a>
+                </div>
                 <!-- Maoin Menu -->
                 <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
-                    <a href="#home" class="text-primary transition font-bold">Home</a>
+                    <a href="#home" class="text-secondary font-bold transition">Home</a>
                     <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
@@ -78,22 +132,16 @@
                         <!-- Injected via JS based on Auth Status -->
                     </div>
                 </div>
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
-                </div>
             </div>
         </div>
         <!-- Mobile Menu Panel -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
-                <a href="#home" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Home</a>
+                <a href="#home" class="block px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Home</a>
                 <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
-                <a href="doctors.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Doctors</a>
-                <button onclick="handleAppointmentClick()" class="block w-full text-left px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Book Appointment</button>
+                <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <button onclick="handleAppointmentClick()" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
             </div>
@@ -113,13 +161,23 @@
                 <p class="text-lg text-gray-200 mb-8 max-w-xl mx-auto md:mx-0">
                     Providing world-class healthcare with state-of-the-art facilities and compassionate medical experts at MD Care Hospital.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <button onclick="handleAppointmentClick()" class="bg-primary text-white px-8 py-3 rounded-full font-medium hover:bg-teal-700 transition text-center animate-glow-pulse">
-                        Book an Appointment
-                    </button>
-                    <a href="about.html" class="bg-white text-secondary px-8 py-3 rounded-full font-medium hover:bg-gray-100 transition text-center">
-                        Learn More
-                    </a>
+                <div class="flex flex-col gap-4 items-center md:items-start">
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <button onclick="handleAppointmentClick()" class="bg-primary text-white px-8 py-3 rounded-full font-medium hover:bg-teal-700 transition flex items-center justify-center animate-glow-pulse">
+                            Book an Appointment
+                        </button>
+                        <a href="about.html" class="bg-white text-secondary px-8 py-3 rounded-full font-medium hover:bg-gray-100 transition flex items-center justify-center">
+                            About Us
+                        </a>
+                    </div>
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <button type="button" onclick="openModal('emergency-modal')" class="bg-red-500 text-white px-8 py-3 rounded-full font-medium hover:bg-red-600 transition flex items-center justify-center shadow-lg shadow-red-500/30">
+                            <i class="fa-solid fa-truck-medical mr-2"></i> Emergency
+                        </button>
+                        <a href="profile.html#appointments-list" class="bg-secondary text-white px-8 py-3 rounded-full font-medium hover:bg-slate-800 transition flex items-center justify-center shadow-lg border border-slate-700">
+                            <i class="fa-solid fa-list-check mr-2"></i> Your Bookings
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,7 +189,7 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">About MD Care Hospital</h4>
                 <h2 class="text-3xl md:text-5xl font-bold text-secondary mb-6">Committed to Outstanding Patient Care & Medical Excellence</h2>
-                <p class="text-slate-600 text-lg leading-relaxed">Located in the heart of Basti DanishManda Jalandhar, MD Hospitals has been a cornerstone of health and wellness. We believe that everyone deserves access to top-tier medical assistance.</p>
+                <p class="text-slate-600 text-lg leading-relaxed">Located at Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021, MD Hospitals has been a cornerstone of health and wellness. We believe that everyone deserves access to top-tier medical assistance.</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
@@ -143,9 +201,9 @@
                     </div>
                 </div>
                 <div class="space-y-6">
-                    <h3 class="text-2xl font-bold text-secondary border-l-4 border-primary pl-4">Our Story & Mission</h3>
+                <h3 class="text-2xl font-bold text-secondary border-l-4 border-primary pl-4">Our Legacy & Mission</h3>
                     <p class="text-slate-600 leading-relaxed">
-                        Founded with a vision to redefine healthcare, MD Care Hospital combines the latest medical technology with compassionate, expert professionals to ensure you receive the best care possible. Our expansive facility features highly specialized departments and a robust trauma center.
+                    Established with a profound commitment to redefining healthcare standards, MD Care Hospital seamlessly integrates cutting-edge medical technology with compassionate, patient-centered care. For over 15 years, our world-class facility, encompassing highly specialized departments and a 24/7 trauma center, has been dedicated to delivering clinical excellence and fostering holistic healing for our community.
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                         <button onclick="openModal('labs-modal')" class="text-left bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-primary transition group">
@@ -278,7 +336,7 @@
                             </div>
                             <div>
                                 <p class="text-teal-200 text-sm">Email us at</p>
-                                    <p class="font-bold text-lg">thenish9997@gmail.com</p>
+                                    <p class="font-bold text-lg">mdcareadmin@gmail.com</p>
                             </div>
                         </div>
                         <div class="flex items-center">
@@ -287,7 +345,7 @@
                             </div>
                             <div>
                                 <p class="text-teal-200 text-sm">Visit us at</p>
-                                <p class="font-bold">Basti DanishManda Jalandhar</p>
+                                <p class="font-bold text-sm">Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p>
                             </div>
                         </div>
                     </div>
@@ -310,7 +368,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
-                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="John Doe">
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="Patient Name">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
@@ -413,18 +471,53 @@
                 <h2 class="text-2xl font-bold text-secondary">Create an Account</h2>
                 <p class="text-slate-500 text-sm">Join MD Care Hospital Portal</p>
             </div>
-            <form id="register-form" class="space-y-4">
+            <form id="register-form" class="space-y-4 text-left">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
-                    <input type="text" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="John Doe">
+                    <input type="text" id="reg-name" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="Your Name">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input type="email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="user@example.com">
+                    <input type="email" id="reg-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="user@example.com">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Age</label>
+                        <input type="number" id="reg-age" min="0" max="150" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. 35">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Sex</label>
+                        <select id="reg-sex" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none bg-white">
+                            <option value="" disabled selected>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Blood Group</label>
+                        <select id="reg-blood-group" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none bg-white">
+                            <option value="" disabled selected>Select</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Phone (Optional)</label>
+                        <input type="tel" id="reg-phone" pattern="[0-9]{10}" title="Must be exactly 10 digits" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="10-digit number">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input type="password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••">
+                    <input type="password" id="reg-pass" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••">
                 </div>
                 <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition shadow-md mt-4">Register</button>
                 <p class="text-center text-sm text-slate-600 mt-4">Already have an account? <a href="#" onclick="switchModal('register-modal', 'login-modal')" class="text-primary font-bold hover:underline">Login</a></p>
@@ -455,11 +548,12 @@
     <!-- Doctor biodata  -->
     <div id="doctor-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl relative overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
-            <button onclick="closeModal('doctor-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-3xl z-20 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeModal('doctor-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-3xl z-30 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark"></i></button>
             <div class="md:w-2/5 h-64 md:h-auto relative">
                 <img id="doc-modal-img" src="" alt="Doctor" class="w-full h-full object-cover object-top">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
-                    <span id="doc-modal-dept" class="bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg"></span>
+                <button id="modal-fav-btn" onclick="toggleModalFavorite()" class="absolute top-4 right-16 md:right-4 z-20 bg-white/90 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-md transition hover:scale-110"><i id="modal-fav-icon" class="fa-regular fa-heart text-xl text-slate-400"></i></button>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 pointer-events-none">
+                    <span id="doc-modal-dept" class="bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg pointer-events-auto"></span>
                 </div>
             </div>
             <div class="md:w-3/5 p-8 md:p-10 overflow-y-auto no-scrollbar">
@@ -471,6 +565,31 @@
                 </div>
                 <h4 class="font-bold text-secondary mb-2 uppercase tracking-wide text-sm">Professional Biography</h4>
                 <p id="doc-modal-bio" class="text-slate-600 leading-relaxed text-sm"></p>
+            
+            <div class="mt-8 border-t border-slate-200 pt-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="font-bold text-secondary uppercase tracking-wide text-sm">Patient Reviews</h4>
+                    <button onclick="toggleDocReviewForm()" class="text-primary text-sm font-bold hover:underline"><i class="fa-solid fa-pen mr-1"></i> Write Review</button>
+                </div>
+                <form id="doc-review-form" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 text-left shadow-sm">
+                    <div class="mb-3 flex items-center gap-3">
+                        <label class="text-sm font-medium text-slate-700">Rating:</label>
+                        <select id="doc-review-rating" class="px-3 py-1.5 rounded-lg border border-slate-300 outline-none text-sm bg-white focus:ring-2 focus:ring-primary">
+                            <option value="5">5 Stars - Excellent</option>
+                            <option value="4">4 Stars - Good</option>
+                            <option value="3">3 Stars - Average</option>
+                            <option value="2">2 Stars - Poor</option>
+                            <option value="1">1 Star - Terrible</option>
+                        </select>
+                    </div>
+                    <textarea id="doc-review-text" rows="2" required class="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none text-sm mb-3" placeholder="Share your experience with this doctor..."></textarea>
+                    <div class="flex justify-end gap-2">
+                        <button type="button" onclick="toggleDocReviewForm()" class="px-3 py-1.5 text-slate-500 hover:bg-slate-200 rounded-lg text-xs font-bold transition">Cancel</button>
+                        <button type="submit" id="submit-doc-review-btn" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-teal-700 transition shadow-sm">Submit</button>
+                    </div>
+                </form>
+                <div id="doc-modal-reviews-list" class="space-y-3 max-h-48 overflow-y-auto no-scrollbar pr-2"></div>
+            </div>
             </div>
         </div>
     </div>
@@ -506,8 +625,8 @@
             <h2 class="text-2xl font-bold text-secondary mb-2">24/7 Emergency Contacts</h2>
             <p class="text-slate-500 text-sm mb-6">In case of a medical emergency, immediately contact the numbers below.</p>
             <div class="space-y-4">
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-blue-500 text-xl"></i><span class="font-bold text-slate-700">Police</span></div><a href="tel:100" class="text-xl font-bold text-blue-600 hover:underline">100</a></div>
                 <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-truck-medical text-red-500 text-xl"></i><span class="font-bold text-slate-700">Ambulance</span></div><a href="tel:108" class="text-xl font-bold text-red-600 hover:underline">108</a></div>
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-blue-500 text-xl"></i><span class="font-bold text-slate-700">Police</span></div><a href="tel:100" class="text-xl font-bold text-blue-600 hover:underline">100</a></div>
                 <div class="flex justify-between items-center bg-teal-50 p-4 rounded-xl border border-teal-100"><div class="flex items-center gap-3"><i class="fa-solid fa-hospital text-primary text-xl"></i><span class="font-bold text-teal-900 text-left leading-tight">MD Care<br/><span class="text-xs">Emergency</span></span></div><a href="tel:8091919997" class="text-xl font-bold text-primary hover:underline">8091919997</a></div>
             </div>
         </div>
@@ -565,7 +684,7 @@
     <div id="reviews-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl relative flex flex-col max-h-[90vh] overflow-hidden">
             <button onclick="closeModal('reviews-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-secondary text-2xl z-20 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
-            <div class="p-8 overflow-y-auto no-scrollbar flex-grow">
+            <div class="p-8 overflow-y-auto flex-grow">
                 <div class="text-center mb-8">
                 <h2 class="text-2xl font-bold text-secondary mb-2"><i class="fa-solid fa-star text-yellow-400 mr-2"></i> Patient Reviews</h2>
                 <div class="flex items-center justify-center gap-2 mb-2">
@@ -577,6 +696,16 @@
                     <span class="text-xl font-bold text-secondary ml-2">4.8/5</span>
                 </div>
                 <p class="text-slate-600 text-sm">Based on 50,000+ happy patients</p>
+                <div class="mt-4 flex justify-center">
+                    <select id="modal-review-filter" onchange="filterModalReviews()" class="px-4 py-2 rounded-full border border-slate-300 outline-none text-sm bg-white focus:ring-2 focus:ring-primary shadow-sm text-slate-600 font-medium">
+                        <option value="">All Ratings</option>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="2">2 Stars</option>
+                        <option value="1">1 Star</option>
+                    </select>
+                </div>
             </div>
             
         <div id="reviews-container" class="space-y-4">
@@ -691,16 +820,22 @@
                     <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
                     <ul class="space-y-4 text-gray-400">
                         <li class="flex items-start">
-                            <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary"></i>
-                            <span>Basti DanishManda<br/>Jalandhar</span>
+                            <a href="https://maps.app.goo.gl/VHmDEL9wXsqcp3o66?g_st=aw" target="_blank" rel="noopener noreferrer" class="flex items-start hover:text-primary transition group">
+                                <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span class="text-sm">Street-3, Danishmandan,<br/>Basti Bawa khel, JALANDHAR,<br/>PUNJAB, Pincode: 144021</span>
+                            </a>
                         </li>
                         <li class="flex items-center">
-                            <i class="fa-solid fa-phone mr-3 text-primary"></i>
-                            <span>8091919997</span>
+                            <a href="tel:8091919997" class="flex items-center hover:text-primary transition group">
+                                <i class="fa-solid fa-phone mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span>8091919997</span>
+                            </a>
                         </li>
                         <li class="flex items-center">
-                            <i class="fa-solid fa-envelope mr-3 text-primary"></i>
-                            <span>thenish9997@gmail.com</span>
+                            <a href="mailto:mdcareadmin@gmail.com" class="flex items-center hover:text-primary transition group">
+                                <i class="fa-solid fa-envelope mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span>mdcareadmin@gmail.com</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -709,11 +844,14 @@
                     <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
                     <p class="text-gray-400 mb-4">Stay updated with our latest health tips and news.</p>
                     <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#E1306C] transition text-2xl text-[#E1306C] hover:text-white">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition text-xl">
+                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition text-2xl text-[#25D366] hover:text-white">
                             <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.facebook.com/share/1GAU4bhogt/" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition text-2xl text-[#1877F2] hover:text-white">
+                            <i class="fa-brands fa-facebook-f"></i>
                         </a>
                     </div>
                 </div>
@@ -760,6 +898,12 @@
             });
         });
 
+        document.addEventListener('click', (event) => {
+            if (!menu.classList.contains('hidden') && !menu.contains(event.target) && !btn.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
         window.openModal = function(id) {
             document.getElementById(id).classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -774,7 +918,7 @@
         }
 
         // Beautiful Toast Notification System
-        window.showToast = function(title, message, type = 'success') {
+        window.showToast = function(title, message, type = 'success', duration = 6000) {
             let container = document.getElementById('toast-container');
             if (!container) {
                 container = document.createElement('div');
@@ -806,8 +950,17 @@
             setTimeout(() => {
                 toast.classList.add('translate-x-full', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 6000);
+            }, duration);
         };
+        
+        const pendingToast = sessionStorage.getItem('mdcare_pendingToast');
+        if (pendingToast) {
+            try {
+                const toastData = JSON.parse(pendingToast);
+                setTimeout(() => window.showToast(toastData.title, toastData.message, toastData.type, toastData.duration), 300);
+            } catch(e) {}
+            sessionStorage.removeItem('mdcare_pendingToast');
+        }
 
         window.handleAppointmentClick = function() {
             if(!isLoggedIn) {
@@ -849,12 +1002,8 @@
             localStorage.removeItem('mdcare_profilePic');
             localStorage.removeItem('mdcare_userInitial');
             signOut(auth).then(() => {
-                window.showToast("Logged Out", "You have been successfully logged out.", "success");
-                setTimeout(() => {
-                    const menu = document.getElementById('mobile-menu');
-                    if (menu) menu.classList.add('hidden');
-                    window.location.href = 'index.html';
-                }, 1500);
+                sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
+                window.location.href = 'index.html';
             }).catch(err => console.error(err));
         }
 
@@ -923,13 +1072,12 @@
             try {
                 const userCred = await signInWithEmailAndPassword(auth, email, pass);
                 if (!userCred.user.emailVerified) {
-                    window.showToast("Verification Required", "Your email address is not verified yet. Please check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder.", "error");
-                } else {
-                    window.showToast("Login Successful", "Welcome back!", "success");
-                }
-                setTimeout(() => {
+                    sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Verification Required", message: "Your email address is not verified yet. Please check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder.", type: "error", duration: 3000 }));
                     window.location.href = 'index.html';
-                }, 1000);
+                } else {
+                    sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Login Successful", message: "Welcome back!", type: "success", duration: 3000 }));
+                    window.location.href = 'index.html';
+                }
             } catch (err) {
                 isAuthenticating = false;
                 let errorMsg = err.message;
@@ -955,9 +1103,13 @@
             btn.disabled = true;
 
             isAuthenticating = true;
-            const name = e.target.querySelectorAll('input[type="text"]')[0].value;
-            const email = e.target.querySelector('input[type="email"]').value;
-            const pass = e.target.querySelector('input[type="password"]').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const age = document.getElementById('reg-age').value.trim();
+            const sex = document.getElementById('reg-sex').value;
+            const bloodGroup = document.getElementById('reg-blood-group').value;
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value;
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 await updateProfile(userCredential.user, { displayName: name });
@@ -970,24 +1122,28 @@
                 await setDoc(doc(db, "users", userCredential.user.uid), {
                     name: name,
                     email: email,
+                    age: age,
+                    sex: sex,
+                    bloodGroup: bloodGroup,
+                    phone: phone,
                     role: "patient",
                     createdAt: serverTimestamp()
                 });
 
                 // Notify Admin via email
-                await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
-                    to_email: "thenish9997@gmail.com",
+                await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                    to_email: "mdcareadmin@gmail.com",
                     subject: "New Patient Registration - MD Care",
                     html_message: `
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 0 auto; background-color: #f8fafc; padding: 30px; border-radius: 16px;">
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                         <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                            <div style="background-color: #1e293b; padding: 40px 20px; text-align: center; border-bottom: 6px solid #3b82f6;">
-                                <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                            <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #3b82f6;">
+                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
                             </div>
-                            <div style="padding: 50px 40px; color: #334155; line-height: 1.8; font-size: 18px;">
+                            <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                 <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
-                                    <h3 style="margin: 0 0 5px 0; color: #1e40af;">New Patient Registration</h3>
-                                    <p style="margin: 0; color: #1e3a8a; font-size: 16px;">A new patient has created an account on the portal.</p>
+                                    <h3 style="margin: 0 0 5px 0; color: #1e40af; font-size: 16px;">New Patient Registration</h3>
+                                    <p style="margin: 0; color: #1e3a8a; font-size: 14px;">A new patient has created an account on the portal.</p>
                                 </div>
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                                     <tr>
@@ -1001,7 +1157,7 @@
                                 </table>
                             </div>
                             <div style="text-align: center; margin-top: 10px; margin-bottom: 30px;">
-                                <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                                <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
                             </div>
                             <div style="background-color: #f1f5f9; padding: 25px; text-align: center; border-top: 1px solid #e2e8f0;">
                                 <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
@@ -1010,10 +1166,8 @@
                     </div>`
                 });
 
-                window.showToast("Account Created", "Registration successful! A <span class='text-blue-600 font-bold'>verification link</span> has been sent. Please check your Inbox and <span class='text-red-500 font-bold'>Spam</span> folders.", "success");
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Account Created", message: "Registration successful! A <span class='text-blue-600 font-bold'>verification link</span> has been sent. Please check your Inbox and <span class='text-red-500 font-bold'>Spam</span> folders.", type: "success", duration: 6000 }));
+                window.location.href = 'index.html';
             } catch (err) {
                 isAuthenticating = false;
                 let errorMsg = err.message;
@@ -1057,7 +1211,8 @@
         // --- Doctors ---
 
         const doctorsList = [
-            { name: "Dr. Rajat Sharma", dept: "Cardiology", qual: "MBBS, MD, DM (Cardiology)", exp: "15+ Years", email: "rajat.sharma@mdcare.com", img: "images/maled1.avif", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
+            { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry", displayDept: "Psychiatry (Director)", qual: "VNGP (Psychiatry)", displayTitle: "VNGP (Psychiatry) - Director", exp: "23+ Years", email: "director@mdcare.com", img: "images/nadim.jpeg", bio: "Hospital Director and leading specialist in Psychiatry. Committed to clinical excellence and compassionate patient care." },
+            { name: "Dr. M D Sheikh", dept: "Cardiology", qual: "MBBS, MD, DM (Cardiology)", exp: "15+ Years", email: "mdcareadmin@gmail.com", img: "images/myphoto.jpeg", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
             { name: "Dr. Neha Verma", dept: "Cardiology", qual: "MBBS, MS, Fellowship in Cardiac Surgery", exp: "10 Years", email: "neha.verma@mdcare.com", img: "images/femaled2.avif", bio: "Expert in pediatric cardiology and minimally invasive cardiac surgeries. A leading voice in preventive cardiovascular healthcare." },
             { name: "Dr. Arjun Patel", dept: "Cardiology", qual: "MBBS, MD (Cardiology)", exp: "8 Years", email: "arjun.patel@mdcare.com", img: "images/maled3.avif", bio: "Dedicated to echocardiography and non-invasive diagnostics. Passionate about managing chronic heart conditions." },
             { name: "Dr. Anil Kapoor", dept: "Neurology", qual: "MBBS, DM (Neurology)", exp: "20 Years", email: "anil.kapoor@mdcare.com", img: "images/maled4.avif", bio: "Senior neurologist specializing in stroke management, epilepsy, and neurodegenerative disorders. Heads the stroke trauma unit." },
@@ -1085,24 +1240,32 @@
 
         // Render Doctors
         const slider = document.getElementById('doctors-slider');
-        doctorsList.forEach((doc, index) => {
-            const card = document.createElement('div');
-            card.className = "flex-none w-[280px] sm:w-[300px] snap-center bg-slate-50 rounded-2xl overflow-hidden hover:shadow-xl transition cursor-pointer group border border-slate-100";
-            card.onclick = () => openDoctorProfile(index);
-            card.innerHTML = `
-                <div class="relative overflow-hidden h-64">
-                    <img src="${doc.img}" alt="${doc.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-secondary/90 to-transparent p-4">
-                        <span class="text-teal-300 text-xs font-bold uppercase tracking-wider">${doc.dept}</span>
+        window.renderDoctorsSlider = function() {
+            slider.innerHTML = '';
+            const favs = JSON.parse(localStorage.getItem('mdcare_favs') || '[]');
+            doctorsList.forEach((doc, index) => {
+                const isFav = favs.includes(doc.name);
+                const favBadge = isFav ? `<div class="absolute top-3 right-3 z-20 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-heart text-red-500"></i></div>` : '';
+                const card = document.createElement('div');
+                card.className = "flex-none w-[280px] sm:w-[300px] snap-center bg-slate-50 rounded-2xl overflow-hidden hover:shadow-xl transition cursor-pointer group border border-slate-100 relative";
+                card.onclick = () => window.openDoctorProfile(index);
+                card.innerHTML = `
+                    <div class="relative overflow-hidden h-64">
+                        <img src="${doc.img}" alt="${doc.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+                        ${favBadge}
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-secondary/90 to-transparent p-4 pointer-events-none">
+                            <span class="text-teal-300 text-xs font-bold uppercase tracking-wider pointer-events-auto">${doc.displayDept || doc.dept}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="p-6 text-center">
-                    <h3 class="text-xl font-bold text-secondary">${doc.name}</h3>
-                    <p class="text-slate-500 text-sm mt-1 truncate">${doc.qual}</p>
-                </div>
-            `;
-            slider.appendChild(card);
-        });
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold text-secondary">${doc.name}</h3>
+                        <p class="text-slate-500 text-sm mt-1 truncate">${doc.displayTitle || doc.qual}</p>
+                    </div>
+                `;
+                slider.appendChild(card);
+            });
+        };
+        window.renderDoctorsSlider();
 
         // Slider Controls
         const btnLeft = document.getElementById('slide-left');
@@ -1123,18 +1286,121 @@
             btnDeptRight.addEventListener('click', () => { deptSlider.scrollBy({ left: 320, behavior: 'smooth' }); });
         }
 
-        function openDoctorProfile(idx) {
+        window.currentModalDocName = '';
+        window.openDoctorProfile = function(idx) {
             const doc = doctorsList[idx];
+            window.currentModalDocName = doc.name;
             document.getElementById('doc-modal-img').src = doc.img;
-            document.getElementById('doc-modal-dept').textContent = doc.dept;
+            document.getElementById('doc-modal-dept').textContent = doc.displayDept || doc.dept;
             document.getElementById('doc-modal-name').textContent = doc.name;
             document.getElementById('doc-modal-qual').textContent = doc.qual;
             document.getElementById('doc-modal-exp').textContent = doc.exp;
             document.getElementById('doc-modal-email').textContent = doc.email;
             document.getElementById('doc-modal-email').href = `mailto:${doc.email}`;
             document.getElementById('doc-modal-bio').textContent = doc.bio;
+            if (window.updateModalHeart) window.updateModalHeart();
+        document.getElementById('doc-review-form').classList.add('hidden');
+        window.loadDoctorReviews(doc.name);
             openModal('doctor-modal');
         }
+
+        window.updateModalHeart = function() {
+            const favs = JSON.parse(localStorage.getItem('mdcare_favs') || '[]');
+            const isFav = favs.includes(window.currentModalDocName);
+            const icon = document.getElementById('modal-fav-icon');
+            if (icon) {
+                icon.className = isFav ? "fa-solid fa-heart text-xl text-red-500" : "fa-regular fa-heart text-xl text-slate-400 hover:text-red-500 transition";
+            }
+        };
+
+        window.toggleModalFavorite = function() {
+            window.toggleFavorite(window.currentModalDocName);
+        };
+        
+        window.toggleFavorite = function(name, event) {
+            if (event) event.stopPropagation(); // Prevents opening modal when clicking heart
+            let favs = JSON.parse(localStorage.getItem('mdcare_favs') || '[]');
+            if (favs.includes(name)) {
+                favs = favs.filter(f => f !== name);
+            } else {
+                favs.push(name);
+            }
+            localStorage.setItem('mdcare_favs', JSON.stringify(favs));
+            if (window.renderDoctorsSlider) window.renderDoctorsSlider();
+            if (window.updateModalHeart) window.updateModalHeart();
+        };
+
+    window.toggleDocReviewForm = function() {
+        if (!isLoggedIn) {
+            window.closeModal('doctor-modal');
+            window.openModal('login-modal');
+            return;
+        }
+        if (!auth.currentUser?.emailVerified) {
+            window.showToast("Verification Required", "Please verify your email address to write a review. Check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder for the link.", "error");
+            return;
+        }
+        document.getElementById('doc-review-form').classList.toggle('hidden');
+    };
+
+    window.loadDoctorReviews = async function(docName) {
+        const list = document.getElementById('doc-modal-reviews-list');
+        list.innerHTML = '<p class="text-slate-500 text-sm"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading reviews...</p>';
+        try {
+            const q = query(collection(db, "doctor_reviews"), where("doctorName", "==", docName));
+            const snapshot = await getDocs(q);
+            const docReviews = [];
+            snapshot.forEach(d => {
+                const data = d.data();
+                docReviews.push({ ...data, createdAtMillis: data.createdAt?.toMillis() || 0 });
+            });
+            docReviews.sort((a,b) => b.createdAtMillis - a.createdAtMillis);
+
+            list.innerHTML = '';
+            if (docReviews.length === 0) {
+                list.innerHTML = '<p class="text-slate-500 text-sm">No reviews yet. Be the first to review!</p>';
+                return;
+            }
+
+            docReviews.forEach(review => {
+                let starsHtml = '';
+                for(let j=0; j<Math.floor(review.rating); j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+                list.innerHTML += `<div class="bg-slate-50 p-3 rounded-lg border border-slate-100"><div class="flex justify-between items-start mb-1"><h5 class="font-bold text-secondary text-xs flex items-center gap-1">${review.name} ${review.userId !== "unknown" ? '<i class="fa-solid fa-circle-check text-teal-500" title="Verified Patient"></i>' : ''}</h5><div class="text-[10px]">${starsHtml}</div></div><p class="text-xs text-slate-600">"${review.text}"</p></div>`;
+            });
+        } catch (e) {
+            list.innerHTML = '<p class="text-red-500 text-sm">Failed to load reviews.</p>';
+        }
+    };
+
+    document.getElementById('doc-review-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!isLoggedIn || !auth.currentUser?.emailVerified) return;
+
+        const btn = document.getElementById('submit-doc-review-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        try {
+            await addDoc(collection(db, "doctor_reviews"), {
+                userId: auth.currentUser?.uid || "unknown",
+                name: auth.currentUser?.displayName || "Patient",
+                doctorName: window.currentModalDocName,
+                rating: parseFloat(document.getElementById('doc-review-rating').value),
+                text: document.getElementById('doc-review-text').value,
+                createdAt: serverTimestamp()
+            });
+            window.showToast("Review Submitted", "Thank you for your feedback!", "success");
+            e.target.reset();
+            document.getElementById('doc-review-form').classList.add('hidden');
+            window.loadDoctorReviews(window.currentModalDocName);
+        } catch (err) {
+            window.showToast("Error", "Could not submit review: " + err.message, "error");
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
 
         function setupBookingForm(prefix) {
             const deptSelect = document.getElementById(prefix + 'department-select');
@@ -1249,17 +1515,16 @@
                 subBtn.disabled = true;
 
                 const patientName = e.target.querySelectorAll('input[type="text"]')[0].value;
-                const slotId = `${dateSel.value}_${docSelect.value}_${timeSel.value}`.replace(/[^a-zA-Z0-9]/g, '_');
-                const appointmentRef = doc(db, "appointments", slotId);
 
                 try {
-                    await runTransaction(db, async (transaction) => {
-                        const docSnap = await transaction.get(appointmentRef);
-                        if (docSnap.exists() && docSnap.data().status !== 'Cancelled') {
-                            throw new Error("SLOT_ALREADY_BOOKED");
-                        }
-                        
-                        transaction.set(appointmentRef, {
+                    const qCheck = query(collection(db, "appointments"), where("date", "==", dateSel.value), where("doctor", "==", docSelect.value), where("time", "==", timeSel.value));
+                    const snapCheck = await getDocs(qCheck);
+                    let isBooked = false;
+                    snapCheck.forEach(d => { if (d.data().status !== 'Cancelled' && d.data().status !== 'Expired') isBooked = true; });
+                    if (isBooked) throw new Error("SLOT_ALREADY_BOOKED");
+                    
+                    const serialDocId = (9999999999999 - Date.now()).toString();
+                    await setDoc(doc(db, "appointments", serialDocId), {
                             userId: auth.currentUser.uid,
                             patientName: patientName,
                             email: auth.currentUser.email,
@@ -1273,21 +1538,20 @@
                             status: "Pending",
                             createdAt: serverTimestamp()
                         });
-                    });
                     
-                    await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
-                        to_email: "thenish9997@gmail.com",
-                        subject: "New Appointment Booking - MD Care",
+                    await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                        to_email: "mdcareadmin@gmail.com",
+                        subject: `New Appointment Booking: ${dateSel.value} at ${timeSel.value} - MD Care`,
                         html_message: `
-                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                             <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                            <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
                                 </div>
-                                <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                            <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                     <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                        <h3 style="margin: 0 0 5px 0; color: #115e59;">New Appointment Request</h3>
-                                        <p style="margin: 0; color: #134e4a; font-size: 16px;">A patient has requested a new consultation.</p>
+                                    <h3 style="margin: 0 0 5px 0; color: #115e59; font-size: 16px;">New Appointment Request</h3>
+                                    <p style="margin: 0; color: #134e4a; font-size: 14px;">A patient has requested a new consultation.</p>
                                     </div>
                                     <table style="width: 100%; border-collapse: collapse;">
                                         <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${patientName}</td></tr>
@@ -1360,7 +1624,7 @@
         const reviewsContainer = document.getElementById('reviews-container');
         if (reviewsContainer) {
             const reviews = [
-                { name: "Rajesh Kumar", rating: 5, text: "The cardiology department is top-notch. Dr. Rajat Sharma saved my father's life. The hospital staff is extremely polite and the facilities are world-class." },
+                { name: "Rajesh Kumar", rating: 5, text: "The cardiology department is top-notch. Dr. M D Sheikh saved my father's life. The hospital staff is extremely polite and the facilities are world-class." },
                 { name: "Simran Kaur", rating: 4.5, text: "Very clean wards and timely service. The pediatric unit handled my child's case with so much care. Highly recommend MD Care to everyone in Jalandhar." },
                 { name: "Amit Verma", rating: 5, text: "The booking process was seamless and the wait times were minimal. Excellent orthopedics team. Helped me recover fully from a sports injury." }
             ];
@@ -1409,12 +1673,21 @@
             let currentReviewIndex = 0;
             const loadMoreBtn = document.getElementById('load-more-reviews-btn');
 
+            window.currentReviewFilter = '';
+            window.filterModalReviews = function() {
+                window.currentReviewFilter = document.getElementById('modal-review-filter').value;
+                reviewsContainer.innerHTML = '';
+                currentReviewIndex = 0;
+                window.loadMoreReviews();
+            };
+
             window.loadMoreReviews = function() {
-                const end = Math.min(currentReviewIndex + 5, reviews.length);
+                const filteredReviews = window.currentReviewFilter ? reviews.filter(r => Math.floor(r.rating) === parseInt(window.currentReviewFilter)) : reviews;
+                const end = Math.min(currentReviewIndex + 5, filteredReviews.length);
                 let htmlStr = '';
                 
                 for (let i = currentReviewIndex; i < end; i++) {
-                    const review = reviews[i];
+                    const review = filteredReviews[i];
                     let starsHtml = '';
                     const fullStars = Math.floor(review.rating);
                     const halfStar = review.rating % 1 !== 0;
@@ -1456,10 +1729,14 @@
                 reviewsContainer.innerHTML += htmlStr;
                 currentReviewIndex = end;
 
-                if (currentReviewIndex >= reviews.length) {
+                if (currentReviewIndex >= filteredReviews.length) {
                     loadMoreBtn.classList.add('hidden');
                 } else {
                     loadMoreBtn.classList.remove('hidden');
+                }
+
+                if (filteredReviews.length === 0 && currentReviewIndex === 0) {
+                    reviewsContainer.innerHTML = '<p class="text-center text-slate-500 py-6">No reviews found for this rating.</p>';
                 }
             };
 
@@ -1508,19 +1785,19 @@
                     });
 
                     // Notify Admin via email
-                    await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
-                        to_email: "thenish9997@gmail.com",
+                    await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                        to_email: "mdcareadmin@gmail.com",
                         subject: "New Patient Review - MD Care",
                         html_message: `
-                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                             <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #eab308;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #eab308;">Admin Alerts</span></h1>
+                                <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #eab308;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #eab308;">Admin Alerts</span></h1>
                                 </div>
-                                <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                     <div style="background-color: #fefce8; border-left: 4px solid #eab308; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                        <h3 style="margin: 0 0 5px 0; color: #854d0e;">New Patient Review</h3>
-                                        <p style="margin: 0; color: #713f12; font-size: 16px;">A patient has just left a review on the portal.</p>
+                                        <h3 style="margin: 0 0 5px 0; color: #854d0e; font-size: 16px;">New Patient Review</h3>
+                                        <p style="margin: 0; color: #713f12; font-size: 14px;">A patient has just left a review on the portal.</p>
                                     </div>
                                     <table style="width: 100%; border-collapse: collapse;">
                                         <tr>

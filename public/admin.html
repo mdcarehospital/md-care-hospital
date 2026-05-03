@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-        (function() { emailjs.init("lT18BxqA4wgJ-8RuJ"); })();
+        (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
@@ -17,7 +17,55 @@
             theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#0d9488', secondary: '#1e293b' } } }
         }
     </script>
-    <style>body { font-family: 'Poppins', sans-serif; }</style>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
+    </style>
+    <style>
+        /* Dark Mode Auto-Overrides */
+        * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+        html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+        html.dark .bg-white { background-color: #1e293b !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; }
+        html.dark .bg-slate-100 { background-color: #334155 !important; }
+        html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+        html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+        html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        html.dark .bg-secondary { background-color: #020617 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .theme-icon-moon { display: none !important; }
+        html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+        html.dark { scrollbar-color: #334155 #0f172a; }
+    </style>
+    <script>
+        function adaptTheme() {
+            const savedTheme = localStorage.getItem('mdcare_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
+            else { document.documentElement.classList.remove('dark'); }
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
+        adaptTheme();
+
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('mdcare_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('mdcare_theme', 'dark');
+            }
+        };
+    </script>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 
@@ -25,12 +73,17 @@
     <nav class="bg-secondary shadow-md fixed w-full z-50 top-0 left-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-                    <i class="fa-solid fa-house-medical text-2xl text-primary"></i>
-                    <span class="font-bold text-xl text-white">MD Care <span class="text-primary">Admin</span></span>
-                </a>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-300 hover:text-white transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden text-yellow-400"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-white whitespace-nowrap">MD Care <span class="text-primary">Admin</span></span>
+                    </a>
+                </div>
                 <div id="admin-controls" class="hidden flex items-center gap-4">
-                    <span class="text-slate-300 text-sm hidden sm:inline-block"><i class="fa-solid fa-user-shield mr-1"></i> thenish9997@gmail.com</span>
+                    <span class="text-slate-300 text-sm hidden sm:inline-block"><i class="fa-solid fa-user-shield mr-1"></i> mdcareadmin@gmail.com</span>
                     <button onclick="adminLogout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">Logout</button>
                 </div>
             </div>
@@ -50,7 +103,7 @@
             <form id="admin-login-form" class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Admin Email</label>
-                    <input type="email" id="admin-email" value="thenish9997@gmail.com" readonly class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-slate-50 text-slate-500 outline-none">
+                    <input type="email" id="admin-email" value="mdcareadmin@gmail.com" readonly class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-slate-50 text-slate-500 outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
@@ -206,18 +259,18 @@
             </div>
 
             <!-- Reviews Management Section -->
-            <div class="lg:col-span-3 mt-4">
+            <div class="lg:col-span-3 mt-4"> <!-- This should be inside the grid -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="p-6 border-b border-slate-200 bg-slate-50 flex flex-wrap gap-4 justify-between items-center">
                         <h2 class="text-xl font-bold text-secondary flex items-center gap-2">
-                            <i class="fa-solid fa-star text-yellow-400 mr-2"></i> Patient Reviews
+                            <i class="fa-solid fa-star text-yellow-400 mr-2"></i> Doctor Reviews
                             <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-1 rounded border border-slate-200 ml-2">Total: <span id="reviews-count">0</span></span>
                         </h2>
                         <div class="flex items-center gap-3">
                             <button id="bulk-delete-reviews-btn" onclick="deleteSelectedReviews()" class="hidden text-sm font-bold text-red-500 hover:text-red-700 transition bg-red-50 px-3 py-1.5 rounded-lg border border-red-100"><i class="fa-solid fa-trash-can mr-1"></i> Delete Selected</button>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
-                                <input type="text" id="filter-review-search" oninput="renderAdminReviews()" placeholder="Search reviews..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[160px]">
+                                <input type="text" id="filter-review-search" oninput="renderAdminReviews()" placeholder="Search patient, doctor..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[160px]">
                             </div>
                             <select id="filter-review-rating" onchange="renderAdminReviews()" class="px-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
                                 <option value="">All Ratings</option>
@@ -226,6 +279,9 @@
                                 <option value="3">3 Stars</option>
                                 <option value="2">2 Stars</option>
                                 <option value="1">1 Star</option>
+                            </select>
+                            <select id="filter-review-doctor" onchange="renderAdminReviews()" class="px-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Doctors</option>
                             </select>
                             <button onclick="clearReviewFilters()" class="text-sm font-bold text-slate-500 hover:text-secondary transition"><i class="fa-solid fa-filter-circle-xmark mr-1"></i> Clear Filters</button>
                             <button onclick="loadAdminReviews()" class="text-sm font-bold text-primary hover:text-teal-700 transition"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
@@ -236,14 +292,15 @@
                             <thead class="sticky top-0 z-20 shadow-sm">
                                 <tr class="bg-slate-100 text-slate-500 text-xs uppercase tracking-wider">
                                     <th class="p-4 font-bold border-b w-12 text-center"><input type="checkbox" id="select-all-reviews" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" onchange="toggleAllReviews(this)"></th>
-                                    <th class="p-4 font-bold border-b w-1/4">Patient Info</th>
+                                    <th class="p-4 font-bold border-b w-1/5">Patient Info</th>
+                                    <th class="p-4 font-bold border-b w-1/5">Doctor</th>
                                     <th class="p-4 font-bold border-b w-1/6">Rating</th>
-                                    <th class="p-4 font-bold border-b w-1/2">Review</th>
+                                    <th class="p-4 font-bold border-b">Review</th>
                                     <th class="p-4 font-bold border-b text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-reviews-list" class="text-sm text-slate-700 divide-y divide-slate-100">
-                                <tr><td colspan="5" class="p-8 text-center text-slate-400">Loading reviews...</td></tr>
+                                <tr><td colspan="6" class="p-8 text-center text-slate-400">Loading reviews...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -377,7 +434,7 @@
         // Auth Listener
         onAuthStateChanged(auth, (user) => {
             if (isLoggingOut) return;
-            if (user && user.email === 'thenish9997@gmail.com') {
+            if (user && user.email === 'mdcareadmin@gmail.com') {
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 adminControls.classList.remove('hidden');
@@ -407,6 +464,7 @@
         window.adminLogout = function() {
             isLoggingOut = true;
             signOut(auth).then(() => {
+                sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
                 window.location.href = 'index.html';
             });
         };
@@ -464,29 +522,29 @@
                                 displayStatus = "Expired";
                                 updateDoc(doc(db, "appointments", id), { status: "Expired" }).then(() => {
                                     if (data.email) {
-                                        emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                                        emailjs.send("service_iyt09jj", "template_xyclksp", {
                                             to_email: data.email,
-                                            subject: "Appointment Expired - MD Care Hospital",
+                                            subject: `Appointment Expired: ${data.date} at ${data.time} - MD Care Hospital`,
                                             html_message: `
-                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                                                 <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #64748b;">
-                                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #94a3b8;">Hospital</span></h1>
+                                                    <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #64748b;">
+                                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #94a3b8;">Hospital</span></h1>
                                                     </div>
-                                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                                    <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                                         <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
                                                         <div style="background-color: #f8fafc; border-left: 4px solid #94a3b8; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                                            <h3 style="margin: 0 0 5px 0; color: #475569;">Appointment Expired</h3>
-                                                            <p style="margin: 0; color: #64748b; font-size: 16px;">The scheduled time for your appointment has passed.</p>
+                                                            <h3 style="margin: 0 0 5px 0; color: #475569; font-size: 16px;">Appointment Expired</h3>
+                                                            <p style="margin: 0; color: #64748b; font-size: 14px;">The scheduled time for your appointment has passed.</p>
                                                         </div>
-                                                        <p>Your appointment on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong> is now marked as <span style="display: inline-block; background-color: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 16px; border: 1px solid #e2e8f0;">Expired</span>.</p>
+                                                        <p>Your appointment on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong> is now marked as <span style="display: inline-block; background-color: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 14px; border: 1px solid #e2e8f0;">Expired</span>.</p>
                                                         <p>If you missed this appointment and still need medical assistance, please book a new slot through your patient dashboard.</p>
                                                     </div>
                                                     <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Book New Appointment</a>
+                                                        <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Book New Appointment</a>
                                                     </div>
                                                     <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                                    <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p>
                                                     </div>
                                                 </div>
                                             </div>`
@@ -496,29 +554,29 @@
                             } else if (displayStatus === 'Confirmed' && !data.reminderSent && (aptDate - now) <= 6 * 60 * 60 * 1000) {
                                 updateDoc(doc(db, "appointments", id), { reminderSent: true }).then(() => {
                                     if (data.email) {
-                                        emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                                        emailjs.send("service_iyt09jj", "template_xyclksp", {
                                             to_email: data.email,
-                                            subject: "Upcoming Appointment Reminder - MD Care",
+                                            subject: `Upcoming Appointment Reminder: ${data.date} at ${data.time} - MD Care`,
                                             html_message: `
-                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                                                 <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0ea5e9;">
-                                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #38bdf8;">Hospital</span></h1>
+                                                    <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0ea5e9;">
+                                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #38bdf8;">Hospital</span></h1>
                                                     </div>
-                                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                                    <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                                         <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
                                                         <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                                            <h3 style="margin: 0 0 5px 0; color: #0369a1;">Appointment Reminder</h3>
-                                                            <p style="margin: 0; color: #0c4a6e; font-size: 16px;">This is a friendly reminder for your upcoming appointment in less than 6 hours.</p>
+                                                            <h3 style="margin: 0 0 5px 0; color: #0369a1; font-size: 16px;">Appointment Reminder</h3>
+                                                            <p style="margin: 0; color: #0c4a6e; font-size: 14px;">This is a friendly reminder for your upcoming appointment in less than 6 hours.</p>
                                                         </div>
                                                         <p>Your appointment is scheduled on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong>.</p>
                                                         <p>Please ensure you arrive at least 15 minutes early. If you need to cancel or reschedule, please do so from your patient dashboard or contact the front desk.</p>
                                                     </div>
                                                     <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">View Dashboard</a>
+                                                        <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">View Dashboard</a>
                                                     </div>
                                                     <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                                    <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p>
                                                     </div>
                                                 </div>
                                             </div>`
@@ -686,28 +744,37 @@
                 await updateDoc(doc(db, "appointments", id), { status: newStatus });
                 loadAppointments(); // Refresh to update the colors
                 
+                const appt = allAppointmentsData.find(a => a.id === id);
+                const apptDate = appt ? appt.date : 'Unknown Date';
+                const apptTime = appt ? appt.time : 'Unknown Time';
+
                 // Notify Patient via email
                 if (patientEmail) {
-                    await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                        let sorryMsg = '';
+                        if (newStatus === 'Cancelled') {
+                            sorryMsg = '<p style="margin-top: 15px; color: #ef4444; font-weight: bold; font-size: 14px;">We sincerely apologize for having to cancel your appointment and for any inconvenience this may cause you.</p>';
+                        }
+                    await emailjs.send("service_iyt09jj", "template_xyclksp", {
                         to_email: patientEmail,
-                        subject: `Appointment ${newStatus} - MD Care Hospital`,
+                        subject: `Appointment ${newStatus}: ${apptDate} at ${apptTime} - MD Care Hospital`,
                         html_message: `
-                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                             <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #14b8a6;">Hospital</span></h1>
+                                    <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #14b8a6;">Hospital</span></h1>
                                 </div>
-                                <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                    <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                     <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${patientName}</strong>,</p>
-                                    <p>We are writing to inform you that your appointment status at MD Care Hospital has been updated to: <span style="display: inline-block; background-color: #f0fdfa; color: #0d9488; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 16px; margin-left: 5px; border: 1px solid #ccfbf1;">${newStatus}</span></p>
+                                        <p>We are writing to inform you that your appointment status at MD Care Hospital has been updated to: <span style="display: inline-block; background-color: #f0fdfa; color: #0d9488; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 14px; margin-left: 5px; border: 1px solid #ccfbf1;">${newStatus}</span></p>
+                                        ${sorryMsg}
                                     <p>If you have any questions or need to reschedule, please contact our front desk at your earliest convenience.</p>
                                     <p style="margin-bottom: 0;">Thank you for choosing MD Care Hospital for your healthcare needs.</p>
                                 </div>
                                 <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                    <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                                    <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
                                 </div>
                                 <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                    <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar<br>Phone: 8091919997 | Email: thenish9997@gmail.com</p>
+                                <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021<br>Phone: 8091919997 | Email: mdcareadmin@gmail.com</p>
                                 </div>
                             </div>
                         </div>`
@@ -795,7 +862,8 @@
 
         // Setup Doctor Dropdown mapping (Reused from frontend)
         const doctorsList = [
-            { name: "Dr. Rajat Sharma", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
+            { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry" },
+            { name: "Dr. M D Sheikh", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
             { name: "Dr. Anil Kapoor", dept: "Neurology" }, { name: "Dr. Priya Singh", dept: "Neurology" }, { name: "Dr. Rohan Mehta", dept: "Neurology" },
             { name: "Dr. Vikram Das", dept: "Orthopedics" }, { name: "Dr. Sana Khan", dept: "Orthopedics" }, { name: "Dr. Aditya Rao", dept: "Orthopedics" },
             { name: "Dr. Amit Patel", dept: "Pediatrics" }, { name: "Dr. Kavita Rao", dept: "Pediatrics" }, { name: "Dr. Nidhi Sharma", dept: "Pediatrics" },
@@ -828,6 +896,13 @@
         doctorsList.forEach(doc => {
             filterDocSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
         });
+
+        const filterReviewDoctorSelect = document.getElementById('filter-review-doctor');
+        if (filterReviewDoctorSelect) {
+            doctorsList.forEach(doc => {
+                filterReviewDoctorSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
+            });
+        }
 
         document.getElementById('filter-search').addEventListener('input', window.renderAdminAppointments);
         document.getElementById('filter-date').addEventListener('change', window.renderAdminAppointments);
@@ -927,17 +1002,16 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
             btn.disabled = true;
             
-            const slotId = `${document.getElementById('add-date').value}_${docSelect.value}_${document.getElementById('add-time').value}`.replace(/[^a-zA-Z0-9]/g, '_');
-            const appointmentRef = doc(db, "appointments", slotId);
 
             try {
-                await runTransaction(db, async (transaction) => {
-                    const docSnap = await transaction.get(appointmentRef);
-                    if (docSnap.exists() && docSnap.data().status !== 'Cancelled') {
-                        throw new Error("SLOT_ALREADY_BOOKED");
-                    }
-                    
-                    transaction.set(appointmentRef, {
+                const qCheck = query(collection(db, "appointments"), where("date", "==", document.getElementById('add-date').value), where("doctor", "==", docSelect.value), where("time", "==", document.getElementById('add-time').value));
+                const snapCheck = await getDocs(qCheck);
+                let isBooked = false;
+                snapCheck.forEach(d => { if (d.data().status !== 'Cancelled' && d.data().status !== 'Expired') isBooked = true; });
+                if (isBooked) throw new Error("SLOT_ALREADY_BOOKED");
+                
+                const serialDocId = (9999999999999 - Date.now()).toString();
+                await setDoc(doc(db, "appointments", serialDocId), {
                         userId: "admin_created_record",
                         patientName: document.getElementById('add-name').value,
                         phone: document.getElementById('add-phone').value,
@@ -949,7 +1023,6 @@
                         status: "Confirmed",
                         createdAt: serverTimestamp()
                     });
-                });
                 e.target.reset();
                 docSelect.disabled = true;
                 docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
@@ -986,9 +1059,9 @@
     // Fetch and Manage Reviews
     window.loadAdminReviews = async function() {
         const reviewsTbody = document.getElementById('admin-reviews-list');
-        reviewsTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching reviews...</td></tr>';
+        reviewsTbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching reviews...</td></tr>';
         try {
-            const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+            const q = query(collection(db, "doctor_reviews"), orderBy("createdAt", "desc"));
             const snapshot = await getDocs(q);
             
             allReviewsData = [];
@@ -1000,7 +1073,7 @@
 
             renderAdminReviews();
         } catch (err) {
-            reviewsTbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-medium">Error loading reviews: ${err.message}</td></tr>`;
+            reviewsTbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-medium">Error loading reviews: ${err.message}</td></tr>`;
             console.error(err);
         }
     };
@@ -1008,22 +1081,25 @@
     window.renderAdminReviews = function() {
         const filterRating = document.getElementById('filter-review-rating').value;
         const filterSearch = document.getElementById('filter-review-search').value.toLowerCase();
+        const filterDoctor = document.getElementById('filter-review-doctor').value;
         const reviewsTbody = document.getElementById('admin-reviews-list');
         
         const filteredReviews = allReviewsData.filter(data => {
             const matchRating = !filterRating || Math.floor(data.rating || 5) === parseInt(filterRating);
             const matchSearch = !filterSearch || 
                 (data.name && data.name.toLowerCase().includes(filterSearch)) || 
-                (data.text && data.text.toLowerCase().includes(filterSearch));
+                (data.text && data.text.toLowerCase().includes(filterSearch)) ||
+                (data.doctorName && data.doctorName.toLowerCase().includes(filterSearch));
+            const matchDoctor = !filterDoctor || data.doctorName === filterDoctor;
             
-            return matchRating && matchSearch;
+            return matchRating && matchSearch && matchDoctor;
         });
 
         document.getElementById('reviews-count').textContent = filteredReviews.length;
 
         reviewsTbody.innerHTML = '';
         if (filteredReviews.length === 0) {
-            reviewsTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400">No reviews found matching your criteria.</td></tr>';
+            reviewsTbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">No reviews found matching your criteria.</td></tr>';
             return;
         }
 
@@ -1060,6 +1136,9 @@
                             <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i> ${dateStr}</p>
                         </td>
                         <td class="px-4 py-2.5">
+                            <p class="font-bold text-primary">${data.doctorName}</p>
+                        </td>
+                        <td class="px-4 py-2.5">
                             <div class="text-xs">${starsHtml}</div>
                             <p class="text-xs font-bold text-slate-500 mt-1">${data.rating} / 5</p>
                         </td>
@@ -1087,6 +1166,7 @@
     window.clearReviewFilters = function() {
         document.getElementById('filter-review-search').value = '';
         document.getElementById('filter-review-rating').value = '';
+        document.getElementById('filter-review-doctor').value = '';
         renderAdminReviews();
     };
 
@@ -1106,7 +1186,7 @@
         btn.disabled = true;
 
         try {
-            await updateDoc(doc(db, "reviews", id), { adminReply: text });
+            await updateDoc(doc(db, "doctor_reviews", id), { adminReply: text });
             
             // If the admin actually wrote a reply, fetch the patient's email and notify them
             const review = allReviewsData.find(r => r.id === id);
@@ -1115,16 +1195,16 @@
                 if (userSnap.exists()) {
                     const patientEmail = userSnap.data().email;
                     if (patientEmail) {
-                        await emailjs.send("service_7o9hcwe", "template_g3n5r4f", {
+                        await emailjs.send("service_iyt09jj", "template_xyclksp", {
                             to_email: patientEmail,
                             subject: "MD Care Hospital - Reply to your review",
                             html_message: `
-                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 800px; margin: 0 auto; background-color: #f8fafc; padding: 20px; border-radius: 16px;">
+                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
                                 <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                                    <div style="background-color: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 6px solid #0d9488;">
-                                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #14b8a6;">Hospital</span></h1>
+                                    <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #14b8a6;">Hospital</span></h1>
                                     </div>
-                                    <div style="padding: 30px 40px; color: #334155; line-height: 1.6; font-size: 16px;">
+                                    <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
                                         <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${review.name || 'Patient'}</strong>,</p>
                                         <p>An administrator has responded to your recent review on the MD Care Hospital portal.</p>
                                         <div style="background-color: #f8fafc; border-left: 4px solid #cbd5e1; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; font-style: italic;">
@@ -1137,10 +1217,10 @@
                                         <p style="margin-bottom: 0;">Thank you for your valuable feedback.</p>
                                     </div>
                                     <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-                                        <a href="https://danish-teal.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
+                                        <a href="https://md-care-hospital.vercel.app/" style="background-color: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);">Open Our Website</a>
                                     </div>
                                     <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                        <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Basti DanishManda, Jalandhar</p>
+                                    <p style="margin: 0; color: #64748b; font-size: 15px;"><strong>MD Care Hospital</strong><br>Street-3, Danishmandan, Basti Bawa khel, JALANDHAR, PUNJAB, Pincode: 144021</p>
                                     </div>
                                 </div>
                             </div>`
@@ -1166,7 +1246,7 @@
             "Are you sure you want to completely delete this review? This action cannot be undone.",
             async () => {
                 try {
-                    await deleteDoc(doc(db, "reviews", id));
+                    await deleteDoc(doc(db, "doctor_reviews", id));
                     window.showToast("Deleted", "Review deleted successfully.", "success");
                     loadAdminReviews();
                 } catch (err) {
@@ -1216,7 +1296,7 @@
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Deleting...';
                     btn.disabled = true;
                     
-                    const deletePromises = Array.from(checkboxes).map(cb => deleteDoc(doc(db, "reviews", cb.value)));
+                    const deletePromises = Array.from(checkboxes).map(cb => deleteDoc(doc(db, "doctor_reviews", cb.value)));
                     await Promise.all(deletePromises);
                     
                     window.showToast("Deleted", `${checkboxes.length} review(s) deleted successfully.`, "success");
