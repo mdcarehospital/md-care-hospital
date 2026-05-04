@@ -1,44 +1,36 @@
 export default async function handler(req, res) {
-    // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     const { context } = req.body;
-    
-    // The API key is securely pulled from the hosting provider's environment variables
-    const apiKey = process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.trim() : null;
+    const apiKey = process.env.GEMINI_API_KEY;
 
-    if (!apiKey) return res.status(500).json({ error: 'API key not configured on server' });
-
-    // Smart Check: Prevent accidental use of Firebase API Key
-    if (apiKey === "AIzaSyBbV_3UfBbILAq4BrSjZKxYz16EzZ_w3QY" || apiKey.includes("BWp-8CEFAr")) {
-        return res.status(403).json({ error: { message: "You are using your Firebase API key! You must generate a dedicated Gemini API key from https://aistudio.google.com and update Vercel." } });
+    if (!apiKey) {
+        return res.status(500).json({ error: 'GEMINI_API_KEY is missing in Vercel.' });
     }
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    if (apiKey.startsWith("AIzaSyBWp")) {
+        return res.status(400).json({ error: 'You pasted your Firebase API Key into Vercel! Please go to aistudio.google.com to get a Gemini key.' });
+    }
 
     try {
-        const aiResponse = await fetch(endpoint, {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: context }] }] })
         });
         
-        const data = await aiResponse.json();
+        const data = await response.json();
         
-        if (!aiResponse.ok) {
-            // If Google says the model isn't found, the key lacks Generative AI permissions.
-            if (aiResponse.status === 404) {
-                data.error = data.error || {};
-                data.error.message = "API Key Error: The project associated with this key does not have Gemini enabled. Please go to Google AI Studio -> Create API Key -> and explicitly select 'Create API key in NEW project' (do not reuse your Firebase project).";
-            }
-            return res.status(aiResponse.status).json(data);
+        if (!response.ok) {
+            throw new Error(data.error?.message || 'Failed to fetch from Gemini API');
         }
         
-        res.status(200).json(data);
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response.";
+        res.status(200).json({ reply });
     } catch (error) {
-        console.error("Backend Error:", error);
-        res.status(500).json({ error: 'Failed to communicate with AI provider' });
+        res.status(500).json({ error: error.message });
     }
 }
