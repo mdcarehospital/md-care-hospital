@@ -148,9 +148,24 @@
         </div>
     </nav>
 
-    <section id="home" class="relative h-screen min-h-[600px] flex items-center pt-20 overflow-hidden">
-        <div id="hero-carousel" class="absolute inset-0 z-0"></div>
-        <div class="absolute inset-0 bg-slate-900/60 z-0"></div>
+    <section id="home" class="relative h-screen min-h-[600px] flex items-center pt-20 overflow-hidden cursor-pointer" onclick="toggleHeroAnimation(event)">
+        <div id="hero-carousel" class="absolute inset-0 z-0 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-slate-900/60 z-0 pointer-events-none"></div>
+        
+        <!-- Left Arrow -->
+        <button onclick="prevHeroImage(event)" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white bg-black/30 hover:bg-black/50 w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center backdrop-blur-sm transition focus:outline-none">
+            <i class="fa-solid fa-chevron-left text-xl md:text-2xl"></i>
+        </button>
+
+        <!-- Right Arrow -->
+        <button onclick="nextHeroImage(event)" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white bg-black/30 hover:bg-black/50 w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center backdrop-blur-sm transition focus:outline-none">
+            <i class="fa-solid fa-chevron-right text-xl md:text-2xl"></i>
+        </button>
+
+        <!-- Play/Pause Indicator -->
+        <div id="hero-play-pause-indicator" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 text-white bg-black/50 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center text-3xl md:text-4xl backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 scale-50">
+            <i class="fa-solid fa-pause"></i>
+        </div>
         
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center md:text-left">
             <div class="md:w-2/3">
@@ -174,9 +189,9 @@
                         <button type="button" onclick="openModal('emergency-modal')" class="bg-red-500 text-white px-8 py-3 rounded-full font-medium hover:bg-red-600 transition flex items-center justify-center shadow-lg shadow-red-500/30">
                             <i class="fa-solid fa-truck-medical mr-2"></i> Emergency
                         </button>
-                        <a href="profile.html#appointments-list" class="bg-secondary text-white px-8 py-3 rounded-full font-medium hover:bg-slate-800 transition flex items-center justify-center shadow-lg border border-slate-700">
+                        <button type="button" onclick="handleBookingsClick()" class="bg-secondary text-white px-8 py-3 rounded-full font-medium hover:bg-slate-800 transition flex items-center justify-center shadow-lg border border-slate-700">
                             <i class="fa-solid fa-list-check mr-2"></i> Your Bookings
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -194,7 +209,7 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
                 <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="MD Hospitals Building" class="rounded-3xl shadow-2xl z-10 relative">
+                    <img src="images/hero1.jpg" alt="MD Hospitals Building" class="rounded-3xl shadow-2xl z-10 relative">
                     <div class="absolute -bottom-8 -right-8 bg-primary text-white p-8 rounded-3xl shadow-xl z-20 hidden md:block">
                         <p class="font-bold text-4xl mb-1">15+</p>
                         <p class="text-sm font-medium">Years of Excellence</p>
@@ -858,7 +873,7 @@
             </div>
             
             <div class="border-t border-gray-700 pt-8 text-center text-gray-500 text-sm">
-                <p>&copy; 2020 MD Care Hospital (MD Hospitals). All Rights Reserved. | <a href="admin.html" class="hover:text-primary transition font-medium">Admin Portal</a></p>
+                <p>&copy; 2015 MD Care Hospital (MD Hospitals). All Rights Reserved. | <a href="admin.html" class="hover:text-primary transition font-medium">Admin Portal</a></p>
             </div>
         </div>
     </footer>
@@ -967,6 +982,14 @@
                 window.openModal('login-modal');
             } else {
                 window.openModal('appointment-modal');
+            }
+        }
+
+        window.handleBookingsClick = function() {
+            if(!isLoggedIn) {
+                window.openModal('login-modal');
+            } else {
+                window.location.href = 'profile.html#appointments-list';
             }
         }
 
@@ -1212,7 +1235,7 @@
 
         const doctorsList = [
             { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry", displayDept: "Psychiatry (Director)", qual: "VNGP (Psychiatry)", displayTitle: "VNGP (Psychiatry) - Director", exp: "23+ Years", email: "director@mdcare.com", img: "images/nadim.jpeg", bio: "Hospital Director and leading specialist in Psychiatry. Committed to clinical excellence and compassionate patient care." },
-            { name: "Dr. M D Sheikh", dept: "Cardiology", qual: "MBBS, MD, DM (Cardiology)", exp: "15+ Years", email: "mdcareadmin@gmail.com", img: "images/myphoto.jpeg", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
+            { name: "Dr. M D Sheikh", dept: "Cardiology", qual: "Website Developer", exp: "15+ Years", email: "mdcareadmin@gmail.com", img: "images/myphoto.jpeg", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
             { name: "Dr. Neha Verma", dept: "Cardiology", qual: "MBBS, MS, Fellowship in Cardiac Surgery", exp: "10 Years", email: "neha.verma@mdcare.com", img: "images/femaled2.avif", bio: "Expert in pediatric cardiology and minimally invasive cardiac surgeries. A leading voice in preventive cardiovascular healthcare." },
             { name: "Dr. Arjun Patel", dept: "Cardiology", qual: "MBBS, MD (Cardiology)", exp: "8 Years", email: "arjun.patel@mdcare.com", img: "images/maled3.avif", bio: "Dedicated to echocardiography and non-invasive diagnostics. Passionate about managing chronic heart conditions." },
             { name: "Dr. Anil Kapoor", dept: "Neurology", qual: "MBBS, DM (Neurology)", exp: "20 Years", email: "anil.kapoor@mdcare.com", img: "images/maled4.avif", bio: "Senior neurologist specializing in stroke management, epilepsy, and neurodegenerative disorders. Heads the stroke trauma unit." },
@@ -1598,27 +1621,111 @@
         setupBookingForm('');
         setupBookingForm('sec-');
 
-        // Hero Carousel Logc
+        // Hero Imgaed
         const heroImages = [
-            "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80",
-            "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80",
-            "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80"
+            "images/hero1.jpg",
+            "images/hero2.jpg",
+            "images/hero3.jpg",
+            "images/hero4.jpg",
+            "images/hero5.jpg",
+            "images/hero6.jpg",
+            "images/hero7.jpg",
+            "images/hero8.jpg",
+            "images/hero9.jpg"
         ];
         const carouselContainer = document.getElementById('hero-carousel');
         heroImages.forEach((src, index) => {
             const div = document.createElement('div');
-            div.className = `absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
+            div.className = `absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-in-out ${index === 0 ? 'translate-x-0' : 'translate-x-full'}`;
             div.style.backgroundImage = `url('${src}')`;
             carouselContainer.appendChild(div);
         });
 
         let currentHeroIndex = 0;
-        setInterval(() => {
+        window.isHeroPaused = false;
+        window.heroInterval = null;
+
+        window.changeHeroImage = function(direction, isAuto = false) {
             const slides = carouselContainer.children;
-            slides[currentHeroIndex].classList.replace('opacity-100', 'opacity-0');
-            currentHeroIndex = (currentHeroIndex + 1) % slides.length;
-            slides[currentHeroIndex].classList.replace('opacity-0', 'opacity-100');
-        }, 5000);
+            const currentSlide = slides[currentHeroIndex];
+            
+            if (direction === 'next') {
+                currentSlide.classList.remove('translate-x-0');
+                currentSlide.classList.add('-translate-x-full');
+                currentHeroIndex = (currentHeroIndex + 1) % slides.length;
+                const nextSlide = slides[currentHeroIndex];
+                nextSlide.classList.remove('transition-transform', '-translate-x-full', 'translate-x-0');
+                nextSlide.classList.add('translate-x-full');
+                void nextSlide.offsetWidth; // Force reflow
+                nextSlide.classList.add('transition-transform');
+                nextSlide.classList.remove('translate-x-full');
+                nextSlide.classList.add('translate-x-0');
+            } else {
+                currentSlide.classList.remove('translate-x-0');
+                currentSlide.classList.add('translate-x-full');
+                currentHeroIndex = (currentHeroIndex - 1 + slides.length) % slides.length;
+                const prevSlide = slides[currentHeroIndex];
+                prevSlide.classList.remove('transition-transform', 'translate-x-full', 'translate-x-0');
+                prevSlide.classList.add('-translate-x-full');
+                void prevSlide.offsetWidth; // Force reflow
+                prevSlide.classList.add('transition-transform');
+                prevSlide.classList.remove('-translate-x-full');
+                prevSlide.classList.add('translate-x-0');
+            }
+            
+            // Auto-reset the timer if manual switch happens while it's playing
+            if (!isAuto && !window.isHeroPaused) {
+                startHeroAnimation();
+            }
+        };
+
+        window.nextHeroImage = function(e) {
+            if(e) { e.preventDefault(); e.stopPropagation(); }
+            window.changeHeroImage('next');
+        };
+
+        window.prevHeroImage = function(e) {
+            if(e) { e.preventDefault(); e.stopPropagation(); }
+            window.changeHeroImage('prev');
+        };
+
+        function startHeroAnimation() {
+            if (window.heroInterval) clearInterval(window.heroInterval);
+            window.heroInterval = setInterval(() => {
+                window.changeHeroImage('next', true);
+            }, 3000);
+        }
+        
+        startHeroAnimation(); // Start initially
+
+        window.toggleHeroAnimation = function(e) {
+            // Ignore clicks if they occurred on a button or link
+            if (e && (e.target.closest('button') || e.target.closest('a'))) return;
+            
+            const indicator = document.getElementById('hero-play-pause-indicator');
+            const icon = indicator.querySelector('i');
+            
+            if (window.isHeroPaused) {
+                window.isHeroPaused = false;
+                startHeroAnimation();
+                icon.className = 'fa-solid fa-play ml-1';
+            } else {
+                window.isHeroPaused = true;
+                clearInterval(window.heroInterval);
+                icon.className = 'fa-solid fa-pause';
+            }
+            
+            // Pop the indicator into view
+            indicator.classList.remove('opacity-0', 'scale-50');
+            indicator.classList.add('opacity-100', 'scale-100');
+            
+            // Fade the indicator out after half a second
+            clearTimeout(window.indicatorTimeout);
+            window.indicatorTimeout = setTimeout(() => {
+                indicator.classList.remove('opacity-100', 'scale-100');
+                indicator.classList.add('opacity-0', 'scale-50');
+            }, 600);
+        };
 
         // Populate 45 Reviews Dynamically
         const reviewsContainer = document.getElementById('reviews-container');

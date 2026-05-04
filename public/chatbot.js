@@ -1,11 +1,11 @@
 (function() {
     const ui = `
     <div id="md-chatbot" class="fixed bottom-6 right-6 z-[100] flex flex-col items-end font-sans">
-        <div id="md-chat-window" class="bg-white w-80 sm:w-96 rounded-2xl shadow-2xl border border-slate-100 hidden flex-col overflow-hidden mb-4 transition-all">
+        <div id="md-chat-window" class="bg-white w-[calc(100vw-3rem)] sm:w-96 rounded-2xl shadow-2xl border border-slate-100 hidden flex-col overflow-hidden mb-4 transition-all">
             <div class="bg-primary text-white p-4 flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-robot text-xl"></i>
-                    <span class="font-bold">MD Care AI</span>
+                    <span class="font-bold">MD Care Ai Assist</span>
                 </div>
                 <button id="md-chat-close" class="hover:text-gray-200"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
@@ -17,7 +17,7 @@
             </div>
             <form id="md-chat-form" class="p-3 bg-white border-t border-slate-100 flex gap-2">
                 <input type="text" id="md-chat-input" placeholder="Type your question..." class="flex-grow px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary" autocomplete="off">
-                <button type="submit" class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-teal-700 flex-shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
+                <button type="submit" class="w-10 h-10 min-w-[40px] bg-primary text-white rounded-full flex items-center justify-center hover:bg-teal-700 flex-shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
             </form>
         </div>
         <button id="md-chat-toggle" class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-teal-700 hover:scale-105 transition animate-glow-pulse text-2xl">
@@ -41,9 +41,15 @@
         const icon = sender === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
         const iconBg = sender === 'user' ? 'bg-secondary' : 'bg-primary';
         
+        let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        if (sender === 'bot' && (text.toLowerCase().includes('appointment') || text.toLowerCase().includes('book'))) {
+            formattedText += `<div class="mt-3"><a href="index.html#appointment" onclick="document.getElementById('md-chat-close').click(); if(typeof handleAppointmentClick === 'function') { event.preventDefault(); handleAppointmentClick(); } else if(typeof openAppointmentModal === 'function') { event.preventDefault(); openAppointmentModal(); }" class="bg-primary text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-teal-700 transition shadow-sm inline-flex items-center w-fit"><i class="fa-solid fa-calendar-check mr-2"></i> Book an Appointment</a></div>`;
+        }
+
         div.innerHTML = `
             <div class="w-8 h-8 ${iconBg} rounded-full flex items-center justify-center text-white text-xs flex-shrink-0">${icon}</div>
-            <div class="p-3 rounded-2xl shadow-sm text-sm max-w-[80%] ${bubbleClass}">${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+            <div class="p-3 rounded-2xl shadow-sm text-sm max-w-[80%] flex flex-col ${bubbleClass}">${formattedText}</div>
         `;
         messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
@@ -61,7 +67,7 @@
         const typingDiv = document.createElement('div');
         typingDiv.id = typingId;
         typingDiv.className = 'text-xs text-slate-400 italic ml-10';
-        typingDiv.innerText = 'AI is typing...';
+        typingDiv.innerText = 'Typing...';
         messages.appendChild(typingDiv);
         messages.scrollTop = messages.scrollHeight;
 
