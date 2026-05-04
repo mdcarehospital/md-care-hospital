@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     if (!apiKey) return res.status(500).json({ error: 'API key not configured on server' });
 
     // Smart Check: Prevent accidental use of Firebase API Key
-    if (apiKey === "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY" || apiKey.includes("BWp-8CEFAr")) {
+    if (apiKey === "AIzaSyBbV_3UfBbILAq4BrSjZKxYz16EzZ_w3QY" || apiKey.includes("BWp-8CEFAr")) {
         return res.status(403).json({ error: { message: "You are using your Firebase API key! You must generate a dedicated Gemini API key from https://aistudio.google.com and update Vercel." } });
     }
 
