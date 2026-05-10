@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- HELPER FUNCTIONS ---
+    
+    // Check if the user is the admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'mdcareadmin@gmail.com';
+    }
+    
+    // Check if the user owns the document they are trying to access
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- COLLECTION RULES ---
+
+    // 1. Users Collection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+    }
+
+    // 2. Appointments Collection
+    match /appointments/{appointmentId} {
+      // Admin has full control
+      allow read, write, delete: if isAdmin();
+      
+      // Patients can read, create, and update (cancel) their own appointments
+      allow read, update: if isOwner(resource.data.userId);
+      allow create: if isOwner(request.resource.data.userId);
+    }
+
+    // 3. Reviews & Doctor Reviews Collections
+    match /{collection}/{reviewId} {
+      allow read: if collection in ['reviews', 'doctor_reviews'];
+      allow create: if collection in ['reviews', 'doctor_reviews'] && isOwner(request.resource.data.userId);
+      allow update, delete: if collection in ['reviews', 'doctor_reviews'] && isAdmin();
+    }
+    
+    // 4. Blocked Slots Collection
+    match /blocked_slots/{slotId} {
+      allow read: if true;
+      allow write, delete: if isAdmin();
+    }
+  }
+}

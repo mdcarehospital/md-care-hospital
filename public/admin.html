@@ -12,6 +12,7 @@
         (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#0d9488', secondary: '#1e293b' } } }
@@ -38,34 +39,22 @@
         html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
         html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
         html.dark .bg-secondary { background-color: #020617 !important; }
-        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50, html.dark .bg-purple-100 { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .text-teal-600, html.dark .text-teal-700 { color: #2dd4bf !important; }
+        html.dark .text-yellow-600, html.dark .text-yellow-700 { color: #facc15 !important; }
+        html.dark .text-red-500, html.dark .text-red-600, html.dark .text-red-700 { color: #f87171 !important; }
+        html.dark .text-blue-500, html.dark .text-blue-600, html.dark .text-blue-700 { color: #60a5fa !important; }
+        html.dark .text-purple-700 { color: #c084fc !important; }
         html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .even\:bg-slate-50:nth-child(even) { background-color: #0f172a !important; }
+        html.dark .even\:bg-slate-100:nth-child(even) { background-color: #334155 !important; }
         html.dark .theme-icon-moon { display: none !important; }
         html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
         html.dark ::-webkit-scrollbar-track { background: #0f172a; }
         html.dark ::-webkit-scrollbar-thumb { background: #334155; }
         html.dark { scrollbar-color: #334155 #0f172a; }
     </style>
-    <script>
-        function adaptTheme() {
-            const savedTheme = localStorage.getItem('mdcare_theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
-            else { document.documentElement.classList.remove('dark'); }
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
-        adaptTheme();
-
-        window.toggleTheme = function() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('mdcare_theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('mdcare_theme', 'dark');
-            }
-        };
-    </script>
+    <script src="utils.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 
@@ -83,7 +72,7 @@
                     </a>
                 </div>
                 <div id="admin-controls" class="hidden flex items-center gap-4">
-                    <span class="text-slate-300 text-sm hidden sm:inline-block"><i class="fa-solid fa-user-shield mr-1"></i> mdcareadmin@gmail.com</span>
+                    <span id="admin-display-email" class="text-slate-300 text-sm hidden sm:inline-block"><i class="fa-solid fa-user-shield mr-1"></i> mdcareadmin@gmail.com</span>
                     <button onclick="adminLogout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">Logout</button>
                 </div>
             </div>
@@ -103,11 +92,14 @@
             <form id="admin-login-form" class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Admin Email</label>
-                    <input type="email" id="admin-email" value="mdcareadmin@gmail.com" readonly class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-slate-50 text-slate-500 outline-none">
+                    <input type="email" id="admin-email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none transition" placeholder="admin@example.com">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input type="password" id="admin-pass" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none transition" placeholder="Enter admin password">
+                    <div class="relative">
+                        <input type="password" id="admin-pass" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none transition pr-10" placeholder="Enter admin password">
+                        <button type="button" onclick="togglePasswordVisibility('admin-pass', 'admin-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-primary focus:outline-none"><i id="admin-pass-icon" class="fa-solid fa-eye"></i></button>
+                    </div>
                 </div>
                 <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition shadow-lg mt-2">
                     Secure Login <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
@@ -118,10 +110,46 @@
 
     <!-- Dashboad -->
     <div id="admin-dashboard-section" class="hidden flex-grow pt-24 pb-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- all bookings table -->
+            <!-- Tab Navigation -->
             <div class="lg:col-span-3">
+                <div class="flex overflow-x-auto gap-2 mb-2 pb-2 no-scrollbar">
+                    <button onclick="switchAdminTab('tab-dashboard', this)" class="admin-tab-btn active bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm shadow-sm whitespace-nowrap"><i class="fa-solid fa-chart-line mr-1"></i> Dashboard</button>
+                    <button onclick="switchAdminTab('tab-availability', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-calendar-xmark mr-1"></i> Availability</button>
+                    <button onclick="switchAdminTab('tab-blogs', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-newspaper mr-1"></i> Blogs</button>
+                    <button onclick="switchAdminTab('tab-doc-reviews', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-star mr-1"></i> Doc Reviews</button>
+                    <button onclick="switchAdminTab('tab-hospital-reviews', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-hospital mr-1"></i> Hospital Reviews</button>
+                    <button onclick="switchAdminTab('tab-users', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-users mr-1"></i> Users</button>
+                    <button onclick="switchAdminTab('tab-admins', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-user-shield mr-1"></i> Admins</button>
+                </div>
+            </div>
+
+            <!-- Tab: Dashboard -->
+            <div id="tab-dashboard" class="admin-tab-content lg:col-span-3 space-y-6">
+            <!-- Analytics Section -->
+            <div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 border-b border-slate-100 pb-2">
+                            <h3 id="appointments-chart-title" class="font-bold text-secondary text-sm uppercase tracking-wider"><i class="fa-solid fa-chart-column text-primary mr-1"></i> Appointments</h3>
+                            <select id="chart-filter" onchange="window.updateAppointmentsChart()" class="text-xs font-bold border border-slate-300 rounded-lg outline-none py-1.5 px-3 bg-slate-50 text-slate-600 focus:ring-1 focus:ring-primary cursor-pointer transition">
+                                <option value="today">Today (Hourly)</option>
+                                <option value="last7days" selected>Last 7 Days</option>
+                                <option value="thismonth">This Month</option>
+                            </select>
+                        </div>
+                        <div class="h-48 relative w-full"><canvas id="appointmentsChart"></canvas></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-secondary mb-4 text-center text-sm uppercase tracking-wider">Patients per Department</h3>
+                        <div class="h-48 relative w-full"><canvas id="departmentChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- all bookings table -->
+            <div>
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="p-6 border-b border-slate-200 bg-slate-50">
                         <div class="flex justify-between items-center mb-4">
@@ -186,10 +214,14 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="p-4 text-center">
+                        <button id="load-more-appointments-btn" onclick="loadAppointments(true)" class="hidden bg-slate-100 text-primary font-bold py-2 px-6 rounded-full hover:bg-slate-200 transition shadow-sm border border-slate-200">Load More</button>
+                    </div>
                 </div>
+            </div>
 
             <!-- Add New Booking (Admin End) -->
-            <div class="lg:col-span-3 w-full max-w-4xl mx-auto mt-4">
+            <div class="w-full max-w-4xl mx-auto">
                 <button onclick="document.getElementById('admin-booking-wrapper').classList.toggle('hidden')" class="w-full bg-primary text-white font-bold text-lg py-4 rounded-xl shadow-md hover:bg-teal-700 transition flex items-center justify-center gap-2 animate-glow-pulse">
                     <i class="fa-solid fa-calendar-plus"></i> Book an Appointment
                 </button>
@@ -235,17 +267,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-slate-700 mb-1">Time</label>
-                                <select id="add-time" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
-                                    <option value="" disabled selected>Time</option>
-                                    <option value="09:00 AM">09:00 AM</option><option value="09:30 AM">09:30 AM</option>
-                                    <option value="10:00 AM">10:00 AM</option><option value="10:30 AM">10:30 AM</option>
-                                    <option value="11:00 AM">11:00 AM</option><option value="11:30 AM">11:30 AM</option>
-                                    <option value="12:00 PM">12:00 PM</option><option value="12:30 PM">12:30 PM</option>
-                                    <option value="01:00 PM">01:00 PM</option><option value="01:30 PM">01:30 PM</option>
-                                    <option value="02:00 PM">02:00 PM</option><option value="02:30 PM">02:30 PM</option>
-                                    <option value="03:00 PM">03:00 PM</option><option value="03:30 PM">03:30 PM</option>
-                                    <option value="04:00 PM">04:00 PM</option><option value="04:30 PM">04:30 PM</option>
-                                </select>
+                                <select id="add-time" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white"><option value="" disabled selected>Time</option></select>
                             </div>
                         </div>
                         <div id="admin-availability-message" class="text-xs font-bold mt-1"></div>
@@ -254,12 +276,189 @@
                         </button>
                     </form>
                 </div>
-                </div>
             </div>
             </div>
 
+            <!-- Availability Manager -->
+            <!-- Tab: Availability -->
+            <div id="tab-availability" class="admin-tab-content hidden lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-xl font-bold text-secondary mb-4 flex items-center gap-2"><i class="fa-solid fa-calendar-xmark text-primary"></i> Doctor Availability Manager</h2>
+                    <form id="block-slot-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Doctor</label>
+                            <select id="block-doctor" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="" disabled selected>Select Doctor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Date</label>
+                            <input type="date" id="block-date" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Time Slot</label>
+                            <select id="block-time" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="All Day">All Day</option>
+                                <option value="09:00 AM">09:00 AM</option><option value="09:30 AM">09:30 AM</option>
+                                <option value="10:00 AM">10:00 AM</option><option value="10:30 AM">10:30 AM</option>
+                                <option value="11:00 AM">11:00 AM</option><option value="11:30 AM">11:30 AM</option>
+                                <option value="12:00 PM">12:00 PM</option><option value="12:30 PM">12:30 PM</option>
+                                <option value="01:00 PM">01:00 PM</option><option value="01:30 PM">01:30 PM</option>
+                                <option value="02:00 PM">02:00 PM</option><option value="02:30 PM">02:30 PM</option>
+                                <option value="03:00 PM">03:00 PM</option><option value="03:30 PM">03:30 PM</option>
+                                <option value="04:00 PM">04:00 PM</option><option value="04:30 PM">04:30 PM</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition shadow text-sm">Block Slot</button>
+                    </form>
+                    <div class="mt-6">
+                        <h4 class="font-bold text-slate-700 text-sm mb-2">Currently Blocked Slots</h4>
+                        <div class="overflow-auto max-h-48 border border-slate-200 rounded-lg">
+                            <table class="w-full text-left text-sm"><thead class="bg-slate-50 sticky top-0"><tr><th class="p-2 border-b">Doctor</th><th class="p-2 border-b">Date</th><th class="p-2 border-b">Time</th><th class="p-2 border-b text-center">Action</th></tr></thead><tbody id="blocked-slots-list" class="divide-y divide-slate-100"><tr><td colspan="4" class="p-4 text-center text-slate-400">Loading...</td></tr></tbody></table>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW: Working Hours Manager -->
+                    <div class="mt-8 border-t border-slate-200 pt-6">
+                        <h4 class="font-bold text-slate-700 text-sm mb-4"><i class="fa-solid fa-clock text-primary mr-1"></i> Doctor Working Hours</h4>
+                        <form id="schedule-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Doctor</label>
+                                <select id="schedule-doctor" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white"><option value="" disabled selected>Select Doctor</option></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Start Time</label>
+                                <select id="schedule-start" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white"><option value="" disabled selected>Start</option></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">End Time</label>
+                                <select id="schedule-end" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white"><option value="" disabled selected>End</option></select>
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-2 rounded-lg hover:bg-teal-700 transition shadow text-sm">Save Hours</button>
+                        </form>
+                    </div>
+
+                    <!-- NEW: Hospital Holidays Manager -->
+                    <div class="mt-8 border-t border-slate-200 pt-6">
+                        <h4 class="font-bold text-slate-700 text-sm mb-4"><i class="fa-solid fa-calendar-day text-primary mr-1"></i> Hospital Holidays Manager</h4>
+                        <form id="holiday-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Date</label>
+                                <input type="date" id="holiday-date" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Reason / Occasion</label>
+                                <input type="text" id="holiday-reason" required placeholder="e.g., Independence Day" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-2 rounded-lg hover:bg-teal-700 transition shadow text-sm">Add Holiday</button>
+                        </form>
+                        <div class="mt-6">
+                            <h4 class="font-bold text-slate-700 text-sm mb-2">Upcoming Holidays</h4>
+                            <div class="overflow-auto max-h-48 border border-slate-200 rounded-lg">
+                                <table class="w-full text-left text-sm"><thead class="bg-slate-50 sticky top-0"><tr><th class="p-2 border-b">Date</th><th class="p-2 border-b">Occasion</th><th class="p-2 border-b text-center">Action</th></tr></thead><tbody id="holidays-list" class="divide-y divide-slate-100"><tr><td colspan="3" class="p-4 text-center text-slate-400">Loading...</td></tr></tbody></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Admins -->
+            <div id="tab-admins" class="admin-tab-content hidden lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-xl font-bold text-secondary mb-4 flex items-center gap-2"><i class="fa-solid fa-user-plus text-primary"></i> Register New Admin</h2>
+                    <form id="create-admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Admin Name</label>
+                            <input type="text" id="new-admin-name" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Admin Email</label>
+                            <input type="email" id="new-admin-email" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Password</label>
+                            <div class="relative"><input type="password" id="new-admin-pass" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm pr-10"><button type="button" onclick="togglePasswordVisibility('new-admin-pass', 'new-admin-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-primary focus:outline-none"><i id="new-admin-pass-icon" class="fa-solid fa-eye"></i></button></div>
+                        </div>
+                        <button type="submit" class="w-full bg-secondary text-white font-bold py-2 rounded-lg hover:bg-slate-800 transition shadow text-sm">Create Admin</button>
+                    </form>
+
+                    <!-- NEW: Admin Accounts List -->
+                    <div class="mt-8 border-t border-slate-200 pt-6">
+                        <h4 class="font-bold text-slate-700 text-sm mb-4"><i class="fa-solid fa-user-shield text-primary mr-1"></i> Admin Accounts</h4>
+                        <div class="overflow-auto max-h-64 border border-slate-200 rounded-lg">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 sticky top-0"><tr><th class="p-2 border-b">Name</th><th class="p-2 border-b">Email</th><th class="p-2 border-b">Joined</th><th class="p-2 border-b text-center">Status</th></tr></thead>
+                                <tbody id="admin-accounts-list" class="divide-y divide-slate-100"><tr><td colspan="4" class="p-4 text-center text-slate-400">Loading...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Management Section -->
+            <!-- Tab: Blogs -->
+            <div id="tab-blogs" class="admin-tab-content hidden lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-xl font-bold text-secondary mb-4 flex items-center gap-2"><i class="fa-solid fa-newspaper text-primary"></i> Blog & News Management</h2>
+                    
+                    <form id="create-blog-form" class="space-y-4 mb-8">
+                        <div class="flex justify-between items-center border-b pb-2 mb-4">
+                            <h3 class="text-sm font-bold text-slate-700" id="blog-form-title">Create New Post</h3>
+                            <button type="button" onclick="seedSampleBlogs()" class="text-xs bg-teal-50 text-teal-700 font-bold px-3 py-1.5 rounded-md hover:bg-teal-100 transition border border-teal-200 shadow-sm"><i class="fa-solid fa-seedling mr-1"></i> Add Sample Posts</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Title</label>
+                                <input type="text" id="blog-title" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Category</label>
+                                <select id="blog-category" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                    <option value="Health Tips">Health Tips</option>
+                                    <option value="Hospital News">Hospital News</option>
+                                    <option value="Dietary Advice">Dietary Advice</option>
+                                    <option value="Medical Innovations">Medical Innovations</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Author</label>
+                                <select id="blog-author" required class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                    <option value="MD Care Admin">MD Care Admin</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Cover Image (Upload or URL)</label>
+                                <div class="flex gap-2">
+                                    <input type="url" id="blog-image" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm" placeholder="https://example.com/image.jpg">
+                                    <input type="file" id="blog-image-file" accept="image/*" class="hidden">
+                                    <button type="button" onclick="document.getElementById('blog-image-file').click()" class="bg-slate-100 text-slate-600 px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-200 transition text-sm font-bold flex-shrink-0" title="Upload from computer"><i class="fa-solid fa-upload"></i></button>
+                                </div>
+                                <p id="blog-image-name" class="text-[10px] text-primary font-bold mt-1 hidden"></p>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Content</label>
+                            <textarea id="blog-content" required rows="5" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary outline-none text-sm" placeholder="Write your post content here..."></textarea>
+                        </div>
+                        <input type="hidden" id="edit-blog-id">
+                        <div class="flex gap-2">
+                            <button type="submit" id="blog-submit-btn" class="bg-primary text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-700 transition shadow text-sm">Publish Post</button>
+                            <button type="button" id="blog-cancel-btn" onclick="cancelBlogEdit()" class="hidden bg-slate-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-slate-600 transition shadow text-sm">Cancel Edit</button>
+                        </div>
+                    </form>
+
+                    <div class="mt-6">
+                        <h4 class="font-bold text-slate-700 text-sm mb-2">Published Posts</h4>
+                        <div class="overflow-auto max-h-64 border border-slate-200 rounded-lg">
+                            <table class="w-full text-left text-sm"><thead class="bg-slate-50 sticky top-0"><tr><th class="p-2 border-b">Title</th><th class="p-2 border-b">Category</th><th class="p-2 border-b">Author</th><th class="p-2 border-b">Date</th><th class="p-2 border-b text-center">Action</th></tr></thead><tbody id="admin-blog-list" class="divide-y divide-slate-100"><tr><td colspan="5" class="p-4 text-center text-slate-400">Loading posts...</td></tr></tbody></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Reviews Management Section -->
-            <div class="lg:col-span-3 mt-4"> <!-- This should be inside the grid -->
+            <!-- Tab: Doctor Reviews -->
+            <div id="tab-doc-reviews" class="admin-tab-content hidden lg:col-span-3">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="p-6 border-b border-slate-200 bg-slate-50 flex flex-wrap gap-4 justify-between items-center">
                         <h2 class="text-xl font-bold text-secondary flex items-center gap-2">
@@ -306,6 +505,67 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tab: Hospital Reviews -->
+            <div id="tab-hospital-reviews" class="admin-tab-content hidden lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 bg-slate-50 flex flex-wrap gap-4 justify-between items-center">
+                        <h2 class="text-xl font-bold text-secondary flex items-center gap-2">
+                            <i class="fa-solid fa-hospital text-primary mr-2"></i> Hospital Reviews
+                            <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-1 rounded border border-slate-200 ml-2">Total: <span id="h-reviews-count">0</span></span>
+                        </h2>
+                        <div class="flex items-center gap-3">
+                            <button id="bulk-delete-h-reviews-btn" onclick="deleteSelectedHReviews()" class="hidden text-sm font-bold text-red-500 hover:text-red-700 transition bg-red-50 px-3 py-1.5 rounded-lg border border-red-100"><i class="fa-solid fa-trash-can mr-1"></i> Delete Selected</button>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
+                                <input type="text" id="filter-h-review-search" oninput="renderAdminHReviews()" placeholder="Search patient..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[160px]">
+                            </div>
+                            <select id="filter-h-review-rating" onchange="renderAdminHReviews()" class="px-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Ratings</option>
+                                <option value="5">5 Stars</option><option value="4">4 Stars</option><option value="3">3 Stars</option><option value="2">2 Stars</option><option value="1">1 Star</option>
+                            </select>
+                            <button onclick="clearHReviewFilters()" class="text-sm font-bold text-slate-500 hover:text-secondary transition"><i class="fa-solid fa-filter-circle-xmark mr-1"></i> Clear Filters</button>
+                            <button onclick="loadAdminHReviews()" class="text-sm font-bold text-primary hover:text-teal-700 transition"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="overflow-auto max-h-[1000px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 z-20 shadow-sm"><tr class="bg-slate-100 text-slate-500 text-xs uppercase tracking-wider"><th class="p-4 font-bold border-b w-12 text-center"><input type="checkbox" id="select-all-h-reviews" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" onchange="toggleAllHReviews(this)"></th><th class="p-4 font-bold border-b w-1/4">Patient Info</th><th class="p-4 font-bold border-b w-1/6">Rating</th><th class="p-4 font-bold border-b">Review</th><th class="p-4 font-bold border-b text-center">Action</th></tr></thead>
+                            <tbody id="admin-h-reviews-list" class="text-sm text-slate-700 divide-y divide-slate-100"><tr><td colspan="5" class="p-8 text-center text-slate-400">Loading reviews...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Users -->
+            <div id="tab-users" class="admin-tab-content hidden lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center flex-wrap gap-4">
+                        <h2 class="text-xl font-bold text-secondary flex items-center gap-2">
+                            <i class="fa-solid fa-users text-primary mr-2"></i> Registered Users
+                            <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-1 rounded border border-slate-200 ml-2">Total: <span id="users-count">0</span></span>
+                        </h2>
+                        <div class="flex gap-3 items-center">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
+                                <input type="text" id="filter-user-search" oninput="renderAdminUsers()" placeholder="Search name, email..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[200px]">
+                            </div>
+                            <button onclick="loadAdminUsers()" class="text-sm font-bold text-primary hover:text-teal-700 transition whitespace-nowrap"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="overflow-auto max-h-[600px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 z-20 shadow-sm bg-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr><th class="p-4 font-bold border-b">User Info</th><th class="p-4 font-bold border-b">Role</th><th class="p-4 font-bold border-b">Joined</th><th class="p-4 font-bold border-b text-center">Actions</th></tr>
+                            </thead>
+                            <tbody id="admin-users-list" class="text-sm text-slate-700 divide-y divide-slate-100">
+                                <tr><td colspan="4" class="p-8 text-center text-slate-400">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -349,6 +609,7 @@
             <h2 class="text-xl font-bold text-secondary mb-4"><i class="fa-solid fa-reply text-primary mr-2"></i> Reply to Review</h2>
             <textarea id="reply-text" rows="4" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary outline-none text-sm mb-4" placeholder="Type your response here. To remove a response, leave this blank."></textarea>
             <input type="hidden" id="reply-review-id">
+            <input type="hidden" id="reply-review-type" value="doctor">
             <div class="flex justify-end gap-3">
                 <button onclick="document.getElementById('reply-modal').classList.add('hidden')" class="px-4 py-2 text-slate-500 hover:bg-slate-200 rounded-lg text-sm font-bold transition">Cancel</button>
                 <button onclick="submitReviewReply()" id="submit-reply-btn" class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition shadow">Submit Reply</button>
@@ -357,9 +618,11 @@
     </div>
 
     <script type="module">
+        import { app, auth, db } from "./firebase-config.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy, where, runTransaction, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { isLoggingOut } from "./auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy, where, runTransaction, getDoc, setDoc, onSnapshot, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
@@ -370,76 +633,61 @@
             appId: "1:214966558089:web:d49f400adb427614089558",
             measurementId: "G-K3S90QH9LT"
         };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+        const secondaryAuth = getAuth(secondaryApp);
 
         const loginSection = document.getElementById('admin-login-section');
         const dashboardSection = document.getElementById('admin-dashboard-section');
         const adminControls = document.getElementById('admin-controls');
         const tbody = document.getElementById('admin-appointments-list');
 
-        // Beautiful Toast Notification System
-        window.showToast = function(title, message, type = 'success') {
-            let container = document.getElementById('toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
-                container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
-                document.body.appendChild(container);
-            }
-            
-            const toast = document.createElement('div');
-            toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 ${type === 'success' ? 'border-teal-500' : 'border-red-500'} rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
-            
-            const icon = `<div class="w-10 h-10 rounded-full ${type === 'success' ? 'bg-teal-50 text-teal-500' : 'bg-red-50 text-red-500'} flex items-center justify-center flex-shrink-0 text-lg">
-                <i class="fa-solid ${type === 'success' ? 'fa-check' : 'fa-xmark'}"></i>
-            </div>`;
-                
-            toast.innerHTML = `
-                ${icon}
-                <div class="flex-grow pt-0.5">
-                    <h4 class="font-bold text-slate-800 text-sm">${title}</h4>
-                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>
-            `;
-            
-            container.appendChild(toast);
-            
-            requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
-            
-            setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 6000);
+        window.showConfirmModal = function(title, message, confirmCallback, confirmText = "Delete", cancelText = "Cancel", btnClass = "bg-red-500 hover:bg-red-600") {
+            document.getElementById('confirm-modal-title').textContent = title;
+            document.getElementById('confirm-modal-message').textContent = message;
+            const confirmBtn = document.getElementById('confirm-modal-btn');
+            confirmBtn.previousElementSibling.textContent = cancelText;
+            const newBtn = confirmBtn.cloneNode(true);
+            newBtn.textContent = confirmText;
+            newBtn.className = `w-full text-white font-bold py-2.5 rounded-lg transition shadow-sm ${btnClass}`;
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            newBtn.addEventListener('click', () => {
+                document.getElementById('confirm-modal').classList.add('hidden');
+                confirmCallback();
+            });
+            document.getElementById('confirm-modal').classList.remove('hidden');
         };
 
-    window.showConfirmModal = function(title, message, confirmCallback) {
-        document.getElementById('confirm-modal-title').textContent = title;
-        document.getElementById('confirm-modal-message').textContent = message;
-        const confirmBtn = document.getElementById('confirm-modal-btn');
-        const newBtn = confirmBtn.cloneNode(true);
-        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
-        newBtn.addEventListener('click', () => {
-            document.getElementById('confirm-modal').classList.add('hidden');
-            confirmCallback();
-        });
-        document.getElementById('confirm-modal').classList.remove('hidden');
-    };
-
-    let isLoggingOut = false;
-
-        // Auth Listener
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (isLoggingOut) return;
-            if (user && user.email === 'mdcareadmin@gmail.com') {
+            let isAdmin = false;
+            if (user) {
+                if (user.email === 'mdcareadmin@gmail.com') {
+                    isAdmin = true;
+                } else {
+                    try {
+                        const userDoc = await getDoc(doc(db, "users", user.uid));
+                        if (userDoc.exists() && userDoc.data().role === 'admin') {
+                            isAdmin = true;
+                        } else if (!userDoc.exists() || userDoc.data().disabled) {
+                            await signOut(auth);
+                            window.showToast("Access Denied", "Your account has been removed or disabled.", "error");
+                            return;
+                        }
+                    } catch(e) {}
+                }
+            }
+            if (isAdmin) {
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 adminControls.classList.remove('hidden');
+                document.getElementById('admin-display-email').innerHTML = `<i class="fa-solid fa-user-shield mr-1"></i> ${user.email}`;
                 loadAppointments();
                 loadAdminReviews();
+                loadAdminHReviews();
+                loadAdminBlogs();
+                loadAdminUsers();
+                loadBlockedSlots();
+                loadHolidays();
             } else {
                 if(user) { signOut(auth); window.showToast("Unauthorized Access", "Admin only. You have been automatically signed out.", "error"); }
                 loginSection.classList.remove('hidden');
@@ -447,6 +695,17 @@
                 adminControls.classList.add('hidden');
             }
         });
+
+        window.switchAdminTab = function(tabId, btn) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab-btn').forEach(el => {
+                el.classList.remove('bg-primary', 'text-white', 'shadow-sm', 'active');
+                el.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200', 'hover:bg-slate-50');
+            });
+            btn.classList.add('bg-primary', 'text-white', 'shadow-sm', 'active');
+            btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200', 'hover:bg-slate-50');
+        };
 
         // Admin Login
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
@@ -461,31 +720,145 @@
             }
         });
 
-        window.adminLogout = function() {
-            isLoggingOut = true;
-            signOut(auth).then(() => {
-                sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
-                window.location.href = 'index.html';
-            });
-        };
-
         let allAppointmentsData = [];
         let currentFilteredData = [];
 
+        let appointmentsChartInstance = null;
+        let departmentChartInstance = null;
+
+        window.addEventListener('themeToggled', () => {
+            if (appointmentsChartInstance) window.updateAppointmentsChart();
+            if (departmentChartInstance) updateCharts(allAppointmentsData);
+        });
+
+        window.updateAppointmentsChart = function() {
+            const filter = document.getElementById('chart-filter').value;
+            const data = allAppointmentsData;
+            let labels = [];
+            let counts = [];
+            
+            if (filter === 'today') {
+                const now = new Date();
+                const y = now.getFullYear();
+                const m = String(now.getMonth() + 1).padStart(2, '0');
+                const d = String(now.getDate()).padStart(2, '0');
+                const localToday = `${y}-${m}-${d}`;
+                
+                const todayData = data.filter(a => a.date === localToday && a.status !== 'Cancelled');
+                labels = ["09 AM", "10 AM", "11 AM", "12 PM", "01 PM", "02 PM", "03 PM", "04 PM"];
+                counts = labels.map(label => {
+                    const hour = label.substring(0, 2);
+                    const ampm = label.substring(3, 5);
+                    return todayData.filter(a => a.time && a.time.startsWith(hour) && a.time.includes(ampm)).length;
+                });
+            } else if (filter === 'thismonth') {
+                const now = new Date();
+                const y = now.getFullYear();
+                const m = now.getMonth();
+                const daysInMonth = new Date(y, m + 1, 0).getDate();
+                for (let i = 1; i <= daysInMonth; i++) {
+                    labels.push(String(i).padStart(2, '0'));
+                    const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                    counts.push(data.filter(a => a.date === dateStr && a.status !== 'Cancelled').length);
+                }
+            } else {
+                const days = Array.from({length: 7}, (_, i) => {
+                    const d = new Date(); d.setDate(d.getDate() - i);
+                    const y = d.getFullYear();
+                    const mo = String(d.getMonth() + 1).padStart(2, '0');
+                    const da = String(d.getDate()).padStart(2, '0');
+                    return `${y}-${mo}-${da}`;
+                }).reverse();
+                labels = days.map(d => d.slice(5));
+                counts = days.map(dateStr => data.filter(a => a.date === dateStr && a.status !== 'Cancelled').length);
+            }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#cbd5e1' : '#64748b'; 
+            const gridColor = isDark ? '#334155' : '#e2e8f0'; 
+
+            const aptCtx = document.getElementById('appointmentsChart').getContext('2d');
+            if (appointmentsChartInstance) appointmentsChartInstance.destroy();
+            appointmentsChartInstance = new Chart(aptCtx, {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'Appointments', data: counts, backgroundColor: '#0d9488', borderRadius: 4 }] },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { labels: { color: textColor } } },
+                    scales: { 
+                        x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                        y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor }, grid: { color: gridColor } } 
+                    } 
+                }
+            });
+        };
+
+        function updateCharts(data) {
+            window.updateAppointmentsChart();
+
+            const deptCounts = {};
+            data.forEach(a => {
+                if (a.status !== 'Cancelled' && a.department) deptCounts[a.department] = (deptCounts[a.department] || 0) + 1;
+            });
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#cbd5e1' : '#64748b'; 
+
+            const deptCtx = document.getElementById('departmentChart').getContext('2d');
+            if (departmentChartInstance) departmentChartInstance.destroy();
+            departmentChartInstance = new Chart(deptCtx, {
+                type: 'pie',
+                data: { labels: Object.keys(deptCounts), datasets: [{ data: Object.values(deptCounts), backgroundColor: ['#0d9488', '#1e293b', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#10b981', '#6366f1'], borderColor: isDark ? '#1e293b' : '#ffffff', borderWidth: 2 }] },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 }, color: textColor } } } 
+                }
+            });
+        }
+
         // Fetch Appointments
-        window.loadAppointments = async function() {
-            tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching...</td></tr>';
+        let lastAppointmentVisible = null;
+        window.loadAppointments = async function(isLoadMore = false) {
+            const loadMoreBtn = document.getElementById('load-more-appointments-btn');
+            if (!isLoadMore) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching...</td></tr>';
+                allAppointmentsData = [];
+                lastAppointmentVisible = null;
+            } else {
+                if (loadMoreBtn) { loadMoreBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...'; loadMoreBtn.disabled = true; }
+            }
+            
             try {
-                const q = query(collection(db, "appointments"), orderBy("createdAt", "desc"));
+                let q = query(collection(db, "appointments"), orderBy("createdAt", "desc"), limit(50));
+                if (lastAppointmentVisible) {
+                    q = query(collection(db, "appointments"), orderBy("createdAt", "desc"), startAfter(lastAppointmentVisible), limit(50));
+                }
+                
                 const snapshot = await getDocs(q);
                 
-                allAppointmentsData = [];
-                if (snapshot.empty) {
+                if (!snapshot.empty) {
+                    lastAppointmentVisible = snapshot.docs[snapshot.docs.length - 1];
+                }
+
+                if (snapshot.docs.length < 50) {
+                    if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+                } else {
+                    if (loadMoreBtn) {
+                        loadMoreBtn.classList.remove('hidden');
+                        loadMoreBtn.innerHTML = 'Load More';
+                        loadMoreBtn.disabled = false;
+                    }
+                }
+
+                if (snapshot.empty && !isLoadMore) {
                     renderAdminAppointments();
+                    updateCharts(allAppointmentsData);
                     return;
                 }
 
-                snapshot.forEach((document) => {
+                    snapshot.forEach((document) => {
                     const data = document.data();
                     const id = document.id;
                     
@@ -587,16 +960,20 @@
                             }
                         } catch(e) {}
                     }
-                    data.displayStatus = displayStatus;
 
+                    data.displayStatus = displayStatus;
                     data.id = id;
                     data.refNumber = refNumber;
                     allAppointmentsData.push(data);
                 });
 
                 renderAdminAppointments();
+                if (!isLoadMore) updateCharts(allAppointmentsData);
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-medium">Error loading data: ${err.message}<br><span class="text-sm font-normal text-slate-500 mt-2 block">If the error says "Missing or insufficient permissions", your Firestore Rules have not updated yet.</span></td></tr>`;
+                if (!isLoadMore) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-medium">Error loading data: ${err.message}</td></tr>`;
+                    updateCharts([]);
+                }
                 console.error(err);
             }
         };
@@ -661,7 +1038,7 @@
                         </td>
                         <td class="px-4 py-2.5">
                             <p class="font-bold text-primary">${data.doctor}</p>
-                            <p class="text-xs text-slate-500 bg-slate-200 inline-block px-2 py-0.5 rounded mt-1">${data.department}</p>
+                            <p class="text-xs text-slate-500 bg-slate-100 border border-slate-200 inline-block px-2 py-0.5 rounded mt-1">${data.department}</p>
                         </td>
                         <td class="px-4 py-2.5">
                             <p class="font-medium text-slate-700"><i class="fa-regular fa-calendar text-primary mr-1"></i> ${data.date}</p>
@@ -742,7 +1119,6 @@
         window.updateBookingStatus = async function(id, newStatus, patientEmail, patientName) {
             try {
                 await updateDoc(doc(db, "appointments", id), { status: newStatus });
-                loadAppointments(); // Refresh to update the colors
                 
                 const appt = allAppointmentsData.find(a => a.id === id);
                 const apptDate = appt ? appt.date : 'Unknown Date';
@@ -829,7 +1205,6 @@
                         await Promise.all(deletePromises);
                         
                         window.showToast("Deleted", `${checkboxes.length} booking(s) deleted successfully.`, "success");
-                        loadAppointments(); // Refresh
                     } catch (err) {
                         window.showToast("Delete Failed", "Could not delete some bookings: " + err.message, "error");
                     } finally {
@@ -839,7 +1214,8 @@
                             btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected`;
                         }
                     }
-                }
+                },
+                "Delete", "Cancel"
             );
         };
 
@@ -852,26 +1228,13 @@
                 try {
                     await deleteDoc(doc(db, "appointments", id));
                     window.showToast("Deleted", "Booking deleted successfully.", "success");
-                    loadAppointments(); // Refresh
                 } catch (err) {
                     window.showToast("Delete Failed", "Could not delete booking: " + err.message, "error");
                 }
-            }
+            },
+            "Delete", "Cancel"
         );
         };
-
-        // Setup Doctor Dropdown mapping (Reused from frontend)
-        const doctorsList = [
-            { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry" },
-            { name: "Dr. M D Sheikh", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
-            { name: "Dr. Anil Kapoor", dept: "Neurology" }, { name: "Dr. Priya Singh", dept: "Neurology" }, { name: "Dr. Rohan Mehta", dept: "Neurology" },
-            { name: "Dr. Vikram Das", dept: "Orthopedics" }, { name: "Dr. Sana Khan", dept: "Orthopedics" }, { name: "Dr. Aditya Rao", dept: "Orthopedics" },
-            { name: "Dr. Amit Patel", dept: "Pediatrics" }, { name: "Dr. Kavita Rao", dept: "Pediatrics" }, { name: "Dr. Nidhi Sharma", dept: "Pediatrics" },
-            { name: "Dr. Sameer Reddy", dept: "Oncology" }, { name: "Dr. Anjali Desai", dept: "Oncology" }, { name: "Dr. Kabir Jain", dept: "Oncology" },
-            { name: "Dr. Varun Gupta", dept: "Dermatology" }, { name: "Dr. Pooja Iyer", dept: "Dermatology" }, { name: "Dr. Akash Singh", dept: "Dermatology" },
-            { name: "Dr. Tarun Kumar", dept: "Ophthalmology" }, { name: "Dr. Sneha Nair", dept: "Ophthalmology" }, { name: "Dr. Rahul Bose", dept: "Ophthalmology" },
-            { name: "Dr. Kabir Singh", dept: "Psychiatry" }, { name: "Dr. Aisha Ali", dept: "Psychiatry" }, { name: "Dr. Manish Sen", dept: "Psychiatry" }
-        ];
 
         const deptSelect = document.getElementById('department-select');
         const docSelect = document.getElementById('doctor-select');
@@ -879,7 +1242,7 @@
         deptSelect.addEventListener('change', function() {
             const dept = this.value;
             docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
-            const filteredDocs = doctorsList.filter(d => d.dept === dept);
+            const filteredDocs = window.doctorsList.filter(d => d.dept === dept);
             if (filteredDocs.length > 0) {
                 docSelect.disabled = false;
                 filteredDocs.forEach(doc => {
@@ -893,13 +1256,13 @@
 
         // Setup Filter Dropdowns and Search Events
         const filterDocSelect = document.getElementById('filter-doc');
-        doctorsList.forEach(doc => {
+        window.doctorsList.forEach(doc => {
             filterDocSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
         });
 
         const filterReviewDoctorSelect = document.getElementById('filter-review-doctor');
         if (filterReviewDoctorSelect) {
-            doctorsList.forEach(doc => {
+            window.doctorsList.forEach(doc => {
                 filterReviewDoctorSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
             });
         }
@@ -911,11 +1274,110 @@
         document.getElementById('filter-dept').addEventListener('change', (e) => {
             const dept = e.target.value;
             filterDocSelect.innerHTML = '<option value="">All Doctors</option>';
-            const docsToPopulate = dept ? doctorsList.filter(d => d.dept === dept) : doctorsList;
+            const docsToPopulate = dept ? window.doctorsList.filter(d => d.dept === dept) : window.doctorsList;
             docsToPopulate.forEach(doc => {
                 filterDocSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
             });
             window.renderAdminAppointments();
+        });
+
+        const blockDoctorSelect = document.getElementById('block-doctor');
+        const scheduleDoctorSelect = document.getElementById('schedule-doctor');
+        const blogAuthorSelect = document.getElementById('blog-author');
+        const scheduleStartSelect = document.getElementById('schedule-start');
+        const scheduleEndSelect = document.getElementById('schedule-end');
+        window.doctorsList.forEach(doc => { 
+            if(blockDoctorSelect) blockDoctorSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`; 
+            if(scheduleDoctorSelect) scheduleDoctorSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
+            if(blogAuthorSelect) blogAuthorSelect.innerHTML += `<option value="${doc.name}">${doc.name}</option>`;
+        });
+        window.allTimeSlots.forEach(slot => {
+            if(scheduleStartSelect) scheduleStartSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+            if(scheduleEndSelect) scheduleEndSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+        });
+        
+        window.unsubscribeBlockedSlots = null;
+        window.loadBlockedSlots = function() {
+            const list = document.getElementById('blocked-slots-list');
+            if (window.unsubscribeBlockedSlots) window.unsubscribeBlockedSlots();
+            
+            const q = query(collection(db, "blocked_slots"), orderBy("date", "desc"));
+            window.unsubscribeBlockedSlots = onSnapshot(q, (snapshot) => {
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-400">No slots blocked.</td></tr>';
+                    return;
+                }
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    list.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-2 font-medium">${data.doctor}</td>
+                            <td class="p-2">${data.date}</td>
+                            <td class="p-2"><span class="bg-red-50 text-red-600 px-2 py-0.5 rounded text-xs font-bold border border-red-100">${data.time}</span></td>
+                            <td class="p-2 text-center"><button onclick="unblockSlot('${docSnap.id}')" class="text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button></td>
+                        </tr>
+                    `;
+                });
+            }, (err) => { console.error(err); });
+        };
+
+        document.getElementById('block-slot-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+            try {
+                await addDoc(collection(db, "blocked_slots"), { doctor: blockDoctorSelect.value, date: document.getElementById('block-date').value, time: document.getElementById('block-time').value });
+                window.showToast("Slot Blocked", `Doctor is now unavailable on ${document.getElementById('block-date').value} at ${document.getElementById('block-time').value}.`, "success");
+                e.target.reset();
+            } catch (err) { window.showToast("Error", err.message, "error"); } finally { btn.innerHTML = 'Block Slot'; btn.disabled = false; }
+        });
+        
+        window.unblockSlot = async function(id) {
+            if(confirm("Unblock this slot?")) {
+                try { await deleteDoc(doc(db, "blocked_slots", id)); } 
+                catch (err) { window.showToast("Error", err.message, "error"); }
+            }
+        };
+
+        document.getElementById('schedule-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+            const doctor = document.getElementById('schedule-doctor').value;
+            const start = document.getElementById('schedule-start').value;
+            const end = document.getElementById('schedule-end').value;
+            try {
+                await setDoc(doc(db, "doctor_schedules", doctor), { startTime: start, endTime: end, updatedAt: serverTimestamp() });
+                window.showToast("Saved", `Working hours updated for ${doctor}.`, "success");
+                e.target.reset();
+            } catch (err) { window.showToast("Error", err.message, "error"); } finally { btn.innerHTML = originalText; btn.disabled = false; }
+        });
+
+        document.getElementById('create-admin-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+
+            const name = document.getElementById('new-admin-name').value;
+            const email = document.getElementById('new-admin-email').value;
+            const pass = document.getElementById('new-admin-pass').value;
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+                await setDoc(doc(db, "users", userCred.user.uid), {
+                    name: name, email: email, role: 'admin', createdAt: serverTimestamp()
+                });
+                await signOut(secondaryAuth);
+                window.showToast("Admin Created", "New admin successfully registered.", "success");
+                e.target.reset();
+            } catch (err) {
+                window.showToast("Error", err.message.replace('Firebase: ', ''), "error");
+            } finally {
+                btn.innerHTML = originalText; btn.disabled = false;
+            }
         });
 
         const adminDateSel = document.getElementById('add-date');
@@ -929,17 +1391,41 @@
                 return;
             }
             
-            // Reset time options
-            Array.from(adminTimeSel.options).forEach(opt => {
-                if(opt.value !== "") {
-                    opt.disabled = false;
-                    opt.textContent = opt.value;
+            const currentTimeSelection = adminTimeSel.value;
+            
+            let validSlots = [...window.allTimeSlots];
+            try {
+                const scheduleDoc = await getDoc(doc(db, "doctor_schedules", docSelect.value));
+                if (scheduleDoc.exists()) {
+                    const data = scheduleDoc.data();
+                    const startIdx = window.allTimeSlots.indexOf(data.startTime);
+                    const endIdx = window.allTimeSlots.indexOf(data.endTime);
+                    if(startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) {
+                        validSlots = window.allTimeSlots.slice(startIdx, endIdx + 1);
+                    }
                 }
+            } catch(e) {}
+            
+            adminTimeSel.innerHTML = '<option value="" disabled selected>Time</option>';
+            validSlots.forEach(slot => {
+                const opt = document.createElement('option');
+                opt.value = slot;
+                opt.textContent = slot;
+                adminTimeSel.appendChild(opt);
             });
 
-            const d = new Date(adminDateSel.value);
-            if(d.getDay() === 0) {
-                adminAvlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> Sunday is closed.</span>";
+            if (currentTimeSelection && validSlots.includes(currentTimeSelection)) {
+                adminTimeSel.value = currentTimeSelection;
+            }
+
+            const [y, m, dNum] = adminDateSel.value.split('-');
+            const dObj = new Date(y, m - 1, dNum);
+            const isHoliday = window.hospitalHolidays && window.hospitalHolidays.includes(adminDateSel.value);
+
+            if(dObj.getDay() === 0 || isHoliday) {
+                const holidayReason = window.hospitalHolidaysMap && window.hospitalHolidaysMap[adminDateSel.value] ? window.hospitalHolidaysMap[adminDateSel.value] : "a hospital holiday";
+                const reason = dObj.getDay() === 0 ? "Sunday is closed." : `This date is closed for ${holidayReason}.`;
+                adminAvlMsg.innerHTML = `<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> ${reason}</span>`;
                 adminSubBtn.disabled = true; adminSubBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 adminTimeSel.disabled = true;
                 return;
@@ -954,6 +1440,9 @@
                 const q = query(collection(db, "appointments"), where("date", "==", adminDateSel.value));
                 const snapshot = await getDocs(q);
                 
+                const qBlock = query(collection(db, "blocked_slots"), where("date", "==", adminDateSel.value), where("doctor", "==", docSelect.value));
+                const snapshotBlock = await getDocs(qBlock);
+                
                 const bookedTimes = [];
                 snapshot.forEach(documentSnapshot => {
                     const data = documentSnapshot.data();
@@ -961,11 +1450,20 @@
                         bookedTimes.push(data.time);
                     }
                 });
+                
+                let isAllDayBlocked = false;
+                snapshotBlock.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.time === "All Day") isAllDayBlocked = true;
+                    else bookedTimes.push(data.time);
+                });
+                
+                if (isAllDayBlocked) { adminAvlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-ban mr-1'></i> Doctor is completely unavailable on this day.</span>"; adminSubBtn.disabled = true; adminSubBtn.classList.add('opacity-50', 'cursor-not-allowed'); adminTimeSel.disabled = true; return; }
 
                 Array.from(adminTimeSel.options).forEach(opt => {
                     if(bookedTimes.includes(opt.value)) {
                         opt.disabled = true;
-                        opt.textContent = opt.value + " (Booked)";
+                        opt.textContent = opt.value + " (Unavailable)";
                     }
                 });
 
@@ -1010,6 +1508,10 @@
                 snapCheck.forEach(d => { if (d.data().status !== 'Cancelled' && d.data().status !== 'Expired') isBooked = true; });
                 if (isBooked) throw new Error("SLOT_ALREADY_BOOKED");
                 
+                const qBlockCheck = query(collection(db, "blocked_slots"), where("date", "==", document.getElementById('add-date').value), where("doctor", "==", docSelect.value));
+                const snapBlockCheck = await getDocs(qBlockCheck);
+                snapBlockCheck.forEach(d => { if (d.data().time === document.getElementById('add-time').value || d.data().time === "All Day") throw new Error("SLOT_UNAVAILABLE"); });
+                
                 const serialDocId = (9999999999999 - Date.now()).toString();
                 await setDoc(doc(db, "appointments", serialDocId), {
                         userId: "admin_created_record",
@@ -1028,11 +1530,13 @@
                 docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
                 adminAvlMsg.innerHTML = '';
                 document.getElementById('admin-booking-wrapper').classList.add('hidden');
-                loadAppointments(); // Refresh table
                 document.getElementById('admin-success-modal').classList.remove('hidden');
             } catch (err) {
                 if (err.message === "SLOT_ALREADY_BOOKED") {
                     window.showToast("Slot Unavailable", "Sorry, this slot was just booked. Please select a different time.", "error");
+                    checkAdminAvailability();
+                } else if (err.message === "SLOT_UNAVAILABLE") {
+                    window.showToast("Slot Blocked", "Sorry, this slot has been explicitly blocked by the administrator.", "error");
                     checkAdminAvailability();
                 } else {
                     window.showToast("Booking Error", "Could not add booking: " + err.message, "error");
@@ -1057,26 +1561,245 @@
     let allReviewsData = [];
 
     // Fetch and Manage Reviews
-    window.loadAdminReviews = async function() {
+    window.unsubscribeAdminReviews = null;
+    window.loadAdminReviews = function() {
         const reviewsTbody = document.getElementById('admin-reviews-list');
         reviewsTbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching reviews...</td></tr>';
+        if (window.unsubscribeAdminReviews) window.unsubscribeAdminReviews();
         try {
             const q = query(collection(db, "doctor_reviews"), orderBy("createdAt", "desc"));
-            const snapshot = await getDocs(q);
             
-            allReviewsData = [];
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                data.id = docSnap.id;
-                allReviewsData.push(data);
+            window.unsubscribeAdminReviews = onSnapshot(q, (snapshot) => {
+                allReviewsData = [];
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    data.id = docSnap.id;
+                    allReviewsData.push(data);
+                });
+                renderAdminReviews();
+            }, (err) => {
+                reviewsTbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-medium">Error loading reviews: ${err.message}</td></tr>`;
+                console.error(err);
             });
-
-            renderAdminReviews();
         } catch (err) {
             reviewsTbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-medium">Error loading reviews: ${err.message}</td></tr>`;
             console.error(err);
         }
     };
+
+    window.unsubscribeHolidays = null;
+    window.loadHolidays = function() {
+        const list = document.getElementById('holidays-list');
+        if (window.unsubscribeHolidays) window.unsubscribeHolidays();
+        
+        const q = query(collection(db, "hospital_holidays"), orderBy("date", "asc"));
+        window.unsubscribeHolidays = onSnapshot(q, (snapshot) => {
+            window.hospitalHolidays = [];
+            window.hospitalHolidaysMap = {};
+            if(list) list.innerHTML = '';
+            
+            if (snapshot.empty) {
+                if(list) list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-400">No holidays added.</td></tr>';
+                return;
+            }
+            
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                window.hospitalHolidays.push(data.date);
+                window.hospitalHolidaysMap[data.date] = data.reason;
+                
+                if(list) list.innerHTML += `
+                    <tr class="even:bg-slate-50 hover:bg-slate-100 transition">
+                        <td class="p-2 font-medium">${data.date}</td>
+                        <td class="p-2 text-slate-600">${data.reason}</td>
+                        <td class="p-2 text-center"><button onclick="deleteHoliday('${docSnap.id}')" class="text-slate-400 hover:text-red-500 transition" title="Remove Holiday"><i class="fa-solid fa-trash-can"></i></button></td>
+                    </tr>
+                `;
+            });
+        }, (err) => { console.error(err); });
+    };
+
+    document.getElementById('holiday-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+        
+        const date = document.getElementById('holiday-date').value;
+        const reason = document.getElementById('holiday-reason').value;
+        
+        try {
+            await setDoc(doc(db, "hospital_holidays", date), { date: date, reason: reason, createdAt: serverTimestamp() });
+            window.showToast("Success", `Holiday added for ${date}.`, "success");
+            e.target.reset();
+        } catch (err) { window.showToast("Error", err.message, "error"); } 
+        finally { btn.innerHTML = originalText; btn.disabled = false; }
+    });
+
+    window.deleteHoliday = async function(id) {
+        if(confirm("Remove this holiday?")) {
+            try { await deleteDoc(doc(db, "hospital_holidays", id)); window.showToast("Removed", "Holiday removed successfully.", "success"); } 
+            catch (err) { window.showToast("Error", err.message, "error"); }
+        }
+    };
+
+        // Blog Management Logic
+        window.unsubscribeAdminBlogs = null;
+        window.adminBlogsData = [];
+        window.loadAdminBlogs = function() {
+            const list = document.getElementById('admin-blog-list');
+            if (window.unsubscribeAdminBlogs) window.unsubscribeAdminBlogs();
+            
+            const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
+            window.unsubscribeAdminBlogs = onSnapshot(q, (snapshot) => {
+                window.adminBlogsData = [];
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400">No posts found.</td></tr>';
+                    return;
+                }
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    window.adminBlogsData.push({ id: docSnap.id, ...data });
+                    let dateStr = 'Just now';
+                    if(data.createdAt) dateStr = new Date(data.createdAt.toMillis()).toLocaleDateString();
+                    
+                    list.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-2 font-medium text-secondary truncate max-w-[200px]" title="${data.title}">${data.title}</td>
+                            <td class="p-2"><span class="bg-teal-50 text-primary px-2 py-0.5 rounded text-xs font-bold border border-teal-100">${data.category}</span></td>
+                            <td class="p-2">${data.author}</td>
+                            <td class="p-2">${dateStr}</td>
+                            <td class="p-2 text-center whitespace-nowrap">
+                                <button onclick="editBlogPost('${docSnap.id}')" class="text-blue-400 hover:text-blue-500 transition mr-2" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteBlogPost('${docSnap.id}')" class="text-slate-400 hover:text-red-500 transition" title="Delete Post"><i class="fa-solid fa-trash-can"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }, (err) => { console.error(err); });
+        };
+
+        window.deleteBlogPost = async function(id) {
+            if(confirm("Delete this blog post?")) {
+                try { await deleteDoc(doc(db, "blogs", id)); window.showToast("Deleted", "Post deleted.", "success"); } 
+                catch (err) { window.showToast("Error", err.message, "error"); }
+            }
+        };
+
+        window.editBlogPost = function(id) {
+            const blog = window.adminBlogsData.find(b => b.id === id);
+            if (!blog) return;
+            document.getElementById('edit-blog-id').value = id;
+            document.getElementById('blog-title').value = blog.title;
+            document.getElementById('blog-category').value = blog.category;
+            document.getElementById('blog-author').value = blog.author;
+            document.getElementById('blog-content').value = blog.content;
+            document.getElementById('blog-image').value = blog.imageUrl || '';
+            window.currentBlogImageBase64 = null;
+            const nameEl = document.getElementById('blog-image-name'); if(nameEl) nameEl.classList.add('hidden');
+            
+            document.getElementById('blog-form-title').innerText = 'Edit Post';
+            document.getElementById('blog-submit-btn').innerText = 'Update Post';
+            document.getElementById('blog-cancel-btn').classList.remove('hidden');
+            
+            document.getElementById('tab-blogs').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.cancelBlogEdit = function() {
+            document.getElementById('create-blog-form').reset();
+            document.getElementById('edit-blog-id').value = '';
+            document.getElementById('blog-form-title').innerText = 'Create New Post';
+            document.getElementById('blog-submit-btn').innerText = 'Publish Post';
+            document.getElementById('blog-cancel-btn').classList.add('hidden');
+            window.currentBlogImageBase64 = null;
+            const nameEl = document.getElementById('blog-image-name'); if(nameEl) nameEl.classList.add('hidden');
+        };
+
+        document.getElementById('create-blog-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('blog-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+            const title = document.getElementById('blog-title').value;
+            const category = document.getElementById('blog-category').value;
+            const author = document.getElementById('blog-author').value;
+            
+            const fallbackImages = [
+                'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1532938911079-1b06ac7ce122?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1584982751601-97dcc096659c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+            ];
+            const image = window.currentBlogImageBase64 || document.getElementById('blog-image').value || fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+            const content = document.getElementById('blog-content').value;
+            try {
+                if (editId) {
+                    await updateDoc(doc(db, "blogs", editId), { title, category, author, imageUrl: image, content });
+                    window.showToast("Success", "Blog post updated.", "success");
+                    window.cancelBlogEdit();
+                } else {
+                    await addDoc(collection(db, "blogs"), { title, category, author, imageUrl: image, content, views: 0, likes: [], createdAt: serverTimestamp() });
+                    window.showToast("Success", "Blog post published.", "success");
+                    e.target.reset();
+                    window.currentBlogImageBase64 = null;
+                    const nameEl = document.getElementById('blog-image-name'); if(nameEl) nameEl.classList.add('hidden');
+                }
+            } catch (err) { window.showToast("Error", err.message, "error"); } 
+            finally { 
+                btn.innerHTML = originalText; btn.disabled = false; 
+            }
+        });
+        
+        window.currentBlogImageBase64 = null;
+        document.getElementById('blog-image-file')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const MAX_WIDTH = 800; // Resize large images before storing
+                        let width = img.width; let height = img.height;
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        canvas.width = width; canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        window.currentBlogImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                        const nameEl = document.getElementById('blog-image-name');
+                        if(nameEl) { nameEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Selected: ${file.name}`; nameEl.classList.remove('hidden'); }
+                        document.getElementById('blog-image').value = '';
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('blog-image')?.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                window.currentBlogImageBase64 = null;
+                const nameEl = document.getElementById('blog-image-name'); if (nameEl) nameEl.classList.add('hidden');
+                const fileInput = document.getElementById('blog-image-file'); if (fileInput) fileInput.value = '';
+            }
+        });
+        
+        window.seedSampleBlogs = async function() {
+            if(!confirm("This will instantly add 3 beautifully written medical articles to your blog. Proceed?")) return;
+            const posts = [
+                { title: "5 Essential Heart Health Tips for 2024", category: "Health Tips", author: "Dr. M D Sheikh", imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", content: "Maintaining a healthy heart is crucial for overall well-being. Here are 5 essential tips to keep your heart in top shape:\n\n1. Eat a balanced diet rich in omega-3 fatty acids.\n2. Engage in at least 30 minutes of moderate exercise daily.\n3. Manage stress through meditation or yoga.\n4. Avoid smoking and limit alcohol intake.\n5. Get regular check-ups to monitor blood pressure and cholesterol.\n\nYour heart works hard for you every second. Return the favor by adopting these healthy habits today." },
+                { title: "MD Care Introduces New Robotic Surgery Wing", category: "Hospital News", author: "MD Care Admin", imageUrl: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", content: "We are thrilled to announce the opening of our state-of-the-art Robotic Surgery Wing at MD Care Hospital.\n\nThis new facility is equipped with the latest da Vinci surgical systems, allowing our surgeons to perform complex procedures with unprecedented precision, flexibility, and control. For patients, this means smaller incisions, less pain, and significantly faster recovery times.\n\nThis marks a major milestone in our commitment to bringing world-class healthcare technology to our community." },
+                { title: "Understanding Child Nutrition: What Parents Should Know", category: "Dietary Advice", author: "Dr. Amit Patel", imageUrl: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", content: "Proper nutrition during childhood is the foundation for a healthy life. But with so much conflicting advice, what should parents focus on?\n\nFirst, prioritize whole foods. Fresh fruits, vegetables, lean proteins, and whole grains should make up the bulk of your child's diet. Limit processed foods and added sugars, which can lead to energy crashes and long-term health issues.\n\nRemember, children learn by example. When parents eat healthy, children are much more likely to adopt those same habits. Stay hydrated and make mealtimes a positive, family-focused experience!" }
+            ];
+            try {
+                for(let post of posts) {
+                    await addDoc(collection(db, "blogs"), { ...post, views: 0, likes: [], createdAt: serverTimestamp() });
+                }
+                window.showToast("Success", "3 Sample Posts added! Check the Blog page.", "success");
+            } catch(err) { window.showToast("Error", err.message, "error"); }
+        };
+
 
     window.renderAdminReviews = function() {
         const filterRating = document.getElementById('filter-review-rating').value;
@@ -1173,23 +1896,27 @@
     window.openReplyModal = function(id) {
         const review = allReviewsData.find(r => r.id === id);
         document.getElementById('reply-review-id').value = id;
+        document.getElementById('reply-review-type').value = 'doctor';
         document.getElementById('reply-text').value = review.adminReply || '';
         document.getElementById('reply-modal').classList.remove('hidden');
     };
 
     window.submitReviewReply = async function() {
         const id = document.getElementById('reply-review-id').value;
+        const type = document.getElementById('reply-review-type').value || 'doctor';
         const text = document.getElementById('reply-text').value.trim();
         const btn = document.getElementById('submit-reply-btn');
         
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
         btn.disabled = true;
 
+        const collectionName = type === 'doctor' ? "doctor_reviews" : "reviews";
+        const reviewsArray = type === 'doctor' ? allReviewsData : allHReviewsData;
+
         try {
-            await updateDoc(doc(db, "doctor_reviews", id), { adminReply: text });
+            await updateDoc(doc(db, collectionName, id), { adminReply: text });
             
-            // If the admin actually wrote a reply, fetch the patient's email and notify them
-            const review = allReviewsData.find(r => r.id === id);
+            const review = reviewsArray.find(r => r.id === id);
             if (text !== '' && review && review.userId && review.userId !== "unknown") {
                 const userSnap = await getDoc(doc(db, "users", review.userId));
                 if (userSnap.exists()) {
@@ -1231,7 +1958,6 @@
 
             window.showToast("Success", "Reply saved successfully.", "success");
             document.getElementById('reply-modal').classList.add('hidden');
-            loadAdminReviews();
         } catch (err) {
             window.showToast("Error", "Could not save reply: " + err.message, "error");
         } finally {
@@ -1248,11 +1974,11 @@
                 try {
                     await deleteDoc(doc(db, "doctor_reviews", id));
                     window.showToast("Deleted", "Review deleted successfully.", "success");
-                    loadAdminReviews();
                 } catch (err) {
                     window.showToast("Delete Failed", "Could not delete review: " + err.message, "error");
                 }
-            }
+            },
+            "Delete", "Cancel"
         );
     };
 
@@ -1300,7 +2026,6 @@
                     await Promise.all(deletePromises);
                     
                     window.showToast("Deleted", `${checkboxes.length} review(s) deleted successfully.`, "success");
-                    loadAdminReviews(); // Refresh
                 } catch (err) {
                     window.showToast("Delete Failed", "Could not delete some reviews: " + err.message, "error");
                 } finally {
@@ -1310,9 +2035,168 @@
                         btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected`;
                     }
                 }
-            }
+            },
+            "Delete", "Cancel"
         );
     };
+
+    let allHReviewsData = [];
+    window.unsubscribeAdminHReviews = null;
+    window.loadAdminHReviews = function() {
+        const reviewsTbody = document.getElementById('admin-h-reviews-list');
+        reviewsTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching reviews...</td></tr>';
+        if (window.unsubscribeAdminHReviews) window.unsubscribeAdminHReviews();
+        try {
+            const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+            window.unsubscribeAdminHReviews = onSnapshot(q, (snapshot) => {
+                allHReviewsData = [];
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    data.id = docSnap.id;
+                    allHReviewsData.push(data);
+                });
+                renderAdminHReviews();
+            }, (err) => { reviewsTbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-medium">Error: ${err.message}</td></tr>`; });
+        } catch (err) { reviewsTbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-medium">Error: ${err.message}</td></tr>`; }
+    };
+
+    window.renderAdminHReviews = function() {
+        const filterRating = document.getElementById('filter-h-review-rating').value;
+        const filterSearch = document.getElementById('filter-h-review-search').value.toLowerCase();
+        const reviewsTbody = document.getElementById('admin-h-reviews-list');
+        
+        const filteredReviews = allHReviewsData.filter(data => {
+            const matchRating = !filterRating || Math.floor(data.rating || 5) === parseInt(filterRating);
+            const matchSearch = !filterSearch || (data.name && data.name.toLowerCase().includes(filterSearch)) || (data.text && data.text.toLowerCase().includes(filterSearch));
+            return matchRating && matchSearch;
+        });
+        document.getElementById('h-reviews-count').textContent = filteredReviews.length;
+        reviewsTbody.innerHTML = '';
+        if (filteredReviews.length === 0) { reviewsTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400">No reviews found.</td></tr>'; return; }
+        filteredReviews.forEach(data => {
+            let starsHtml = '';
+            const fullStars = Math.floor(data.rating || 5);
+            const halfStar = (data.rating || 5) % 1 !== 0;
+            for(let j=0; j<fullStars; j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+            if(halfStar) starsHtml += '<i class="fa-solid fa-star-half-stroke text-yellow-400"></i>';
+            let dateStr = 'Unknown Date';
+            if (data.createdAt) { const date = new Date(data.createdAt.toMillis ? data.createdAt.toMillis() : data.createdAt); if(!isNaN(date)) dateStr = date.toLocaleDateString(); }
+            let replyHtml = '';
+            if (data.adminReply) { replyHtml = `<div class="mt-3 bg-teal-50/80 p-3 rounded-lg border border-teal-200 text-sm shadow-sm border-l-4 border-l-primary"><div class="flex items-center gap-1.5 mb-1.5 text-primary font-bold text-xs uppercase tracking-wider"><i class="fa-solid fa-reply"></i> MD Care Response</div><span class="text-slate-700 italic">"${data.adminReply}"</span></div>`; }
+            reviewsTbody.innerHTML += `
+                <tr class="even:bg-slate-100 hover:bg-slate-200 transition">
+                    <td class="px-4 py-2.5 text-center"><input type="checkbox" class="h-review-checkbox w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" value="${data.id}" onchange="updateHReviewBulkDeleteBtn()"></td>
+                    <td class="px-4 py-2.5"><p class="font-bold text-secondary flex items-center flex-wrap gap-1.5">${data.name || 'Anonymous'} ${data.userId && data.userId !== "unknown" ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-600 text-[10px] font-bold uppercase tracking-wider border border-teal-100 shadow-sm" title="Verified E-mail"><i class="fa-solid fa-circle-check"></i></span>` : ''}</p><p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i> ${dateStr}</p></td>
+                    <td class="px-4 py-2.5"><div class="text-xs">${starsHtml}</div><p class="text-xs font-bold text-slate-500 mt-1">${data.rating} / 5</p></td>
+                    <td class="px-4 py-2.5"><p class="text-slate-600 text-sm italic">"${data.text || ''}"</p>${replyHtml}</td>
+                    <td class="px-4 py-2.5 text-center space-x-1 whitespace-nowrap"><button onclick="openHReplyModal('${data.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-md transition" title="Reply to Review"><i class="fa-solid fa-reply"></i></button><button onclick="deleteHReview('${data.id}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition" title="Delete Review"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>`;
+        });
+        document.getElementById('select-all-h-reviews').checked = false; window.updateHReviewBulkDeleteBtn();
+    };
+    window.clearHReviewFilters = function() { document.getElementById('filter-h-review-search').value = ''; document.getElementById('filter-h-review-rating').value = ''; renderAdminHReviews(); };
+    window.openHReplyModal = function(id) { const review = allHReviewsData.find(r => r.id === id); document.getElementById('reply-review-id').value = id; document.getElementById('reply-review-type').value = 'hospital'; document.getElementById('reply-text').value = review.adminReply || ''; document.getElementById('reply-modal').classList.remove('hidden'); };
+    window.deleteHReview = function(id) { window.showConfirmModal("Delete Review?", "Are you sure you want to completely delete this review? This action cannot be undone.", async () => { try { await deleteDoc(doc(db, "reviews", id)); window.showToast("Deleted", "Review deleted successfully.", "success"); } catch (err) { window.showToast("Delete Failed", "Could not delete review: " + err.message, "error"); } }, "Delete", "Cancel"); };
+    window.toggleAllHReviews = function(source) { const checkboxes = document.querySelectorAll('.h-review-checkbox'); checkboxes.forEach(cb => cb.checked = source.checked); window.updateHReviewBulkDeleteBtn(); };
+    window.updateHReviewBulkDeleteBtn = function() { const checkboxes = document.querySelectorAll('.h-review-checkbox:checked'); const btn = document.getElementById('bulk-delete-h-reviews-btn'); if (checkboxes.length > 0) { btn.classList.remove('hidden'); btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected (${checkboxes.length})`; } else { btn.classList.add('hidden'); } };
+    window.deleteSelectedHReviews = function() {
+        const checkboxes = document.querySelectorAll('.h-review-checkbox:checked'); if (checkboxes.length === 0) return;
+        window.showConfirmModal("Delete Selected Reviews?", `Are you sure you want to completely delete ${checkboxes.length} review(s)?`, async () => {
+            const btn = document.getElementById('bulk-delete-h-reviews-btn'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Deleting...'; btn.disabled = true;
+            try { await Promise.all(Array.from(checkboxes).map(cb => deleteDoc(doc(db, "reviews", cb.value)))); window.showToast("Deleted", `${checkboxes.length} review(s) deleted successfully.`, "success"); } 
+            catch (err) { window.showToast("Delete Failed", "Could not delete some reviews: " + err.message, "error"); } 
+            finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-trash-can mr-1"></i> Delete Selected`; }
+        }, "Delete", "Cancel");
+    };
+
+        // Users Management
+        let allUsersData = [];
+        window.unsubscribeAdminUsers = null;
+
+        window.renderAdminAccountsList = function() {
+            const tbody = document.getElementById('admin-accounts-list');
+            if (!tbody) return;
+            const admins = allUsersData.filter(u => u.role === 'admin');
+            tbody.innerHTML = '';
+            if(admins.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-400">No admins found.</td></tr>'; return; }
+            
+            admins.forEach(admin => {
+                let dateStr = 'Unknown';
+                if(admin.createdAt) { const d = new Date(admin.createdAt.toMillis ? admin.createdAt.toMillis() : admin.createdAt); if(!isNaN(d)) dateStr = d.toLocaleDateString(); }
+                const statusBadge = admin.disabled ? `<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold border border-red-200">Disabled</span>` : `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold border border-green-200">Active</span>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-2 font-medium">${admin.name || 'Unknown'}</td><td class="p-2 text-slate-500">${admin.email}</td><td class="p-2 text-slate-500">${dateStr}</td><td class="p-2 text-center">${statusBadge}</td></tr>`;
+            });
+        };
+
+        window.loadAdminUsers = function() {
+            const tbody = document.getElementById('admin-users-list');
+            if (window.unsubscribeAdminUsers) window.unsubscribeAdminUsers();
+            tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading users...</td></tr>';
+            try {
+                const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
+                window.unsubscribeAdminUsers = onSnapshot(q, (snapshot) => {
+                    allUsersData = [];
+                    snapshot.forEach(docSnap => { allUsersData.push({ id: docSnap.id, ...docSnap.data() }); });
+                    renderAdminUsers();
+                    renderAdminAccountsList();
+                });
+            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-red-500 font-medium">Error: ${e.message}</td></tr>`; }
+        };
+
+        window.renderAdminUsers = function() {
+            const tbody = document.getElementById('admin-users-list');
+            const search = document.getElementById('filter-user-search').value.toLowerCase();
+            const filtered = allUsersData.filter(u => !search || (u.name && u.name.toLowerCase().includes(search)) || (u.email && u.email.toLowerCase().includes(search)));
+            document.getElementById('users-count').textContent = filtered.length;
+            tbody.innerHTML = '';
+            if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400">No users found.</td></tr>'; return; }
+            filtered.forEach(user => {
+                let dateStr = 'Unknown';
+                if(user.createdAt) { const d = new Date(user.createdAt.toMillis ? user.createdAt.toMillis() : user.createdAt); if(!isNaN(d)) dateStr = d.toLocaleDateString(); }
+                
+                const isRoleAdmin = user.role === 'admin';
+                const roleSelect = `<select onchange="changeUserRole('${user.id}', this.value)" class="text-xs font-bold px-2 py-1 rounded outline-none border cursor-pointer transition ${isRoleAdmin ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-slate-50 text-slate-700 border-slate-200'}">
+                    <option value="user" ${!isRoleAdmin ? 'selected' : ''}>User</option>
+                    <option value="admin" ${isRoleAdmin ? 'selected' : ''}>Admin</option>
+                </select>`;
+
+                const statusBtn = user.disabled 
+                    ? `<button onclick="toggleUserStatus('${user.id}', true)" class="bg-green-50 hover:bg-green-100 text-green-600 p-2 rounded-lg transition border border-green-100 shadow-sm" title="Enable Account"><i class="fa-solid fa-user-check"></i></button>`
+                    : `<button onclick="toggleUserStatus('${user.id}', false)" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg transition border border-red-100 shadow-sm" title="Disable Account"><i class="fa-solid fa-user-slash"></i></button>`;
+                const statusBadge = user.disabled ? `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-200 shadow-sm ml-2">Disabled</span>` : '';
+
+                tbody.innerHTML += `
+                    <tr class="even:bg-slate-50 hover:bg-slate-100 transition">
+                        <td class="p-4"><p class="font-bold text-secondary flex items-center">${user.name || 'Unknown'} ${statusBadge}</p><p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-envelope mr-1 w-3 text-center"></i> ${user.email}</p>${user.phone ? `<p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-phone mr-1 w-3 text-center"></i> ${user.phone}</p>` : ''}</td>
+                        <td class="p-4">${roleSelect}</td>
+                        <td class="p-4 text-sm text-slate-600">${dateStr}</td>
+                        <td class="p-4 text-center space-x-2 whitespace-nowrap"><button onclick="resetUserPassword('${user.email}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg transition border border-blue-100 shadow-sm" title="Send Password Reset"><i class="fa-solid fa-key"></i></button>${statusBtn}</td>
+                    </tr>`;
+            });
+        };
+
+        window.resetUserPassword = function(email) { window.showConfirmModal("Send Password Reset?", `Are you sure you want to send a password reset email to ${email}?`, async () => { try { await sendPasswordResetEmail(auth, email); window.showToast("Link Sent", "Password reset link sent to the user's email.", "success"); } catch(err) { window.showToast("Error", err.message, "error"); } }, "Send Link", "Cancel", "bg-blue-500 hover:bg-blue-600 text-white"); };
+        
+        window.changeUserRole = async function(id, newRole) {
+            try {
+                await updateDoc(doc(db, "users", id), { role: newRole });
+                window.showToast("Role Updated", `User role successfully changed to ${newRole}.`, "success");
+            } catch(err) {
+                window.showToast("Error", err.message, "error");
+            }
+        };
+        
+        window.toggleUserStatus = function(id, currentlyDisabled) { 
+            const action = currentlyDisabled ? "Enable" : "Disable";
+            window.showConfirmModal(`${action} User Account?`, `Are you sure you want to ${action.toLowerCase()} this user's account? ${currentlyDisabled ? 'They will regain access.' : 'They will not be able to log in.'}`, async () => { 
+                try { 
+                    await updateDoc(doc(db, "users", id), { disabled: !currentlyDisabled }); 
+                    window.showToast(`${action}d`, `User account has been ${action.toLowerCase()}d.`, "success"); 
+                } catch(err) { 
+                    window.showToast("Error", err.message, "error"); 
+                } 
+            }, action, "Cancel", currentlyDisabled ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"); 
+        };
 
         const now = new Date();
         const year = now.getFullYear();
@@ -1322,5 +2206,4 @@
     </script>
 <script src="chatbot.js"></script>
 </body>
-</html>
 </html>

@@ -28,46 +28,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
         html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
     </style>
-    <style>
-        /* Dark Mode Auto-Overrides */
-        * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
-        html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
-        html.dark .bg-white { background-color: #1e293b !important; }
-        html.dark .bg-slate-50 { background-color: #0f172a !important; }
-        html.dark .bg-slate-100 { background-color: #334155 !important; }
-        html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
-        html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
-        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
-        html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
-        html.dark .bg-secondary { background-color: #020617 !important; }
-        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
-        html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
-        html.dark .theme-icon-moon { display: none !important; }
-        html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
-        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
-        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
-        html.dark { scrollbar-color: #334155 #0f172a; }
-    </style>
-    <script>
-        function adaptTheme() {
-            const savedTheme = localStorage.getItem('mdcare_theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
-            else { document.documentElement.classList.remove('dark'); }
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
-        adaptTheme();
-
-        window.toggleTheme = function() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('mdcare_theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('mdcare_theme', 'dark');
-            }
-        };
-    </script>
+    <script src="utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -92,6 +53,7 @@
                     <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
                     <a href="departments.html" class="text-primary transition font-bold">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
                     <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                     
                     <!-- Auth Buttons -->
@@ -107,6 +69,7 @@
                 <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
                 <a href="departments.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
                 <a href="index.html#appointment" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
@@ -150,6 +113,7 @@
                         <li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li>
                         <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
                         <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
+                        <li><a href="blog.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Blog</a></li>
                     </ul>
                 </div>
                 <div>
@@ -176,8 +140,9 @@
         </div>
     </footer>
 
-    <script>
-        let isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
+    <script type="module">
+        import "./auth.js";
+
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         btn.addEventListener('click', () => menu.classList.toggle('hidden'));
@@ -191,43 +156,19 @@
         function updateAuthUI() {
             const desktopAuth = document.getElementById('auth-nav-container');
             const mobileAuth = document.getElementById('mobile-auth-container');
-            if(isLoggedIn) {
+            if(window.isLoggedIn) {
             const picUrl = localStorage.getItem('mdcare_profilePic');
             const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : `U`;
-            if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Dashboard</a><button onclick="logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
-                if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Dashboard</a><button onclick="logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            const dashboardLink = window.isAdmin ? 'admin.html' : 'profile.html';
+            const dashboardText = window.isAdmin ? 'Admin Dashboard' : 'Profile Dashboard';
+            
+            if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="${dashboardLink}" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="${dashboardLink}" class="text-slate-700 font-bold hover:text-primary transition">${dashboardText}</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+            if(mobileAuth) mobileAuth.innerHTML = `<a href="${dashboardLink}" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">${dashboardText}</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
             } else {
                 if(desktopAuth) desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login</a><a href="index.html" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</a>`;
                 if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
             }
         }
-    window.showToast = function(title, message, type = 'success') {
-        let container = document.getElementById('toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'toast-container';
-            container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
-            document.body.appendChild(container);
-        }
-        const toast = document.createElement('div');
-        toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 border-teal-500 rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
-        toast.innerHTML = `<div class="w-10 h-10 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-check"></i></div><div class="flex-grow pt-0.5"><h4 class="font-bold text-slate-800 text-sm">${title}</h4><p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p></div><button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>`;
-        container.appendChild(toast);
-        requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
-        setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 6000);
-    };
-    function logout(btn) { 
-        if (btn) {
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
-            btn.disabled = true;
-        }
-        localStorage.removeItem('mdcare_auth'); 
-        localStorage.removeItem('mdcare_profilePic'); 
-        localStorage.removeItem('mdcare_userInitial'); 
-        isLoggedIn = false; 
-        sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
-        window.location.href = 'index.html'; 
-    }
         updateAuthUI();
 
         // Departments & Detailed Services Data

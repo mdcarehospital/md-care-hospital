@@ -40,8 +40,15 @@
             html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
             html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
             html.dark .bg-secondary { background-color: #020617 !important; }
-            html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50, html.dark .bg-purple-100 { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .text-teal-600, html.dark .text-teal-700 { color: #2dd4bf !important; }
+        html.dark .text-yellow-600, html.dark .text-yellow-700 { color: #facc15 !important; }
+        html.dark .text-red-500, html.dark .text-red-600, html.dark .text-red-700 { color: #f87171 !important; }
+        html.dark .text-blue-500, html.dark .text-blue-600, html.dark .text-blue-700 { color: #60a5fa !important; }
+        html.dark .text-purple-700 { color: #c084fc !important; }
             html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .even\:bg-slate-50:nth-child(even) { background-color: #0f172a !important; }
+        html.dark .even\:bg-slate-100:nth-child(even) { background-color: #334155 !important; }
             html.dark .theme-icon-moon { display: none !important; }
             html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
         html.dark ::-webkit-scrollbar-track { background: #0f172a; }
@@ -92,6 +99,7 @@
                     <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-primary transition font-bold">Doctors</a>
+                    <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
                     <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                     
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
@@ -106,6 +114,7 @@
                 <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
                 <a href="index.html#appointment" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
@@ -203,7 +212,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
                 <div><div class="flex items-center gap-2 mb-6"><i class="fa-solid fa-house-medical text-3xl text-primary"></i><span class="font-bold text-2xl">MD Care <span class="text-primary">Hospital</span></span></div><p class="text-gray-400 mb-6">Providing exceptional medical care to our community with compassion, integrity, and advanced medical expertise.</p></div>
-                <div><h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Quick Links</h3><ul class="space-y-3 text-gray-400"><li><a href="index.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Home</a></li><li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li><li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li><li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li></ul></div>
+                <div><h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Quick Links</h3><ul class="space-y-3 text-gray-400"><li><a href="index.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Home</a></li><li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li><li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li><li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li><li><a href="blog.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Blog</a></li></ul></div>
             <div><h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3><ul class="space-y-4 text-gray-400"><li class="flex items-start"><a href="https://maps.app.goo.gl/VHmDEL9wXsqcp3o66?g_st=aw" target="_blank" rel="noopener noreferrer" class="flex items-start hover:text-primary transition group"><i class="fa-solid fa-location-dot mt-1 mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span class="text-sm">Street-3, Danishmandan,<br/>Basti Bawa khel, JALANDHAR,<br/>PUNJAB, Pincode: 144021</span></a></li><li class="flex items-center"><a href="tel:8091919997" class="flex items-center hover:text-primary transition group"><i class="fa-solid fa-phone mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span>8091919997</span></a></li><li class="flex items-center"><a href="mailto:mdcareadmin@gmail.com" class="flex items-center hover:text-primary transition group"><i class="fa-solid fa-envelope mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span>mdcareadmin@gmail.com</span></a></li></ul></div>
             <div><h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3><p class="text-gray-400 mb-4">Stay updated with our latest health tips and news.</p><div class="flex space-x-4"><a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#E1306C] transition text-2xl text-[#E1306C] hover:text-white"><i class="fa-brands fa-instagram"></i></a><a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition text-2xl text-[#25D366] hover:text-white"><i class="fa-brands fa-whatsapp"></i></a><a href="https://www.facebook.com/share/1GAU4bhogt/" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition text-2xl text-[#1877F2] hover:text-white"><i class="fa-brands fa-facebook-f"></i></a></div></div>
             </div>
@@ -214,7 +223,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
@@ -229,6 +238,17 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        window.hospitalHolidays = [];
+        window.hospitalHolidaysMap = {};
+        onSnapshot(collection(db, "hospital_holidays"), (snapshot) => {
+            window.hospitalHolidays = [];
+            window.hospitalHolidaysMap = {};
+            snapshot.forEach(docSnap => {
+                window.hospitalHolidays.push(docSnap.data().date);
+                window.hospitalHolidaysMap[docSnap.data().date] = docSnap.data().reason;
+            });
+        });
 
         // --- Global State ---
         window.isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
@@ -250,8 +270,11 @@
             if(window.isLoggedIn) {
             const picUrl = localStorage.getItem('mdcare_profilePic');
             const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : `U`;
-            if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Dashboard</a><button onclick="logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
-                if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Dashboard</a><button onclick="logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            const dashboardLink = window.isAdmin ? 'admin.html' : 'profile.html';
+            const dashboardText = window.isAdmin ? 'Admin Dashboard' : 'Profile Dashboard';
+            
+            if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="${dashboardLink}" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="${dashboardLink}" class="text-slate-700 font-bold hover:text-primary transition">${dashboardText}</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+            if(mobileAuth) mobileAuth.innerHTML = `<a href="${dashboardLink}" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">${dashboardText}</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
             } else {
                 if(desktopAuth) desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login</a><a href="index.html" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</a>`;
                 if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
@@ -287,11 +310,27 @@
         });
     };
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         window.isLoggedIn = !!user;
         if (user) {
+            window.isAdmin = user.email === 'mdcareadmin@gmail.com';
             localStorage.setItem('mdcare_auth', 'true');
             localStorage.setItem('mdcare_userInitial', (user.displayName || "U").charAt(0).toUpperCase());
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().role === 'admin') window.isAdmin = true;
+                else if (!userDoc.exists() && user.email !== 'mdcareadmin@gmail.com') {
+                    await signOut(auth);
+                    window.isLoggedIn = false;
+                    window.isAdmin = false;
+                    localStorage.removeItem('mdcare_auth');
+                    window.showToast("Account Removed", "Your account has been deleted by the administrator.", "error");
+                    updateAuthUI();
+                    return;
+                }
+            } catch(e){}
+        } else {
+            window.isAdmin = false;
         }
         updateAuthUI();
     });
@@ -308,35 +347,7 @@
             document.body.style.overflow = 'auto';
         };
 
-        const doctorsList = [
-            { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry", displayDept: "Psychiatry (Director)", qual: "VNGP (Psychiatry)", displayTitle: "VNGP (Psychiatry) - Director", exp: "23+ Years", email: "director@mdcare.com", img: "images/nadim.jpeg", bio: "Hospital Director and leading specialist in Psychiatry. Committed to clinical excellence and compassionate patient care." },
-            { name: "Dr. M D Sheikh", dept: "Cardiology", qual: "Website Developer", exp: "15+ Years", email: "mdcareadmin@gmail.com", img: "images/myphoto.jpeg", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
-            { name: "Dr. Neha Verma", dept: "Cardiology", qual: "MBBS, MS, Fellowship in Cardiac Surgery", exp: "10 Years", email: "neha.verma@mdcare.com", img: "images/femaled2.avif", bio: "Expert in pediatric cardiology and minimally invasive cardiac surgeries. A leading voice in preventive cardiovascular healthcare." },
-            { name: "Dr. Arjun Patel", dept: "Cardiology", qual: "MBBS, MD (Cardiology)", exp: "8 Years", email: "arjun.patel@mdcare.com", img: "images/maled3.avif", bio: "Dedicated to echocardiography and non-invasive diagnostics. Passionate about managing chronic heart conditions." },
-            { name: "Dr. Anil Kapoor", dept: "Neurology", qual: "MBBS, DM (Neurology)", exp: "20 Years", email: "anil.kapoor@mdcare.com", img: "images/maled4.avif", bio: "Senior neurologist specializing in stroke management, epilepsy, and neurodegenerative disorders. Heads the stroke trauma unit." },
-            { name: "Dr. Priya Singh", dept: "Neurology", qual: "MBBS, MD (Medicine), DM", exp: "12 Years", email: "priya.singh@mdcare.com", img: "images/femaled5.avif", bio: "Focuses on multiple sclerosis and movement disorders. Heavily involved in clinical research and advanced neural mapping." },
-            { name: "Dr. Rohan Mehta", dept: "Neurology", qual: "MBBS, MS (Neuro Surgery)", exp: "14 Years", email: "rohan.mehta@mdcare.com", img: "images/maled6.avif", bio: "Expert neurosurgeon performing delicate brain and spinal cord surgeries with state-of-the-art robotic assistance." },
-            { name: "Dr. Vikram Das", dept: "Orthopedics", qual: "MBBS, MS (Orthopedics)", exp: "18 Years", email: "vikram.das@mdcare.com", img: "images/maled7.avif", bio: "Leading joint replacement surgeon. Pioneer in performing bilateral knee replacements and sports injury reconstruction." },
-            { name: "Dr. Sana Khan", dept: "Orthopedics", qual: "MBBS, DNB (Ortho)", exp: "9 Years", email: "sana.khan@mdcare.com", img: "images/femaled8.avif", bio: "Specializes in arthroscopy and pediatric orthopedics. Dedicated to correcting congenital bone deformities." },
-            { name: "Dr. Aditya Rao", dept: "Orthopedics", qual: "MBBS, MS", exp: "11 Years", email: "aditya.rao@mdcare.com", img: "images/maled9.avif", bio: "Trauma specialist dealing with complex fractures and spinal injuries originating from severe accidents." },
-            { name: "Dr. Amit Patel", dept: "Pediatrics", qual: "MBBS, MD (Pediatrics)", exp: "16 Years", email: "amit.patel@mdcare.com", img: "images/maled10.avif", bio: "Friendly and highly experienced pediatrician. Dedicated to child immunization, developmental milestones, and neonatal intensive care." },
-            { name: "Dr. Kavita Rao", dept: "Pediatrics", qual: "MBBS, DCH", exp: "13 Years", email: "kavita.rao@mdcare.com", img: "images/femaled11.avif", bio: "Expert in treating pediatric asthma, allergies, and nutritional disorders in growing toddlers." },
-            { name: "Dr. Nidhi Sharma", dept: "Pediatrics", qual: "MBBS, MD", exp: "7 Years", email: "nidhi.sharma@mdcare.com", img: "images/femaled12.avif", bio: "Neonatologist who runs the NICU. Passionate about saving premature babies and ensuring healthy early development." },
-            { name: "Dr. Sameer Reddy", dept: "Oncology", qual: "MBBS, DM (Medical Oncology)", exp: "19 Years", email: "sameer.reddy@mdcare.com", img: "images/maled13.avif", bio: "Pioneer in targeted therapies and immunotherapy for solid tumors. Compassionate doctor focusing on quality of life." },
-            { name: "Dr. Anjali Desai", dept: "Oncology", qual: "MBBS, MS (Surgical Oncology)", exp: "14 Years", email: "anjali.desai@mdcare.com", img: "images/femaled14.avif", bio: "Highly skilled surgical oncologist performing tumor resections, including complex breast and gastrointestinal cancer surgeries." },
-            { name: "Dr. Kabir Jain", dept: "Oncology", qual: "MBBS, MD (Radiation)", exp: "10 Years", email: "kabir.jain@mdcare.com", img: "images/maled15.avif", bio: "Expert in precision radiation oncology, utilizing CyberKnife and advanced linear accelerators." },
-            { name: "Dr. Varun Gupta", dept: "Dermatology", qual: "MBBS, MD (Dermatology)", exp: "12 Years", email: "varun.gupta@mdcare.com", img: "images/maled16.avif", bio: "Specializes in clinical dermatology, treating severe psoriasis, eczema, and complex autoimmune skin diseases." },
-            { name: "Dr. Pooja Iyer", dept: "Dermatology", qual: "MBBS, DDVL", exp: "8 Years", email: "pooja.iyer@mdcare.com", img: "images/femaled17.avif", bio: "Renowned for aesthetic dermatology, laser treatments, and advanced scar reduction therapies." },
-            { name: "Dr. Akash Singh", dept: "Dermatology", qual: "MBBS, MD", exp: "15 Years", email: "akash.singh@mdcare.com", img: "images/maled18.avif", bio: "Expert in dermato-surgery and hair transplant procedures. Leads the vitiligo research department." },
-            { name: "Dr. Tarun Kumar", dept: "Ophthalmology", qual: "MBBS, MS (Ophthalmology)", exp: "17 Years", email: "tarun.kumar@mdcare.com", img: "images/maled19.avif", bio: "Senior eye surgeon specializing in advanced cataract surgeries and premium intraocular lens implants." },
-            { name: "Dr. Sneha Nair", dept: "Ophthalmology", qual: "MBBS, DO", exp: "11 Years", email: "sneha.nair@mdcare.com", img: "images/femaled20.avif", bio: "Specialist in refractive surgeries (LASIK) and managing complex glaucoma conditions." },
-            { name: "Dr. Rahul Bose", dept: "Ophthalmology", qual: "MBBS, MS", exp: "9 Years", email: "rahul.bose@mdcare.com", img: "images/maled21.avif", bio: "Vitreoretinal surgeon dealing with diabetic retinopathy and macular degeneration." },
-            { name: "Dr. Kabir Singh", dept: "Psychiatry", qual: "MBBS, MD (Psychiatry)", exp: "14 Years", email: "kabir.singh@mdcare.com", img: "images/maled22.avif", bio: "Focuses on adult psychiatry, treating severe clinical depression, bipolar disorder, and anxiety management." },
-            { name: "Dr. Aisha Ali", dept: "Psychiatry", qual: "MBBS, DPM", exp: "10 Years", email: "aisha.ali@mdcare.com", img: "images/femaled23.avif", bio: "Child and adolescent psychiatrist. Expert in managing ADHD, autism spectrum, and behavioral issues." },
-            { name: "Dr. Manish Sen", dept: "Psychiatry", qual: "MBBS, MD", exp: "16 Years", email: "manish.sen@mdcare.com", img: "images/maled24.avif", bio: "Addiction specialist running the hospital's renowned de-addiction and rehabilitation clinic." }
-        ];
-
-        doctorsList.forEach((doc, index) => {
+        window.doctorsList.forEach((doc, index) => {
             doc.id = index;
         });
 
@@ -372,7 +383,7 @@
             });
         };
         
-        window.renderDoctors(doctorsList);
+        window.renderDoctors(window.doctorsList);
 
         window.applyFilters = function() {
             const searchTerm = document.getElementById('doctor-search').value.toLowerCase();
@@ -380,7 +391,7 @@
             const showFavs = document.getElementById('doctor-fav-filter').checked;
             const favs = JSON.parse(localStorage.getItem('mdcare_favs') || '[]');
 
-            const filteredDoctors = doctorsList.filter(doc => {
+            const filteredDoctors = window.doctorsList.filter(doc => {
                 const matchesSearch = doc.name.toLowerCase().includes(searchTerm) || doc.dept.toLowerCase().includes(searchTerm) || doc.qual.toLowerCase().includes(searchTerm);
                 const matchesDept = deptTerm === "" || doc.dept === deptTerm;
                 const matchesFav = !showFavs || favs.includes(doc.name);
@@ -395,7 +406,7 @@
 
         window.currentModalDocName = '';
         window.openDoctorProfile = function(idx) {
-            const doc = doctorsList[idx];
+            const doc = window.doctorsList[idx];
             window.currentModalDocName = doc.name;
             document.getElementById('doc-modal-img').src = doc.img;
             document.getElementById('doc-modal-dept').textContent = doc.displayDept || doc.dept;
@@ -438,7 +449,7 @@
         };
 
         window.toggleDocReviewForm = function() {
-            if (!window.isLoggedIn) {
+        if (!window.isLoggedIn) {
                 window.closeModal('doctor-modal');
                 window.showToast("Login Required", "Please login to write a review.", "error");
                 return;
@@ -450,29 +461,32 @@
             document.getElementById('doc-review-form').classList.toggle('hidden');
         };
 
-        window.loadDoctorReviews = async function(docName) {
+        window.unsubscribeDoctorReviews = null;
+        window.loadDoctorReviews = function(docName) {
             const list = document.getElementById('doc-modal-reviews-list');
             list.innerHTML = '<p class="text-slate-500 text-sm"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading reviews...</p>';
+            if (window.unsubscribeDoctorReviews) window.unsubscribeDoctorReviews();
             try {
                 const q = query(collection(db, "doctor_reviews"), where("doctorName", "==", docName));
-                const snapshot = await getDocs(q);
-                const docReviews = [];
-                snapshot.forEach(d => {
-                    const data = d.data();
-                    docReviews.push({ ...data, createdAtMillis: data.createdAt?.toMillis() || 0 });
-                });
-                docReviews.sort((a,b) => b.createdAtMillis - a.createdAtMillis);
+                window.unsubscribeDoctorReviews = onSnapshot(q, (snapshot) => {
+                    const docReviews = [];
+                    snapshot.forEach(d => {
+                        const data = d.data();
+                        docReviews.push({ ...data, createdAtMillis: data.createdAt?.toMillis() || 0 });
+                    });
+                    docReviews.sort((a,b) => b.createdAtMillis - a.createdAtMillis);
 
-                list.innerHTML = '';
-                if (docReviews.length === 0) {
-                    list.innerHTML = '<p class="text-slate-500 text-sm">No reviews yet. Be the first to review!</p>';
-                    return;
-                }
+                    list.innerHTML = '';
+                    if (docReviews.length === 0) {
+                        list.innerHTML = '<p class="text-slate-500 text-sm">No reviews yet. Be the first to review!</p>';
+                        return;
+                    }
 
-                docReviews.forEach(review => {
-                    let starsHtml = '';
-                    for(let j=0; j<Math.floor(review.rating); j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
-                    list.innerHTML += `<div class="bg-slate-50 p-3 rounded-lg border border-slate-100"><div class="flex justify-between items-start mb-1"><h5 class="font-bold text-secondary text-xs flex items-center gap-1">${review.name} ${review.userId !== "unknown" ? '<i class="fa-solid fa-circle-check text-teal-500" title="Verified Patient"></i>' : ''}</h5><div class="text-[10px]">${starsHtml}</div></div><p class="text-xs text-slate-600">"${review.text}"</p></div>`;
+                    docReviews.forEach(review => {
+                        let starsHtml = '';
+                        for(let j=0; j<Math.floor(review.rating); j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+                        list.innerHTML += `<div class="bg-slate-50 p-3 rounded-lg border border-slate-100"><div class="flex justify-between items-start mb-1"><h5 class="font-bold text-secondary text-xs flex items-center gap-1">${review.name} ${review.userId !== "unknown" ? '<i class="fa-solid fa-circle-check text-teal-500" title="Verified Patient"></i>' : ''}</h5><div class="text-[10px]">${starsHtml}</div></div><p class="text-xs text-slate-600">"${review.text}"</p></div>`;
+                    });
                 });
             } catch (e) {
                 list.innerHTML = '<p class="text-red-500 text-sm">Failed to load reviews.</p>';
@@ -481,7 +495,7 @@
 
         document.getElementById('doc-review-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!window.isLoggedIn || !auth.currentUser?.emailVerified) return;
+        if (!window.isLoggedIn || !auth.currentUser?.emailVerified) return;
 
             const btn = document.getElementById('submit-doc-review-btn');
             const originalText = btn.innerHTML;
@@ -500,7 +514,6 @@
                 window.showToast("Review Submitted", "Thank you for your feedback!", "success");
                 e.target.reset();
                 document.getElementById('doc-review-form').classList.add('hidden');
-                window.loadDoctorReviews(window.currentModalDocName);
             } catch (err) {
                 window.showToast("Error", "Could not submit review: " + err.message, "error");
             } finally {

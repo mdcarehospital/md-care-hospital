@@ -51,8 +51,15 @@
         html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
         html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
         html.dark .bg-secondary { background-color: #020617 !important; }
-        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50, html.dark .bg-purple-100 { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .text-teal-600, html.dark .text-teal-700 { color: #2dd4bf !important; }
+        html.dark .text-yellow-600, html.dark .text-yellow-700 { color: #facc15 !important; }
+        html.dark .text-red-500, html.dark .text-red-600, html.dark .text-red-700 { color: #f87171 !important; }
+        html.dark .text-blue-500, html.dark .text-blue-600, html.dark .text-blue-700 { color: #60a5fa !important; }
+        html.dark .text-purple-700 { color: #c084fc !important; }
         html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .even\:bg-slate-50:nth-child(even) { background-color: #0f172a !important; }
+        html.dark .even\:bg-slate-100:nth-child(even) { background-color: #334155 !important; }
         html.dark .theme-icon-moon { display: none !important; }
         html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
         html.dark ::-webkit-scrollbar-track { background: #0f172a; }
@@ -102,6 +109,7 @@
                     <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
                     <div id="nav-user-avatar" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md overflow-hidden">U</div>
                     <button onclick="window.logout(this)" class="text-red-500 hover:text-red-700 font-bold transition">Logout</button>
@@ -113,6 +121,7 @@
                 <a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Home</a>
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
                 <div class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                     <button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>
                 </div>
@@ -144,6 +153,7 @@
                     <h3 class="font-bold text-secondary text-lg mb-4 border-b pb-2">Quick Actions</h3>
                     <button onclick="window.openAppointmentModal()" class="w-full block text-center bg-primary text-white px-4 py-3 rounded-lg font-bold hover:bg-teal-700 transition shadow-md mb-3 animate-glow-pulse"><i class="fa-solid fa-calendar-plus mr-2"></i> Book New Appointment</button>
                     <a href="departments.html" class="w-full block text-center bg-slate-100 text-slate-700 px-4 py-3 rounded-lg font-bold hover:bg-slate-200 transition"><i class="fa-solid fa-stethoscope mr-2"></i> Browse Treatments</a>
+                    <a href="admin.html" id="profile-admin-btn" class="hidden w-full text-center bg-secondary text-white px-4 py-3 rounded-lg font-bold hover:bg-slate-800 transition shadow-md mt-3"><i class="fa-solid fa-user-shield mr-2"></i> Admin Panel</a>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mt-6">
@@ -292,7 +302,10 @@
         <form id="delete-account-form" class="space-y-4 text-left">
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                <input type="password" id="delete-password" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-red-500 outline-none" placeholder="Enter your current password">
+                <div class="relative">
+                    <input type="password" id="delete-password" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-red-500 outline-none pr-10" placeholder="Enter your current password">
+                    <button type="button" onclick="togglePasswordVisibility('delete-password', 'del-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-red-500 focus:outline-none"><i id="del-pass-icon" class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
             <div class="flex justify-end gap-3 mt-6">
                 <button type="button" onclick="document.getElementById('delete-account-modal').classList.add('hidden')" class="px-4 py-2 text-slate-500 hover:bg-slate-200 rounded-lg text-sm font-bold transition">Cancel</button>
@@ -326,7 +339,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
-                        <input type="text" id="booking-name" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="
+                        <input type="text" id="booking-name" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="Patient Name">
+                    </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
                         <input type="tel" id="booking-phone" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="e.g., 8091919997">
@@ -359,14 +373,6 @@
                         <label class="block text-sm font-medium text-slate-700 mb-2">Appointment Time</label>
                         <select id="time-select" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white">
                             <option value="" disabled selected>Select Time</option>
-                            <option value="09:00 AM">09:00 AM</option><option value="09:30 AM">09:30 AM</option>
-                            <option value="10:00 AM">10:00 AM</option><option value="10:30 AM">10:30 AM</option>
-                            <option value="11:00 AM">11:00 AM</option><option value="11:30 AM">11:30 AM</option>
-                            <option value="12:00 PM">12:00 PM</option><option value="12:30 PM">12:30 PM</option>
-                            <option value="01:00 PM">01:00 PM</option><option value="01:30 PM">01:30 PM</option>
-                            <option value="02:00 PM">02:00 PM</option><option value="02:30 PM">02:30 PM</option>
-                            <option value="03:00 PM">03:00 PM</option><option value="03:30 PM">03:30 PM</option>
-                            <option value="04:00 PM">04:00 PM</option><option value="04:30 PM">04:30 PM</option>
                         </select>
                     </div>
                     <div id="availability-message" class="col-span-1 md:col-span-2 text-sm font-bold mt-[-10px]"></div>
@@ -399,8 +405,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile, deleteUser, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, addDoc, getDoc, setDoc, deleteDoc, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, addDoc, getDoc, setDoc, deleteDoc, serverTimestamp, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         const firebaseConfig = {
             apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
             authDomain: "md-care-hospital.firebaseapp.com",
@@ -414,6 +419,17 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        window.hospitalHolidays = [];
+        window.hospitalHolidaysMap = {};
+        onSnapshot(collection(db, "hospital_holidays"), (snapshot) => {
+            window.hospitalHolidays = [];
+            window.hospitalHolidaysMap = {};
+            snapshot.forEach(docSnap => {
+                window.hospitalHolidays.push(docSnap.data().date);
+                window.hospitalHolidaysMap[docSnap.data().date] = docSnap.data().reason;
+            });
+        });
 
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -503,6 +519,8 @@
             document.getElementById('user-name').textContent = displayName;
             document.getElementById('user-email').textContent = user.email;
             document.getElementById('user-initial').textContent = displayName.charAt(0).toUpperCase();
+            window.isAdmin = user.email === 'mdcareadmin@gmail.com';
+            if(window.isAdmin) document.getElementById('profile-admin-btn').classList.remove('hidden');
             
             const verificationStatus = document.getElementById('email-verification-status');
             if (verificationStatus) {
@@ -544,6 +562,13 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     window.currentUserData = userDoc.data();
+                    if (window.currentUserData.disabled) {
+                        await signOut(auth);
+                        sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Account Disabled", message: "Your account has been disabled by the administrator.", type: "error", duration: 5000 }));
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                    if (window.currentUserData.role === 'admin') { window.isAdmin = true; document.getElementById('profile-admin-btn').classList.remove('hidden'); }
                     window.setProfileField('profile-age', window.currentUserData.age, 'Add Age');
                     window.setProfileField('profile-sex', window.currentUserData.sex, 'Add Sex');
                     window.setProfileField('profile-blood-group', window.currentUserData.bloodGroup, 'Add Blood Group');
@@ -561,11 +586,17 @@
                         document.getElementById('edit-profile-initial').classList.add('hidden');
                         localStorage.setItem('mdcare_profilePic', window.currentUserData.profilePic);
                     }
+                } else if (user.email !== 'mdcareadmin@gmail.com') {
+                    await signOut(auth);
+                    sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Account Removed", message: "Your account data could not be found.", type: "error", duration: 5000 }));
+                    window.location.href = 'index.html';
+                    return;
                 }
             } catch(e) { console.error("Error fetching profile", e); }
         });
 
-        window.loadUserAppointments = async function() {
+        window.unsubscribeUserAppointments = null;
+        window.loadUserAppointments = function() {
             const user = auth.currentUser;
             if (!user) return;
             
@@ -573,34 +604,34 @@
             list.innerHTML = '<p class="text-slate-500">Loading your appointments...</p>';
 
             window.userAppointmentsMap = {};
+            if (window.unsubscribeUserAppointments) window.unsubscribeUserAppointments();
             
             try {
                 const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
-                const snapshot = await getDocs(q);
                 
-                if (snapshot.empty) {
-                    list.innerHTML = '<p class="text-slate-500">You have no upcoming appointments.</p>';
-                    const loadMoreContainer = document.getElementById('load-more-appointments-container');
-                    if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
-                    return;
-                }
+                window.unsubscribeUserAppointments = onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        list.innerHTML = '<p class="text-slate-500">You have no upcoming appointments.</p>';
+                        const loadMoreContainer = document.getElementById('load-more-appointments-container');
+                        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
+                        return;
+                    }
 
-                let fetchedAppointments = [];
-                snapshot.forEach((docSnap) => {
-                    fetchedAppointments.push({ id: docSnap.id, ...docSnap.data() });
-                });
+                    let fetchedAppointments = [];
+                    snapshot.forEach((docSnap) => {
+                        fetchedAppointments.push({ id: docSnap.id, ...docSnap.data() });
+                    });
 
-                // Sort appointments: newest booked first
-                fetchedAppointments.sort((a, b) => {
-                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.now();
-                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Date.now();
-                    return timeB - timeA;
-                });
-
-                list.innerHTML = '';
+                    fetchedAppointments.sort((a,b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+                    
+                    list.innerHTML = '';
                 window.allUserAppointments = fetchedAppointments;
                 window.currentApptIndex = 0;
                 window.renderAppointmentsChunk();
+                }, (err) => {
+                    list.innerHTML = '<p class="text-red-500">Error loading appointments.</p>';
+                    console.error(err);
+                });
                 
             } catch (err) {
                 list.innerHTML = '<p class="text-red-500">Error loading appointments.</p>';
@@ -912,7 +943,6 @@
                     </div>`
                 });
 
-                    window.loadUserAppointments(); // Refresh the list automatically
                 } catch (err) {
                     alert("Error cancelling appointment: " + err.message);
                 }
@@ -1137,18 +1167,6 @@
         document.body.style.overflow = 'hidden';
     };
 
-    const doctorsList = [
-        { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry" },
-        { name: "Dr. M D Sheikh", dept: "Cardiology" }, { name: "Dr. Neha Verma", dept: "Cardiology" }, { name: "Dr. Arjun Patel", dept: "Cardiology" },
-        { name: "Dr. Anil Kapoor", dept: "Neurology" }, { name: "Dr. Priya Singh", dept: "Neurology" }, { name: "Dr. Rohan Mehta", dept: "Neurology" },
-        { name: "Dr. Vikram Das", dept: "Orthopedics" }, { name: "Dr. Sana Khan", dept: "Orthopedics" }, { name: "Dr. Aditya Rao", dept: "Orthopedics" },
-        { name: "Dr. Amit Patel", dept: "Pediatrics" }, { name: "Dr. Kavita Rao", dept: "Pediatrics" }, { name: "Dr. Nidhi Sharma", dept: "Pediatrics" },
-        { name: "Dr. Sameer Reddy", dept: "Oncology" }, { name: "Dr. Anjali Desai", dept: "Oncology" }, { name: "Dr. Kabir Jain", dept: "Oncology" },
-        { name: "Dr. Varun Gupta", dept: "Dermatology" }, { name: "Dr. Pooja Iyer", dept: "Dermatology" }, { name: "Dr. Akash Singh", dept: "Dermatology" },
-        { name: "Dr. Tarun Kumar", dept: "Ophthalmology" }, { name: "Dr. Sneha Nair", dept: "Ophthalmology" }, { name: "Dr. Rahul Bose", dept: "Ophthalmology" },
-        { name: "Dr. Kabir Singh", dept: "Psychiatry" }, { name: "Dr. Aisha Ali", dept: "Psychiatry" }, { name: "Dr. Manish Sen", dept: "Psychiatry" }
-    ];
-
     const deptSelect = document.getElementById('department-select');
     const docSelect = document.getElementById('doctor-select');
     const dateSel = document.getElementById('date-select');
@@ -1160,7 +1178,7 @@
         deptSelect.addEventListener('change', function() {
             const dept = this.value;
             docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
-            const filteredDocs = doctorsList.filter(d => d.dept === dept);
+            const filteredDocs = window.doctorsList.filter(d => d.dept === dept);
             if (filteredDocs.length > 0) {
                 docSelect.disabled = false;
                 filteredDocs.forEach(doc => {
@@ -1175,10 +1193,33 @@
 
     async function checkAvailability() {
         if(!dateSel.value || !docSelect.value) { avlMsg.innerHTML = ""; return; }
-        Array.from(timeSel.options).forEach(opt => { if(opt.value !== "") { opt.disabled = false; opt.textContent = opt.value; } });
-        const d = new Date(dateSel.value);
-        if(d.getDay() === 0) {
-            avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> Sunday is closed.</span>";
+        const currentTimeSelection = timeSel.value;
+        let validSlots = [...window.allTimeSlots];
+        try {
+            const scheduleDoc = await getDoc(doc(db, "doctor_schedules", docSelect.value));
+            if (scheduleDoc.exists()) {
+                const data = scheduleDoc.data();
+                const startIdx = window.allTimeSlots.indexOf(data.startTime);
+                const endIdx = window.allTimeSlots.indexOf(data.endTime);
+                if(startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) validSlots = window.allTimeSlots.slice(startIdx, endIdx + 1);
+            }
+        } catch(e) {}
+        
+        timeSel.innerHTML = '<option value="" disabled selected>Select Time</option>';
+        validSlots.forEach(slot => {
+            const opt = document.createElement('option'); opt.value = slot; opt.textContent = slot; timeSel.appendChild(opt);
+        });
+        
+        if (currentTimeSelection && validSlots.includes(currentTimeSelection)) timeSel.value = currentTimeSelection;
+        
+        const [y, m, dNum] = dateSel.value.split('-');
+        const dObj = new Date(y, m - 1, dNum);
+        const isHoliday = window.hospitalHolidays && window.hospitalHolidays.includes(dateSel.value);
+        
+        if(dObj.getDay() === 0 || isHoliday) {
+            const holidayReason = window.hospitalHolidaysMap && window.hospitalHolidaysMap[dateSel.value] ? window.hospitalHolidaysMap[dateSel.value] : "a hospital holiday";
+            const reason = dObj.getDay() === 0 ? "Sunday is closed." : `This date is closed for ${holidayReason}.`;
+            avlMsg.innerHTML = `<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> ${reason}</span>`;
             subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
             timeSel.disabled = true; return;
         } else { timeSel.disabled = false; }
@@ -1189,14 +1230,27 @@
         try {
             const q = query(collection(db, "appointments"), where("date", "==", dateSel.value));
             const snapshot = await getDocs(q);
+            
+            const qBlock = query(collection(db, "blocked_slots"), where("date", "==", dateSel.value), where("doctor", "==", docSelect.value));
+            const snapshotBlock = await getDocs(qBlock);
+            
             const bookedTimes = [];
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 if (data.doctor === docSelect.value && data.status !== 'Cancelled') bookedTimes.push(data.time);
             });
+            
+            let isAllDayBlocked = false;
+            snapshotBlock.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.time === "All Day") isAllDayBlocked = true;
+                else bookedTimes.push(data.time);
+            });
+            
+            if (isAllDayBlocked) { avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-ban mr-1'></i> Doctor is unavailable on this day. Please select another date.</span>"; subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed'); timeSel.disabled = true; return; }
 
             Array.from(timeSel.options).forEach(opt => {
-                if(bookedTimes.includes(opt.value)) { opt.disabled = true; opt.textContent = opt.value + " (Booked)"; }
+                if(bookedTimes.includes(opt.value)) { opt.disabled = true; opt.textContent = opt.value + " (Unavailable)"; }
             });
             if(bookedTimes.includes(timeSel.value)) timeSel.value = "";
 
@@ -1235,6 +1289,10 @@
             let isBooked = false;
             snapCheck.forEach(d => { if (d.data().status !== 'Cancelled' && d.data().status !== 'Expired') isBooked = true; });
             if (isBooked) throw new Error("SLOT_ALREADY_BOOKED");
+            
+            const qBlockCheck = query(collection(db, "blocked_slots"), where("date", "==", dateSel.value), where("doctor", "==", docSelect.value));
+            const snapBlockCheck = await getDocs(qBlockCheck);
+            snapBlockCheck.forEach(d => { if (d.data().time === timeSel.value || d.data().time === "All Day") throw new Error("SLOT_UNAVAILABLE"); });
             
             const serialDocId = (9999999999999 - Date.now()).toString();
             await setDoc(doc(db, "appointments", serialDocId), {
@@ -1286,10 +1344,9 @@
             document.getElementById('appointment-modal').classList.add('hidden');
             document.getElementById('success-modal').classList.remove('hidden');
             e.target.reset(); docSelect.disabled = true; docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>'; avlMsg.innerHTML = '';
-            
-            window.loadUserAppointments(); // Refresh the list instantly!
         } catch (error) {
-            if (error.message === "SLOT_ALREADY_BOOKED") { window.showToast("Slot Unavailable", "Sorry, this slot was just booked. Please select a different time.", "error"); checkAvailability(); } 
+            if (error.message === "SLOT_ALREADY_BOOKED") { window.showToast("Slot Unavailable", "Sorry, this slot was just booked by someone else.", "error"); checkAvailability(); } 
+            else if (error.message === "SLOT_UNAVAILABLE") { window.showToast("Slot Blocked", "Sorry, this slot is currently unavailable for booking.", "error"); checkAvailability(); }
             else { window.showToast("Booking Failed", error.message, "error"); }
         } finally { subBtn.innerHTML = originalBtnText; subBtn.disabled = false; }
     });

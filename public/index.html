@@ -59,46 +59,34 @@
         }
         .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     </style>
-        <style>
-            /* Dark Mode Auto-Overrides */
-            * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
-            html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
-            html.dark .bg-white { background-color: #1e293b !important; }
-            html.dark .bg-slate-50 { background-color: #0f172a !important; }
-            html.dark .bg-slate-100 { background-color: #334155 !important; }
-            html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
-            html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
-            html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
-            html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
-            html.dark .bg-secondary { background-color: #020617 !important; }
-            html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50 { background-color: #0f172a !important; border-color: #334155 !important; }
-            html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
-            html.dark .theme-icon-moon { display: none !important; }
-            html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+    <style>
+        /* Dark Mode Auto-Overrides */
+        * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+        html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+        html.dark .bg-white { background-color: #1e293b !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; }
+        html.dark .bg-slate-100 { background-color: #334155 !important; }
+        html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+        html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+        html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        html.dark .bg-secondary { background-color: #020617 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50, html.dark .bg-purple-100 { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .text-teal-600, html.dark .text-teal-700 { color: #2dd4bf !important; }
+        html.dark .text-yellow-600, html.dark .text-yellow-700 { color: #facc15 !important; }
+        html.dark .text-red-500, html.dark .text-red-600, html.dark .text-red-700 { color: #f87171 !important; }
+        html.dark .text-blue-500, html.dark .text-blue-600, html.dark .text-blue-700 { color: #60a5fa !important; }
+        html.dark .text-purple-700 { color: #c084fc !important; }
+        html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .even\:bg-slate-50:nth-child(even) { background-color: #0f172a !important; }
+        html.dark .even\:bg-slate-100:nth-child(even) { background-color: #334155 !important; }
+        html.dark .theme-icon-moon { display: none !important; }
+        html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
         html.dark ::-webkit-scrollbar-track { background: #0f172a; }
         html.dark ::-webkit-scrollbar-thumb { background: #334155; }
         html.dark { scrollbar-color: #334155 #0f172a; }
-        </style>
-        <script>
-            function adaptTheme() {
-                const savedTheme = localStorage.getItem('mdcare_theme');
-                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
-                else { document.documentElement.classList.remove('dark'); }
-            }
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
-            adaptTheme();
-
-            window.toggleTheme = function() {
-                const html = document.documentElement;
-                if (html.classList.contains('dark')) {
-                    html.classList.remove('dark');
-                    localStorage.setItem('mdcare_theme', 'light');
-                } else {
-                    html.classList.add('dark');
-                    localStorage.setItem('mdcare_theme', 'dark');
-                }
-            };
-        </script>
+    </style>
+    <script src="utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -124,6 +112,7 @@
                     <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
                     <button onclick="handleAppointmentClick()" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
                     
                     <!-- Auth buton -->
@@ -141,6 +130,7 @@
                 <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
                 <button onclick="handleAppointmentClick()" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
@@ -467,7 +457,10 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input type="password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••">
+                    <div class="relative">
+                        <input type="password" id="login-pass" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none pr-10" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility('login-pass', 'login-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-primary focus:outline-none"><i id="login-pass-icon" class="fa-solid fa-eye"></i></button>
+                    </div>
                 </div>
                 <div class="text-right mt-1">
                     <a href="#" onclick="switchModal('login-modal', 'forgot-password-modal')" class="text-xs text-primary font-bold hover:underline">Forgot Password?</a>
@@ -532,7 +525,10 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input type="password" id="reg-pass" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••">
+                    <div class="relative">
+                        <input type="password" id="reg-pass" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none pr-10" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility('reg-pass', 'reg-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-primary focus:outline-none"><i id="reg-pass-icon" class="fa-solid fa-eye"></i></button>
+                    </div>
                 </div>
                 <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition shadow-md mt-4">Register</button>
                 <p class="text-center text-sm text-slate-600 mt-4">Already have an account? <a href="#" onclick="switchModal('register-modal', 'login-modal')" class="text-primary font-bold hover:underline">Login</a></p>
@@ -828,6 +824,7 @@
                         <li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li>
                         <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
                         <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
+                        <li><a href="blog.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Blog</a></li>
                     </ul>
                 </div>
 
@@ -879,27 +876,12 @@
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { app, auth, db } from "./firebase-config.js";
+        import { isLoggingOut } from "./auth.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, query, where, getDocs, runTransaction, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, query, where, getDocs, runTransaction, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
-            authDomain: "md-care-hospital.firebaseapp.com",
-            projectId: "md-care-hospital",
-            storageBucket: "md-care-hospital.firebasestorage.app",
-            messagingSenderId: "214966558089",
-            appId: "1:214966558089:web:d49f400adb427614089558",
-            measurementId: "G-K3S90QH9LT"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let isLoggedIn = false;
         let isAuthenticating = false;
-        let isLoggingOut = false;
 
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
@@ -919,56 +901,18 @@
             }
         });
 
-        window.openModal = function(id) {
-            document.getElementById(id).classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-        window.closeModal = function(id) {
-            document.getElementById(id).classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-        window.switchModal = function(closeId, openId) {
-            document.getElementById(closeId).classList.add('hidden');
-            document.getElementById(openId).classList.remove('hidden');
-        }
-
-        // Beautiful Toast Notification System
-        window.showToast = function(title, message, type = 'success', duration = 6000) {
-            let container = document.getElementById('toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
-                container.className = 'fixed top-24 right-4 z-[200] flex flex-col gap-3 pointer-events-none';
-                document.body.appendChild(container);
-            }
-            
-            const toast = document.createElement('div');
-            toast.className = `min-w-[300px] max-w-sm bg-white border-l-4 ${type === 'success' ? 'border-teal-500' : 'border-red-500'} rounded-xl shadow-2xl p-4 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
-            
-            const icon = `<div class="w-10 h-10 rounded-full ${type === 'success' ? 'bg-teal-50 text-teal-500' : 'bg-red-50 text-red-500'} flex items-center justify-center flex-shrink-0 text-lg">
-                <i class="fa-solid ${type === 'success' ? 'fa-check' : 'fa-xmark'}"></i>
-            </div>`;
-                
-            toast.innerHTML = `
-                ${icon}
-                <div class="flex-grow pt-0.5">
-                    <h4 class="font-bold text-slate-800 text-sm">${title}</h4>
-                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">${message}</p>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-times"></i></button>
-            `;
-            
-            container.appendChild(toast);
-            
-            requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
-            
-            setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
-        };
-        
         const pendingToast = sessionStorage.getItem('mdcare_pendingToast');
+        
+        window.hospitalHolidays = [];
+        window.hospitalHolidaysMap = {};
+        onSnapshot(collection(db, "hospital_holidays"), (snapshot) => {
+            window.hospitalHolidays = [];
+            window.hospitalHolidaysMap = {};
+            snapshot.forEach(docSnap => {
+                window.hospitalHolidays.push(docSnap.data().date);
+                window.hospitalHolidaysMap[docSnap.data().date] = docSnap.data().reason;
+            });
+        });
         if (pendingToast) {
             try {
                 const toastData = JSON.parse(pendingToast);
@@ -978,7 +922,7 @@
         }
 
         window.handleAppointmentClick = function() {
-            if(!isLoggedIn) {
+            if(!window.isLoggedIn) {
                 window.openModal('login-modal');
             } else {
                 window.openModal('appointment-modal');
@@ -986,10 +930,10 @@
         }
 
         window.handleBookingsClick = function() {
-            if(!isLoggedIn) {
+            if(!window.isLoggedIn) {
                 window.openModal('login-modal');
             } else {
-                window.location.href = 'profile.html#appointments-list';
+                window.location.href = window.isAdmin ? 'admin.html' : 'profile.html#appointments-list';
             }
         }
 
@@ -998,17 +942,20 @@
             const desktopAuth = document.getElementById('auth-nav-container');
             const mobileAuth = document.getElementById('mobile-auth-container');
             
-            if(isLoggedIn) {
+            if(window.isLoggedIn) {
                 overlay.classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => overlay.classList.add('hidden'), 300);
                 
                 const picUrl = localStorage.getItem('mdcare_profilePic');
                 const userInitial = localStorage.getItem('mdcare_userInitial') || 'U';
                 const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : userInitial;
-
-                const loggedInHTML = `<div class="flex items-center gap-3"><a href="profile.html" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="profile.html" class="text-slate-700 font-bold hover:text-primary transition">Profile Dashboard</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+                
+                const dashboardLink = window.isAdmin ? 'admin.html' : 'profile.html';
+                const dashboardText = window.isAdmin ? 'Admin Dashboard' : 'Profile Dashboard';
+                
+                const loggedInHTML = `<div class="flex items-center gap-3"><a href="${dashboardLink}" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="${dashboardLink}" class="text-slate-700 font-bold hover:text-primary transition">${dashboardText}</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
                 if(desktopAuth) desktopAuth.innerHTML = loggedInHTML;
-                if(mobileAuth) mobileAuth.innerHTML = `<a href="profile.html" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">Profile Dashboard</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="${dashboardLink}" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">${dashboardText}</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
             } else {
                 overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
                 if(desktopAuth) desktopAuth.innerHTML = `<button onclick="window.openModal('login-modal')" class="text-slate-600 hover:text-primary transition font-medium">Login</button><button onclick="window.openModal('register-modal')" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</button>`;
@@ -1016,25 +963,12 @@
             }
         }
 
-        window.logout = function(btn) {
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
-                btn.disabled = true;
-            }
-            isLoggingOut = true;
-            localStorage.removeItem('mdcare_profilePic');
-            localStorage.removeItem('mdcare_userInitial');
-            signOut(auth).then(() => {
-                sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Logged Out", message: "You have been successfully logged out.", type: "success", duration: 3000 }));
-                window.location.href = 'index.html';
-            }).catch(err => console.error(err));
-        }
-
         onAuthStateChanged(auth, async (user) => {
             if (isAuthenticating) return;
             if (isLoggingOut) return;
             if (user) {
-                isLoggedIn = true;
+                window.isLoggedIn = true;
+                window.isAdmin = user.email === 'mdcareadmin@gmail.com';
                 localStorage.setItem('mdcare_auth', 'true');
                 localStorage.setItem('mdcare_userInitial', (user.displayName || "U").charAt(0).toUpperCase());
                 
@@ -1043,6 +977,18 @@
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const data = userDoc.data();
+                    if (data.disabled) {
+                        window.isLoggedIn = false;
+                        window.isAdmin = false;
+                        localStorage.removeItem('mdcare_auth');
+                        localStorage.removeItem('mdcare_profilePic');
+                        localStorage.removeItem('mdcare_userInitial');
+                        await signOut(auth);
+                        window.showToast("Account Disabled", "Your account has been disabled by the administrator.", "error");
+                        updateAuthUI();
+                        return;
+                    }
+                        if (data.role === 'admin') window.isAdmin = true;
                         const phoneInput = document.getElementById('booking-phone');
                     const secPhoneInput = document.getElementById('sec-booking-phone');
                     if (phoneInput && !phoneInput.value && data.phone) {
@@ -1057,6 +1003,16 @@
                         localStorage.removeItem('mdcare_profilePic');
                     }
                     updateAuthUI();
+                } else if (user.email !== 'mdcareadmin@gmail.com') {
+                    window.isLoggedIn = false;
+                    window.isAdmin = false;
+                    localStorage.removeItem('mdcare_auth');
+                    localStorage.removeItem('mdcare_profilePic');
+                    localStorage.removeItem('mdcare_userInitial');
+                    await signOut(auth);
+                    window.showToast("Account Removed", "Your account has been deleted by the administrator.", "error");
+                    updateAuthUI();
+                    return;
                     }
                 } catch(e) { console.error("Error fetching profile for autofill", e); }
                 
@@ -1065,7 +1021,8 @@
                     window.openModal('appointment-modal');
                 }
             } else {
-                isLoggedIn = false;
+                window.isLoggedIn = false;
+                window.isAdmin = false;
                 localStorage.removeItem('mdcare_auth');
                 localStorage.removeItem('mdcare_profilePic');
                 localStorage.removeItem('mdcare_userInitial');
@@ -1094,6 +1051,11 @@
             const pass = e.target.querySelector('input[type="password"]').value;
             try {
                 const userCred = await signInWithEmailAndPassword(auth, email, pass);
+                const userDoc = await getDoc(doc(db, "users", userCred.user.uid));
+                if (userDoc.exists() && userDoc.data().disabled) {
+                    await signOut(auth);
+                    throw new Error("Your account has been disabled by the administrator.");
+                }
                 if (!userCred.user.emailVerified) {
                     sessionStorage.setItem('mdcare_pendingToast', JSON.stringify({ title: "Verification Required", message: "Your email address is not verified yet. Please check your inbox or <span class='text-red-500 font-bold'>SPAM</span> folder.", type: "error", duration: 3000 }));
                     window.location.href = 'index.html';
@@ -1233,40 +1195,12 @@
 
         // --- Doctors ---
 
-        const doctorsList = [
-            { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry", displayDept: "Psychiatry (Director)", qual: "VNGP (Psychiatry)", displayTitle: "VNGP (Psychiatry) - Director", exp: "23+ Years", email: "director@mdcare.com", img: "images/nadim.jpeg", bio: "Hospital Director and leading specialist in Psychiatry. Committed to clinical excellence and compassionate patient care." },
-            { name: "Dr. M D Sheikh", dept: "Cardiology", qual: "Website Developer", exp: "15+ Years", email: "mdcareadmin@gmail.com", img: "images/myphoto.jpeg", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
-            { name: "Dr. Neha Verma", dept: "Cardiology", qual: "MBBS, MS, Fellowship in Cardiac Surgery", exp: "10 Years", email: "neha.verma@mdcare.com", img: "images/femaled2.avif", bio: "Expert in pediatric cardiology and minimally invasive cardiac surgeries. A leading voice in preventive cardiovascular healthcare." },
-            { name: "Dr. Arjun Patel", dept: "Cardiology", qual: "MBBS, MD (Cardiology)", exp: "8 Years", email: "arjun.patel@mdcare.com", img: "images/maled3.avif", bio: "Dedicated to echocardiography and non-invasive diagnostics. Passionate about managing chronic heart conditions." },
-            { name: "Dr. Anil Kapoor", dept: "Neurology", qual: "MBBS, DM (Neurology)", exp: "20 Years", email: "anil.kapoor@mdcare.com", img: "images/maled4.avif", bio: "Senior neurologist specializing in stroke management, epilepsy, and neurodegenerative disorders. Heads the stroke trauma unit." },
-            { name: "Dr. Priya Singh", dept: "Neurology", qual: "MBBS, MD (Medicine), DM", exp: "12 Years", email: "priya.singh@mdcare.com", img: "images/femaled5.avif", bio: "Focuses on multiple sclerosis and movement disorders. Heavily involved in clinical research and advanced neural mapping." },
-            { name: "Dr. Rohan Mehta", dept: "Neurology", qual: "MBBS, MS (Neuro Surgery)", exp: "14 Years", email: "rohan.mehta@mdcare.com", img: "images/maled6.avif", bio: "Expert neurosurgeon performing delicate brain and spinal cord surgeries with state-of-the-art robotic assistance." },
-            { name: "Dr. Vikram Das", dept: "Orthopedics", qual: "MBBS, MS (Orthopedics)", exp: "18 Years", email: "vikram.das@mdcare.com", img: "images/maled7.avif", bio: "Leading joint replacement surgeon. Pioneer in performing bilateral knee replacements and sports injury reconstruction." },
-            { name: "Dr. Sana Khan", dept: "Orthopedics", qual: "MBBS, DNB (Ortho)", exp: "9 Years", email: "sana.khan@mdcare.com", img: "images/femaled8.avif", bio: "Specializes in arthroscopy and pediatric orthopedics. Dedicated to correcting congenital bone deformities." },
-            { name: "Dr. Aditya Rao", dept: "Orthopedics", qual: "MBBS, MS", exp: "11 Years", email: "aditya.rao@mdcare.com", img: "images/maled9.avif", bio: "Trauma specialist dealing with complex fractures and spinal injuries originating from severe accidents." },
-            { name: "Dr. Amit Patel", dept: "Pediatrics", qual: "MBBS, MD (Pediatrics)", exp: "16 Years", email: "amit.patel@mdcare.com", img: "images/maled10.avif", bio: "Friendly and highly experienced pediatrician. Dedicated to child immunization, developmental milestones, and neonatal intensive care." },
-            { name: "Dr. Kavita Rao", dept: "Pediatrics", qual: "MBBS, DCH", exp: "13 Years", email: "kavita.rao@mdcare.com", img: "images/femaled11.avif", bio: "Expert in treating pediatric asthma, allergies, and nutritional disorders in growing toddlers." },
-            { name: "Dr. Nidhi Sharma", dept: "Pediatrics", qual: "MBBS, MD", exp: "7 Years", email: "nidhi.sharma@mdcare.com", img: "images/femaled12.avif", bio: "Neonatologist who runs the NICU. Passionate about saving premature babies and ensuring healthy early development." },
-            { name: "Dr. Sameer Reddy", dept: "Oncology", qual: "MBBS, DM (Medical Oncology)", exp: "19 Years", email: "sameer.reddy@mdcare.com", img: "images/maled13.avif", bio: "Pioneer in targeted therapies and immunotherapy for solid tumors. Compassionate doctor focusing on quality of life." },
-            { name: "Dr. Anjali Desai", dept: "Oncology", qual: "MBBS, MS (Surgical Oncology)", exp: "14 Years", email: "anjali.desai@mdcare.com", img: "images/femaled14.avif", bio: "Highly skilled surgical oncologist performing tumor resections, including complex breast and gastrointestinal cancer surgeries." },
-            { name: "Dr. Kabir Jain", dept: "Oncology", qual: "MBBS, MD (Radiation)", exp: "10 Years", email: "kabir.jain@mdcare.com", img: "images/maled15.avif", bio: "Expert in precision radiation oncology, utilizing CyberKnife and advanced linear accelerators." },
-            { name: "Dr. Varun Gupta", dept: "Dermatology", qual: "MBBS, MD (Dermatology)", exp: "12 Years", email: "varun.gupta@mdcare.com", img: "images/maled16.avif", bio: "Specializes in clinical dermatology, treating severe psoriasis, eczema, and complex autoimmune skin diseases." },
-            { name: "Dr. Pooja Iyer", dept: "Dermatology", qual: "MBBS, DDVL", exp: "8 Years", email: "pooja.iyer@mdcare.com", img: "images/femaled17.avif", bio: "Renowned for aesthetic dermatology, laser treatments, and advanced scar reduction therapies." },
-            { name: "Dr. Akash Singh", dept: "Dermatology", qual: "MBBS, MD", exp: "15 Years", email: "akash.singh@mdcare.com", img: "images/maled18.avif", bio: "Expert in dermato-surgery and hair transplant procedures. Leads the vitiligo research department." },
-            { name: "Dr. Tarun Kumar", dept: "Ophthalmology", qual: "MBBS, MS (Ophthalmology)", exp: "17 Years", email: "tarun.kumar@mdcare.com", img: "images/maled19.avif", bio: "Senior eye surgeon specializing in advanced cataract surgeries and premium intraocular lens implants." },
-            { name: "Dr. Sneha Nair", dept: "Ophthalmology", qual: "MBBS, DO", exp: "11 Years", email: "sneha.nair@mdcare.com", img: "images/femaled20.avif", bio: "Specialist in refractive surgeries (LASIK) and managing complex glaucoma conditions." },
-            { name: "Dr. Rahul Bose", dept: "Ophthalmology", qual: "MBBS, MS", exp: "9 Years", email: "rahul.bose@mdcare.com", img: "images/maled21.avif", bio: "Vitreoretinal surgeon dealing with diabetic retinopathy and macular degeneration." },
-            { name: "Dr. Kabir Singh", dept: "Psychiatry", qual: "MBBS, MD (Psychiatry)", exp: "14 Years", email: "kabir.singh@mdcare.com", img: "images/maled22.avif", bio: "Focuses on adult psychiatry, treating severe clinical depression, bipolar disorder, and anxiety management." },
-            { name: "Dr. Aisha Ali", dept: "Psychiatry", qual: "MBBS, DPM", exp: "10 Years", email: "aisha.ali@mdcare.com", img: "images/femaled23.avif", bio: "Child and adolescent psychiatrist. Expert in managing ADHD, autism spectrum, and behavioral issues." },
-            { name: "Dr. Manish Sen", dept: "Psychiatry", qual: "MBBS, MD", exp: "16 Years", email: "manish.sen@mdcare.com", img: "images/maled24.avif", bio: "Addiction specialist running the hospital's renowned de-addiction and rehabilitation clinic." }
-        ];
-
         // Render Doctors
         const slider = document.getElementById('doctors-slider');
         window.renderDoctorsSlider = function() {
             slider.innerHTML = '';
             const favs = JSON.parse(localStorage.getItem('mdcare_favs') || '[]');
-            doctorsList.forEach((doc, index) => {
+            window.doctorsList.forEach((doc, index) => {
                 const isFav = favs.includes(doc.name);
                 const favBadge = isFav ? `<div class="absolute top-3 right-3 z-20 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-heart text-red-500"></i></div>` : '';
                 const card = document.createElement('div');
@@ -1311,7 +1245,7 @@
 
         window.currentModalDocName = '';
         window.openDoctorProfile = function(idx) {
-            const doc = doctorsList[idx];
+            const doc = window.doctorsList[idx];
             window.currentModalDocName = doc.name;
             document.getElementById('doc-modal-img').src = doc.img;
             document.getElementById('doc-modal-dept').textContent = doc.displayDept || doc.dept;
@@ -1366,29 +1300,32 @@
         document.getElementById('doc-review-form').classList.toggle('hidden');
     };
 
-    window.loadDoctorReviews = async function(docName) {
+    window.unsubscribeDoctorReviews = null;
+    window.loadDoctorReviews = function(docName) {
         const list = document.getElementById('doc-modal-reviews-list');
         list.innerHTML = '<p class="text-slate-500 text-sm"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading reviews...</p>';
+        if (window.unsubscribeDoctorReviews) window.unsubscribeDoctorReviews();
         try {
             const q = query(collection(db, "doctor_reviews"), where("doctorName", "==", docName));
-            const snapshot = await getDocs(q);
-            const docReviews = [];
-            snapshot.forEach(d => {
-                const data = d.data();
-                docReviews.push({ ...data, createdAtMillis: data.createdAt?.toMillis() || 0 });
-            });
-            docReviews.sort((a,b) => b.createdAtMillis - a.createdAtMillis);
+            window.unsubscribeDoctorReviews = onSnapshot(q, (snapshot) => {
+                const docReviews = [];
+                snapshot.forEach(d => {
+                    const data = d.data();
+                    docReviews.push({ ...data, createdAtMillis: data.createdAt?.toMillis() || 0 });
+                });
+                docReviews.sort((a,b) => b.createdAtMillis - a.createdAtMillis);
 
-            list.innerHTML = '';
-            if (docReviews.length === 0) {
-                list.innerHTML = '<p class="text-slate-500 text-sm">No reviews yet. Be the first to review!</p>';
-                return;
-            }
+                list.innerHTML = '';
+                if (docReviews.length === 0) {
+                    list.innerHTML = '<p class="text-slate-500 text-sm">No reviews yet. Be the first to review!</p>';
+                    return;
+                }
 
-            docReviews.forEach(review => {
-                let starsHtml = '';
-                for(let j=0; j<Math.floor(review.rating); j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
-                list.innerHTML += `<div class="bg-slate-50 p-3 rounded-lg border border-slate-100"><div class="flex justify-between items-start mb-1"><h5 class="font-bold text-secondary text-xs flex items-center gap-1">${review.name} ${review.userId !== "unknown" ? '<i class="fa-solid fa-circle-check text-teal-500" title="Verified Patient"></i>' : ''}</h5><div class="text-[10px]">${starsHtml}</div></div><p class="text-xs text-slate-600">"${review.text}"</p></div>`;
+                docReviews.forEach(review => {
+                    let starsHtml = '';
+                    for(let j=0; j<Math.floor(review.rating); j++) starsHtml += '<i class="fa-solid fa-star text-yellow-400"></i>';
+                    list.innerHTML += `<div class="bg-slate-50 p-3 rounded-lg border border-slate-100"><div class="flex justify-between items-start mb-1"><h5 class="font-bold text-secondary text-xs flex items-center gap-1">${review.name} ${review.userId !== "unknown" ? '<i class="fa-solid fa-circle-check text-teal-500" title="Verified Patient"></i>' : ''}</h5><div class="text-[10px]">${starsHtml}</div></div><p class="text-xs text-slate-600">"${review.text}"</p></div>`;
+                });
             });
         } catch (e) {
             list.innerHTML = '<p class="text-red-500 text-sm">Failed to load reviews.</p>';
@@ -1416,7 +1353,6 @@
             window.showToast("Review Submitted", "Thank you for your feedback!", "success");
             e.target.reset();
             document.getElementById('doc-review-form').classList.add('hidden');
-            window.loadDoctorReviews(window.currentModalDocName);
         } catch (err) {
             window.showToast("Error", "Could not submit review: " + err.message, "error");
         } finally {
@@ -1440,7 +1376,7 @@
                 const dept = this.value;
                 docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
                 
-                const filteredDocs = doctorsList.filter(d => d.dept === dept);
+                const filteredDocs = window.doctorsList.filter(d => d.dept === dept);
                 if (filteredDocs.length > 0) {
                     docSelect.disabled = false;
                     filteredDocs.forEach(doc => {
@@ -1461,16 +1397,41 @@
                     return;
                 }
 
-                Array.from(timeSel.options).forEach(opt => {
-                    if(opt.value !== "") {
-                        opt.disabled = false;
-                        opt.textContent = opt.value;
+                const currentTimeSelection = timeSel.value;
+
+                let validSlots = [...window.allTimeSlots];
+                try {
+                    const scheduleDoc = await getDoc(doc(db, "doctor_schedules", docSelect.value));
+                    if (scheduleDoc.exists()) {
+                        const data = scheduleDoc.data();
+                        const startIdx = window.allTimeSlots.indexOf(data.startTime);
+                        const endIdx = window.allTimeSlots.indexOf(data.endTime);
+                        if(startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) {
+                            validSlots = window.allTimeSlots.slice(startIdx, endIdx + 1);
+                        }
                     }
+                } catch(e) {}
+                
+                timeSel.innerHTML = '<option value="" disabled selected>Select Time</option>';
+                validSlots.forEach(slot => {
+                    const opt = document.createElement('option');
+                    opt.value = slot;
+                    opt.textContent = slot;
+                    timeSel.appendChild(opt);
                 });
 
-                const d = new Date(dateSel.value);
-                if(d.getDay() === 0) {
-                    avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> Sunday is closed. Please select another date.</span>";
+                if (currentTimeSelection && validSlots.includes(currentTimeSelection)) {
+                    timeSel.value = currentTimeSelection;
+                }
+
+                const [y, m, dNum] = dateSel.value.split('-');
+                const dObj = new Date(y, m - 1, dNum);
+                const isHoliday = window.hospitalHolidays && window.hospitalHolidays.includes(dateSel.value);
+
+                if(dObj.getDay() === 0 || isHoliday) {
+                const holidayReason = window.hospitalHolidaysMap && window.hospitalHolidaysMap[dateSel.value] ? window.hospitalHolidaysMap[dateSel.value] : "a hospital holiday";
+                const reason = dObj.getDay() === 0 ? "Sunday is closed." : `This date is closed for ${holidayReason}.`;
+                    avlMsg.innerHTML = `<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> ${reason} Please select another date.</span>`;
                     subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
                     timeSel.disabled = true;
                     return;
@@ -1485,6 +1446,9 @@
                     const q = query(collection(db, "appointments"), where("date", "==", dateSel.value));
                     const snapshot = await getDocs(q);
                     
+                    const qBlock = query(collection(db, "blocked_slots"), where("date", "==", dateSel.value), where("doctor", "==", docSelect.value));
+                    const snapshotBlock = await getDocs(qBlock);
+                    
                     const bookedTimes = [];
                     snapshot.forEach(documentSnapshot => {
                         const data = documentSnapshot.data();
@@ -1492,11 +1456,20 @@
                             bookedTimes.push(data.time);
                         }
                     });
+                    
+                    let isAllDayBlocked = false;
+                    snapshotBlock.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data.time === "All Day") isAllDayBlocked = true;
+                        else bookedTimes.push(data.time);
+                    });
+                    
+                    if (isAllDayBlocked) { avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-ban mr-1'></i> Doctor is unavailable on this day. Please select another date.</span>"; subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed'); timeSel.disabled = true; return; }
 
                     Array.from(timeSel.options).forEach(opt => {
                         if(bookedTimes.includes(opt.value)) {
                             opt.disabled = true;
-                            opt.textContent = opt.value + " (Booked)";
+                            opt.textContent = opt.value + " (Unavailable)";
                         }
                     });
 
@@ -1528,7 +1501,7 @@
 
             bookingForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                if(!isLoggedIn) {
+                if(!window.isLoggedIn) {
                     window.openModal('login-modal');
                     return;
                 }
@@ -1545,6 +1518,10 @@
                     let isBooked = false;
                     snapCheck.forEach(d => { if (d.data().status !== 'Cancelled' && d.data().status !== 'Expired') isBooked = true; });
                     if (isBooked) throw new Error("SLOT_ALREADY_BOOKED");
+                    
+                    const qBlockCheck = query(collection(db, "blocked_slots"), where("date", "==", dateSel.value), where("doctor", "==", docSelect.value));
+                    const snapBlockCheck = await getDocs(qBlockCheck);
+                    snapBlockCheck.forEach(d => { if (d.data().time === timeSel.value || d.data().time === "All Day") throw new Error("SLOT_UNAVAILABLE"); });
                     
                     const serialDocId = (9999999999999 - Date.now()).toString();
                     await setDoc(doc(db, "appointments", serialDocId), {
@@ -1601,6 +1578,9 @@
                 } catch (error) {
                     if (error.message === "SLOT_ALREADY_BOOKED") {
                         window.showToast("Slot Unavailable", "Sorry, this exact slot was just booked by someone else. Please select a different time.", "error");
+                        checkAvailability(); 
+                    } else if (error.message === "SLOT_UNAVAILABLE") {
+                        window.showToast("Slot Blocked", "Sorry, this slot is currently unavailable for booking.", "error");
                         checkAvailability(); 
                     } else {
                         window.showToast("Booking Failed", error.message, "error");
@@ -1729,8 +1709,8 @@
 
         // Populate 45 Reviews Dynamically
         const reviewsContainer = document.getElementById('reviews-container');
-        if (reviewsContainer) {
-            const reviews = [
+        if (reviewsContainer) { 
+            const baseReviews = [
                 { name: "Rajesh Kumar", rating: 5, text: "The cardiology department is top-notch. Dr. M D Sheikh saved my father's life. The hospital staff is extremely polite and the facilities are world-class." },
                 { name: "Simran Kaur", rating: 4.5, text: "Very clean wards and timely service. The pediatric unit handled my child's case with so much care. Highly recommend MD Care to everyone in Jalandhar." },
                 { name: "Amit Verma", rating: 5, text: "The booking process was seamless and the wait times were minimal. Excellent orthopedics team. Helped me recover fully from a sports injury." }
@@ -1760,22 +1740,24 @@
             ];
 
             extraNames.forEach((name, i) => {
-                reviews.push({ name: name, rating: (Math.random() > 0.2 ? 5 : 4.5), text: extraTexts[i % extraTexts.length] });
+                baseReviews.push({ name: name, rating: (Math.random() > 0.2 ? 5 : 4.5), text: extraTexts[i % extraTexts.length] });
             });
+            let reviews = [...baseReviews];
 
             // Fetch real user reviews from Firestore and prepend them
-            getDocs(collection(db, "reviews")).then(snapshot => {
+            window.unsubscribeGeneralReviews = onSnapshot(collection(db, "reviews"), snapshot => {
                 const firestoreReviews = [];
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     firestoreReviews.push({ name: data.name, rating: data.rating, text: data.text, adminReply: data.adminReply, createdAt: data.createdAt?.toMillis() || 0, userId: data.userId });
                 });
                 firestoreReviews.sort((a,b) => b.createdAt - a.createdAt);
-                reviews.unshift(...firestoreReviews); // Add Firestore reviews to the beginning
+                
+                reviews = [...firestoreReviews, ...baseReviews]; 
                 reviewsContainer.innerHTML = '';
                 currentReviewIndex = 0;
                 window.loadMoreReviews();
-            }).catch(e => console.log("No firestore reviews yet"));
+            }, (e) => console.log("Failed to load general reviews", e));
 
             let currentReviewIndex = 0;
             const loadMoreBtn = document.getElementById('load-more-reviews-btn');
@@ -1852,7 +1834,7 @@
 
             // Review Form Toggle and Authentication Check
             window.toggleReviewForm = function() {
-                if (!isLoggedIn) {
+                if (!window.isLoggedIn) {
                     window.closeModal('reviews-modal');
                     window.openModal('login-modal');
                     return;
@@ -1867,7 +1849,7 @@
             // Handle Review Submission
             document.getElementById('write-review-form')?.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                if (!isLoggedIn) return;
+                if (!window.isLoggedIn) return;
                 if (!auth.currentUser?.emailVerified) {
                     window.showToast("Verification Required", "Please verify your email address to submit a review.", "error");
                     return;
@@ -1928,10 +1910,6 @@
                         </div>`
                     });
 
-                    reviews.unshift({ name, rating, text, userId: auth.currentUser?.uid || "unknown" });
-                    reviewsContainer.innerHTML = '';
-                    currentReviewIndex = 0;
-                    window.loadMoreReviews();
                     window.showToast("Review Submitted", "Thank you for your feedback!", "success");
                     window.toggleReviewForm();
                     e.target.reset();
