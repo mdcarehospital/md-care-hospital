@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | MD Care Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { primary: '#0d9488', secondary: '#1e293b' },
+                    animation: { 'glow-pulse': 'glow-pulse 2s infinite', 'pop-in': 'pop-in 0.3s ease-out forwards' },
+                    keyframes: { 
+                        'glow-pulse': { '0%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0.4)' }, '70%': { boxShadow: '0 0 0 10px rgba(13, 148, 136, 0)' }, '100%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0)' } },
+                        'pop-in': { '0%': { opacity: '0', transform: 'scale(0.95) translateY(10px)' }, '100%': { opacity: '1', transform: 'scale(1) translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        html { scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; transition: scrollbar-color 0.3s ease; }
+        .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
+    <style>
+        /* Dark Mode Auto-Overrides */
+        * { transition-property: background-color, border-color, color, fill, stroke; transition-duration: 300ms; transition-timing-function: ease-in-out; }
+        html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
+        html.dark .bg-white { background-color: #1e293b !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; }
+        html.dark .bg-slate-100 { background-color: #334155 !important; }
+        html.dark .text-secondary, html.dark .text-slate-800, html.dark .text-slate-700 { color: #f8fafc !important; }
+        html.dark .text-slate-600, html.dark .text-slate-500, html.dark .text-slate-400 { color: #cbd5e1 !important; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300, html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: #334155 !important; }
+        html.dark input, html.dark select, html.dark textarea { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        html.dark .bg-secondary { background-color: #020617 !important; }
+        html.dark .bg-teal-50, html.dark .bg-blue-50, html.dark .bg-red-50, html.dark .bg-yellow-50, html.dark .bg-purple-100 { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .text-teal-600, html.dark .text-teal-700 { color: #2dd4bf !important; }
+        html.dark .text-yellow-600, html.dark .text-yellow-700 { color: #facc15 !important; }
+        html.dark .text-red-500, html.dark .text-red-600, html.dark .text-red-700 { color: #f87171 !important; }
+        html.dark .text-blue-500, html.dark .text-blue-600, html.dark .text-blue-700 { color: #60a5fa !important; }
+        html.dark .text-purple-700 { color: #c084fc !important; }
+        html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .even\:bg-slate-50:nth-child(even) { background-color: #0f172a !important; }
+        html.dark .even\:bg-slate-100:nth-child(even) { background-color: #334155 !important; }
+        html.dark .theme-icon-moon { display: none !important; }
+        html.dark .theme-icon-sun { display: inline-block !important; color: #fbbf24; }
+        html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+        html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+        html.dark { scrollbar-color: #334155 #0f172a; }
+    </style>
+    <script src="utils.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Hospital</span></span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
+                    <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
+                    <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
+                    <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
+                    <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
+                    <a href="careers.html" class="text-primary font-bold transition">Careers</a>
+                    <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                    
+                    <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
+                    <div id="auth-nav-container" class="flex items-center space-x-4"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Home</a>
+                <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
+                <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
+                <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
+                <a href="careers.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Careers</a>
+                <a href="index.html#appointment" class="block w-fit mx-3 text-center bg-primary text-white px-6 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-32 pb-16 bg-teal-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Join Our Team</h4>
+            <h1 class="text-4xl md:text-5xl font-bold text-secondary mb-6">Careers at MD Care Hospital</h1>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg">We are always looking for compassionate and skilled professionals to join our family. Explore our open positions and make a difference in healthcare.</p>
+        </div>
+    </section>
+
+    <!-- Open Positions Section -->
+    <section class="py-16 bg-white flex-grow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Position 1 -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-teal-100 text-primary rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-user-nurse"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-secondary text-lg">Registered Nurse</h3>
+                            <p class="text-sm text-slate-500">ICU / General Ward</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6 flex-grow">We are looking for dedicated and experienced registered nurses to provide high-quality care to our patients. BLS/ACLS certification required.</p>
+                    <div class="flex justify-between items-center mt-auto">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-location-dot mr-1"></i> Jalandhar</span>
+                        <button onclick="openApplicationModal('Registered Nurse')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition">Apply Now</button>
+                    </div>
+                </div>
+
+                <!-- Position 2 -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-teal-100 text-primary rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-secondary text-lg">General Surgeon</h3>
+                            <p class="text-sm text-slate-500">Surgery Department</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6 flex-grow">Seeking a skilled General Surgeon to perform surgical procedures and oversee post-operative care. Minimum 5 years of experience required.</p>
+                    <div class="flex justify-between items-center mt-auto">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-location-dot mr-1"></i> Jalandhar</span>
+                        <button onclick="openApplicationModal('General Surgeon')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition">Apply Now</button>
+                    </div>
+                </div>
+
+                <!-- Position 3 -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-teal-100 text-primary rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-hand-holding-medical"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-secondary text-lg">Ward Boy</h3>
+                            <p class="text-sm text-slate-500">Patient Care Support</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6 flex-grow">Assist nurses and doctors in moving patients, maintaining ward cleanliness, and ensuring patient comfort. Compassionate attitude is a must.</p>
+                    <div class="flex justify-between items-center mt-auto">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-location-dot mr-1"></i> Jalandhar</span>
+                        <button onclick="openApplicationModal('Ward Boy')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition">Apply Now</button>
+                    </div>
+                </div>
+
+                <!-- Position 4 -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-teal-100 text-primary rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-desktop"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-secondary text-lg">Front Desk Receptionist</h3>
+                            <p class="text-sm text-slate-500">Administration</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6 flex-grow">Be the face of MD Care Hospital. Responsible for managing appointments, answering queries, and assisting patients with registration.</p>
+                    <div class="flex justify-between items-center mt-auto">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-location-dot mr-1"></i> Jalandhar</span>
+                        <button onclick="openApplicationModal('Front Desk Receptionist')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-700 transition">Apply Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Modal -->
+    <div id="application-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg relative animate-pop-in">
+            <button onclick="closeModal('application-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold text-secondary mb-2">Apply for <span id="job-title-display" class="text-primary">Position</span></h2>
+            <p class="text-slate-500 text-sm mb-6">Fill out the form below and our HR team will get back to you.</p>
+            
+            <form id="application-form" class="space-y-4">
+                <input type="hidden" id="app-job-title">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                    <input type="text" id="app-name" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="Your Name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+                    <input type="email" id="app-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
+                    <input type="tel" id="app-phone" required pattern="[0-9]{10}" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="10-digit number">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Years of Experience</label>
+                    <input type="number" id="app-experience" required min="0" max="50" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. 3">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Qualification</label>
+                    <input type="text" id="app-qualification" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. B.Sc Nursing, MBBS">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Cover Letter / Short Bio</label>
+                    <textarea id="app-cover-letter" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="Tell us why you are a good fit..."></textarea>
+                </div>
+                <button type="submit" id="submit-app-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-md mt-4">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white pt-16 pb-8 border-t-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="fa-solid fa-house-medical text-3xl text-primary"></i>
+                        <span class="font-bold text-2xl">MD Care <span class="text-primary">Hospital</span></span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Providing exceptional medical care to our community with compassion, integrity, and advanced medical expertise.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Quick Links</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="index.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Home</a></li>
+                        <li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li>
+                        <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
+                        <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
+                        <li><a href="blog.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Blog</a></li>
+                        <li><a href="careers.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start">
+                            <a href="https://maps.app.goo.gl/VHmDEL9wXsqcp3o66?g_st=aw" target="_blank" rel="noopener noreferrer" class="flex items-start hover:text-primary transition group">
+                                <i class="fa-solid fa-location-dot mt-1 mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span class="text-sm">Street-3, Danishmandan,<br/>Basti Bawa khel, JALANDHAR,<br/>PUNJAB, Pincode: 144021</span>
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <a href="tel:8091919997" class="flex items-center hover:text-primary transition group">
+                                <i class="fa-solid fa-phone mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span>8091919997</span>
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <a href="mailto:mdcareadmin@gmail.com" class="flex items-center hover:text-primary transition group">
+                                <i class="fa-solid fa-envelope mr-3 text-primary text-xl group-hover:scale-110 transition"></i>
+                                <span>mdcareadmin@gmail.com</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="https://www.instagram.com/danish_sheikhz?igsh=YWtxdTRnNHVmdXN1" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#E1306C] transition text-2xl text-[#E1306C] hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://wa.me/918091919997" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition text-2xl text-[#25D366] hover:text-white"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/share/1GAU4bhogt/" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition text-2xl text-[#1877F2] hover:text-white"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2015 MD Care Hospital (MD Hospitals). All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { app, auth, db } from "./firebase-config.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        function updateAuthUI() {
+            const desktopAuth = document.getElementById('auth-nav-container');
+            const mobileAuth = document.getElementById('mobile-auth-container');
+            if(window.isLoggedIn) {
+                const picUrl = localStorage.getItem('mdcare_profilePic');
+                const userInitial = localStorage.getItem('mdcare_userInitial') || 'U';
+                const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : userInitial;
+                const dashboardLink = window.isAdmin ? 'admin.html' : 'profile.html';
+                const dashboardText = window.isAdmin ? 'Admin Dashboard' : 'Profile Dashboard';
+                
+                if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="${dashboardLink}" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="${dashboardLink}" class="text-slate-700 font-bold hover:text-primary transition">${dashboardText}</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="${dashboardLink}" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">${dashboardText}</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            } else {
+                if(desktopAuth) desktopAuth.innerHTML = `<button onclick="window.location.href='index.html'" class="text-slate-600 hover:text-primary transition font-medium">Login</button><button onclick="window.location.href='index.html'" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</button>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
+            }
+        }
+
+        window.logout = function(btn) {
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Logging out...';
+            signOut(auth).then(() => {
+                localStorage.removeItem('mdcare_auth');
+                localStorage.removeItem('mdcare_profilePic');
+                localStorage.removeItem('mdcare_userInitial');
+                window.location.href = 'index.html';
+            });
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            window.isLoggedIn = !!user;
+            if (user) {
+                window.isAdmin = user.email === 'mdcareadmin@gmail.com';
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists() && userDoc.data().role === 'admin') {
+                        window.isAdmin = true;
+                    }
+                    if (userDoc.exists() && userDoc.data().phone) {
+                        document.getElementById('app-phone').value = userDoc.data().phone;
+                    }
+                } catch(e){}
+                document.getElementById('app-name').value = user.displayName || "";
+                document.getElementById('app-email').value = user.email || "";
+            }
+            updateAuthUI();
+        });
+
+        window.openApplicationModal = function(jobTitle) {
+            document.getElementById('job-title-display').textContent = jobTitle;
+            document.getElementById('app-job-title').value = jobTitle;
+            window.openModal('application-modal');
+        };
+
+        document.getElementById('application-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-app-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+            btn.disabled = true;
+
+            // Step 1: Save to Firestore Database
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            const applicationData = {
+                jobTitle: document.getElementById('app-job-title').value,
+                name: document.getElementById('app-name').value,
+                email: document.getElementById('app-email').value,
+                phone: document.getElementById('app-phone').value,
+                experience: document.getElementById('app-experience').value,
+                qualification: document.getElementById('app-qualification').value,
+                coverLetter: document.getElementById('app-cover-letter').value,
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                await addDoc(collection(db, "job_applications"), applicationData);
+            } catch (err) {
+                window.showToast("Database Error", "Could not save application: " + err.message, "error");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            // Step 2: Send Email Notification
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending Email...';
+            try {
+                await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                    to_email: "mdcareadmin@gmail.com",
+                    subject: `New Job Application: ${applicationData.jobTitle} - MD Care`,
+                    html_message: `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px;">
+                        <h2>New Job Application Received</h2>
+                        <p><strong>Position:</strong> ${applicationData.jobTitle}</p>
+                        <p><strong>Applicant Name:</strong> ${applicationData.name}</p>
+                        <p><strong>Email:</strong> ${applicationData.email}</p>
+                        <p><strong>Phone:</strong> ${applicationData.phone}</p>
+                        <p><strong>Experience:</strong> ${applicationData.experience} Years</p>
+                        <p><strong>Qualification:</strong> ${applicationData.qualification}</p>
+                        <p><strong>Cover Letter:</strong><br>${applicationData.coverLetter}</p>
+                    </div>`
+                });
+            } catch (err) {
+                console.error("EmailJS Error:", err);
+                window.showToast("Partial Success", "Application saved, but email notification failed.", "warning");
+                window.closeModal('application-modal');
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            window.showToast("Application Submitted", "Your application has been received successfully!", "success");
+            window.closeModal('application-modal');
+            e.target.reset();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

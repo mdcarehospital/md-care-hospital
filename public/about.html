@@ -62,26 +62,7 @@
         html.dark ::-webkit-scrollbar-thumb { background: #334155; }
         html.dark { scrollbar-color: #334155 #0f172a; }
         </style>
-        <script>
-            function adaptTheme() {
-                const savedTheme = localStorage.getItem('mdcare_theme');
-                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
-                else { document.documentElement.classList.remove('dark'); }
-            }
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
-            adaptTheme();
-
-            window.toggleTheme = function() {
-                const html = document.documentElement;
-                if (html.classList.contains('dark')) {
-                    html.classList.remove('dark');
-                    localStorage.setItem('mdcare_theme', 'light');
-                } else {
-                    html.classList.add('dark');
-                    localStorage.setItem('mdcare_theme', 'dark');
-                }
-            };
-        </script>
+    <script src="utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -107,6 +88,7 @@
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
                     <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
+                    <a href="careers.html" class="text-slate-600 hover:text-primary transition font-medium">Careers</a>
                     <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                     
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
@@ -123,7 +105,8 @@
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
                 <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
-                <a href="index.html#appointment" class="block w-[calc(100%-1.5rem)] mx-auto text-center bg-primary text-white px-4 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                <a href="careers.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Careers</a>
+                <a href="index.html#appointment" class="block w-fit mx-3 text-center bg-primary text-white px-6 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
             </div>
@@ -529,6 +512,7 @@
                         <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
                         <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
                         <li><a href="blog.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Blog</a></li>
+                        <li><a href="careers.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Careers</a></li>
                     </ul>
                 </div>
 

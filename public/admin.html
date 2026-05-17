@@ -121,6 +121,7 @@
                     <button onclick="switchAdminTab('tab-doc-reviews', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-star mr-1"></i> Doc Reviews</button>
                     <button onclick="switchAdminTab('tab-hospital-reviews', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-hospital mr-1"></i> Hospital Reviews</button>
                     <button onclick="switchAdminTab('tab-users', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-users mr-1"></i> Users</button>
+                    <button onclick="switchAdminTab('tab-applications', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-briefcase mr-1"></i> Applications</button>
                     <button onclick="switchAdminTab('tab-admins', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-user-shield mr-1"></i> Admins</button>
                 </div>
             </div>
@@ -566,6 +567,35 @@
                 </div>
             </div>
 
+            <!-- Tab: Job Applications -->
+            <div id="tab-applications" class="admin-tab-content hidden lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center flex-wrap gap-4">
+                        <h2 class="text-xl font-bold text-secondary flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-primary mr-2"></i> Job Applications
+                            <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-1 rounded border border-slate-200 ml-2">Total: <span id="apps-count">0</span></span>
+                        </h2>
+                        <div class="flex gap-3 items-center">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
+                                <input type="text" id="filter-app-search" oninput="renderAdminApps()" placeholder="Search position, name..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[200px]">
+                            </div>
+                            <button onclick="loadAdminApps()" class="text-sm font-bold text-primary hover:text-teal-700 transition whitespace-nowrap"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="overflow-auto max-h-[600px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 z-20 shadow-sm bg-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr><th class="p-4 font-bold border-b">Applicant Info</th><th class="p-4 font-bold border-b">Position & Qual</th><th class="p-4 font-bold border-b">Cover Letter</th><th class="p-4 font-bold border-b text-center">Actions</th></tr>
+                            </thead>
+                            <tbody id="admin-apps-list" class="text-sm text-slate-700 divide-y divide-slate-100">
+                                <tr><td colspan="4" class="p-8 text-center text-slate-400">Loading applications...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -686,6 +716,7 @@
                 loadAdminHReviews();
                 loadAdminBlogs();
                 loadAdminUsers();
+                loadAdminApps();
                 loadBlockedSlots();
                 loadHolidays();
             } else {
@@ -2203,6 +2234,69 @@
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
         document.getElementById('add-date').setAttribute('min', `${year}-${month}-${day}`);
+
+        // Job Applications Management
+        let allAppsData = [];
+        window.unsubscribeAdminApps = null;
+
+        window.loadAdminApps = function() {
+            const tbody = document.getElementById('admin-apps-list');
+            if (window.unsubscribeAdminApps) window.unsubscribeAdminApps();
+            tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading applications...</td></tr>';
+            try {
+                const q = query(collection(db, "job_applications"), orderBy("createdAt", "desc"));
+                window.unsubscribeAdminApps = onSnapshot(q, (snapshot) => {
+                    allAppsData = [];
+                    snapshot.forEach(docSnap => { allAppsData.push({ id: docSnap.id, ...docSnap.data() }); });
+                    renderAdminApps();
+                });
+            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-red-500 font-medium">Error: ${e.message}</td></tr>`; }
+        };
+
+        window.renderAdminApps = function() {
+            const tbody = document.getElementById('admin-apps-list');
+            const search = document.getElementById('filter-app-search').value.toLowerCase();
+            const filtered = allAppsData.filter(a => !search || (a.name && a.name.toLowerCase().includes(search)) || (a.jobTitle && a.jobTitle.toLowerCase().includes(search)) || (a.email && a.email.toLowerCase().includes(search)));
+            document.getElementById('apps-count').textContent = filtered.length;
+            tbody.innerHTML = '';
+            if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400">No applications found.</td></tr>'; return; }
+            filtered.forEach(app => {
+                let dateStr = 'Unknown';
+                if(app.createdAt) { const d = new Date(app.createdAt.toMillis ? app.createdAt.toMillis() : app.createdAt); if(!isNaN(d)) dateStr = d.toLocaleDateString(); }
+                
+                tbody.innerHTML += `
+                    <tr class="even:bg-slate-50 hover:bg-slate-100 transition">
+                        <td class="p-4">
+                            <p class="font-bold text-secondary flex items-center">${app.name}</p>
+                            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-envelope mr-1 w-3 text-center"></i> <a href="mailto:${app.email}" class="hover:text-primary transition">${app.email}</a></p>
+                            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-phone mr-1 w-3 text-center"></i> <a href="tel:${app.phone}" class="hover:text-primary transition">${app.phone}</a></p>
+                            <p class="text-xs text-slate-400 mt-1">Applied: ${dateStr}</p>
+                        </td>
+                        <td class="p-4">
+                            <p class="font-bold text-primary">${app.jobTitle}</p>
+                            <p class="text-sm text-slate-600 mt-1">Qual: ${app.qualification || 'N/A'}</p>
+                            <p class="text-xs text-slate-500 mt-1">Exp: ${app.experience} Years</p>
+                        </td>
+                        <td class="p-4 text-sm text-slate-600 max-w-xs truncate" title="${app.coverLetter || ''}">
+                            ${app.coverLetter || 'No cover letter provided.'}
+                        </td>
+                        <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                            <button onclick="deleteApp('${app.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg transition border border-red-100 shadow-sm" title="Delete Application"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>`;
+            });
+        };
+
+        window.deleteApp = function(id) {
+            window.showConfirmModal("Delete Application?", "Are you sure you want to completely delete this job application?", async () => {
+                try {
+                    await deleteDoc(doc(db, "job_applications", id));
+                    window.showToast("Deleted", "Application deleted successfully.", "success");
+                } catch(err) {
+                    window.showToast("Error", err.message, "error");
+                }
+            }, "Delete", "Cancel");
+        };
     </script>
 <script src="chatbot.js"></script>
 </body>

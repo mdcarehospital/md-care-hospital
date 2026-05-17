@@ -66,26 +66,7 @@
         html.dark ::-webkit-scrollbar-thumb { background: #334155; }
         html.dark { scrollbar-color: #334155 #0f172a; }
     </style>
-    <script>
-        function adaptTheme() {
-            const savedTheme = localStorage.getItem('mdcare_theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } 
-            else { document.documentElement.classList.remove('dark'); }
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => { if(!localStorage.getItem('mdcare_theme')) adaptTheme(); });
-        adaptTheme();
-
-        window.toggleTheme = function() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('mdcare_theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('mdcare_theme', 'dark');
-            }
-        };
-    </script>
+    <script src="utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -110,6 +91,7 @@
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
                     <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
+                    <a href="careers.html" class="text-slate-600 hover:text-primary transition font-medium">Careers</a>
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
                     <div id="nav-user-avatar" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md overflow-hidden">U</div>
                     <button onclick="window.logout(this)" class="text-red-500 hover:text-red-700 font-bold transition">Logout</button>
@@ -122,6 +104,7 @@
                 <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
                 <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
+                <a href="careers.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Careers</a>
                 <div class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                     <button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>
                 </div>
