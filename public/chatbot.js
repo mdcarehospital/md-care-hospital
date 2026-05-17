@@ -14,12 +14,6 @@
                     <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs flex-shrink-0"><i class="fa-solid fa-robot"></i></div>
                     <div class="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-700 dark:text-slate-300 border border-slate-100 dark:border-slate-700">Hello! I am the MD Care AI assistant. How can I help you today?</div>
                 </div>
-                <!-- Quick suggestions -->
-                <div class="flex flex-wrap gap-2 mt-1" id="md-chat-suggestions">
-                    <button class="chat-suggestion text-xs bg-teal-50 dark:bg-slate-800 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-slate-700 px-3 py-1.5 rounded-full hover:bg-teal-100 dark:hover:bg-slate-700 transition">Find a doctor</button>
-                    <button class="chat-suggestion text-xs bg-teal-50 dark:bg-slate-800 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-slate-700 px-3 py-1.5 rounded-full hover:bg-teal-100 dark:hover:bg-slate-700 transition">Book appointment</button>
-                    <button class="chat-suggestion text-xs bg-teal-50 dark:bg-slate-800 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-slate-700 px-3 py-1.5 rounded-full hover:bg-teal-100 dark:hover:bg-slate-700 transition">Working hours</button>
-                </div>
             </div>
             <form id="md-chat-form" class="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex gap-2">
                 <input type="text" id="md-chat-input" placeholder="Type your question..." class="flex-grow px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" autocomplete="off">
@@ -36,7 +30,6 @@
     const messages = document.getElementById('md-chat-messages');
     const form = document.getElementById('md-chat-form');
     const input = document.getElementById('md-chat-input');
-    const suggestions = document.getElementById('md-chat-suggestions');
 
     document.getElementById('md-chat-toggle').onclick = () => {
         chatWindow.classList.toggle('hidden');
@@ -46,12 +39,6 @@
     };
     document.getElementById('md-chat-close').onclick = () => chatWindow.classList.add('hidden');
 
-    document.querySelectorAll('.chat-suggestion').forEach(btn => {
-        btn.onclick = () => {
-            input.value = btn.innerText;
-            form.dispatchEvent(new Event('submit'));
-        };
-    });
 
     function appendMessage(text, sender) {
         const div = document.createElement('div');
@@ -81,8 +68,6 @@
         e.preventDefault();
         const text = input.value.trim();
         if (!text) return;
-        
-        if (suggestions) suggestions.style.display = 'none';
 
         appendMessage(text, 'user');
         input.value = '';

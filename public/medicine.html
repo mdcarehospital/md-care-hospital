@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Medicine Online | MD Care Pharmacy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Razorpay Integration -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- EmailJS Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
+    </script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#0d9488', secondary: '#1e293b' }, animation: { 'glow-pulse': 'glow-pulse 2s infinite' }, keyframes: { 'glow-pulse': { '0%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0.4)' }, '70%': { boxShadow: '0 0 0 10px rgba(13, 148, 136, 0)' }, '100%': { boxShadow: '0 0 0 0 rgba(13, 148, 136, 0)' } } } } } }
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+        .modal-backdrop { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
+    <script src="utils.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <div class="flex items-center gap-2 md:gap-4">
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Pharmacy</span></span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
+                    <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
+                    <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
+                    <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="medicine.html" class="text-primary font-bold transition">Pharmacy</a>
+                    <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg">Book Appointment</a>
+                    <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
+                    <div id="auth-nav-container" class="flex items-center space-x-4"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 bg-teal-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h4 class="text-primary font-semibold uppercase tracking-wide mb-2">Online Pharmacy</h4>
+            <h1 class="text-4xl md:text-5xl font-bold text-secondary mb-6">Buy Medicines Securely</h1>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg">Order your prescribed medications or general wellness products and pay online securely through Razorpay.</p>
+        </div>
+    </section>
+
+    <!-- Medicine Grid Section -->
+    <section class="py-16 bg-white flex-grow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div id="medicines-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <div class="col-span-full text-center text-slate-500 py-10"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching available medicines...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Cart Button -->
+    <button id="floating-cart-btn" onclick="toggleCartModal()" class="hidden fixed bottom-8 right-8 bg-primary text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:bg-teal-700 hover:scale-105 transition z-40 animate-glow-pulse text-2xl">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-white">0</span>
+    </button>
+
+    <!-- Cart / Checkout Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg relative animate-pop-in flex flex-col max-h-[90vh]">
+            <button onclick="toggleCartModal()" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold text-secondary mb-4"><i class="fa-solid fa-cart-shopping text-primary mr-2"></i> Your Cart</h2>
+            
+            <div id="cart-items-list" class="flex-grow overflow-y-auto pr-2 no-scrollbar border-y border-slate-100 py-4 mb-4">
+                <!-- Cart Items generated dynamically -->
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex justify-between items-center mb-4">
+                <span class="font-bold text-slate-600">Subtotal:</span>
+                <span id="cart-total" class="font-bold text-xl text-primary">₹0</span>
+            </div>
+            
+            <button id="checkout-btn" onclick="proceedToOrder()" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-md">
+                Proceed for order
+            </button>
+        </div>
+    </div>
+
+    <!-- Delivery Details / Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg relative animate-pop-in flex flex-col max-h-[90vh]">
+            <button onclick="toggleCheckoutModal()" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold text-secondary mb-4"><i class="fa-solid fa-truck text-primary mr-2"></i> Delivery Details</h2>
+            
+            <form id="checkout-form" class="space-y-4 flex-grow overflow-y-auto pr-2 no-scrollbar">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" id="checkout-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Mobile Number</label>
+                    <input type="tel" id="checkout-phone" required pattern="[0-9]{10}" title="Must be exactly 10 digits" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none" placeholder="10-digit number">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Delivery Address</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="checkout-house" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="House / Flat No.">
+                        <input type="text" id="checkout-street" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="Street / Locality">
+                        <input type="text" id="checkout-city" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="City">
+                        <input type="text" id="checkout-state" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="State">
+                        <input type="text" id="checkout-pincode" required pattern="[0-9]{6}" title="6-digit Pincode" class="col-span-2 w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="Area Pin Code (e.g. 144021)">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Payment Method</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition"><input type="radio" name="payment_method" value="Razorpay" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-300"><span class="font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-credit-card text-primary w-5"></i> Online Payment (Razorpay)</span></label>
+                        <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition"><input type="radio" name="payment_method" value="COD" class="w-4 h-4 text-primary focus:ring-primary border-gray-300"><span class="font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-money-bill-wave text-green-600 w-5"></i> Cash on Delivery</span></label>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-100"><button type="submit" id="final-checkout-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-md">Proceed to Payment</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white pt-10 pb-6 border-t-4 border-primary mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-400">
+            <p>&copy; 2015 MD Care Hospital. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
+            authDomain: "md-care-hospital.firebaseapp.com",
+            projectId: "md-care-hospital",
+            storageBucket: "md-care-hospital.firebasestorage.app",
+            messagingSenderId: "214966558089",
+            appId: "1:214966558089:web:d49f400adb427614089558"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.saveCart = function() {
+            if (auth.currentUser) {
+                localStorage.setItem(`mdcare_cart_${auth.currentUser.uid}`, JSON.stringify(window.cart));
+            }
+        };
+
+        window.loadCart = function() {
+            if (auth.currentUser) {
+                const saved = localStorage.getItem(`mdcare_cart_${auth.currentUser.uid}`);
+                if (saved) {
+                    try { window.cart = JSON.parse(saved); } catch(e) { window.cart = []; }
+                } else { window.cart = []; }
+            } else { window.cart = []; }
+            window.renderCart();
+        };
+
+        window.isLoggedIn = false;
+        window.currentUserProfile = null;
+        onAuthStateChanged(auth, async (user) => {
+            window.isLoggedIn = !!user;
+            const desktopAuth = document.getElementById('auth-nav-container');
+            if(window.isLoggedIn) {
+                desktopAuth.innerHTML = `<button onclick="window.logout()" class="text-sm font-bold text-red-500 hover:text-red-700 transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>`;
+                window.loadCart();
+                getDoc(doc(db, "users", user.uid)).then(docSnap => {
+                    if(docSnap.exists()) window.currentUserProfile = docSnap.data();
+                });
+            } else {
+                desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login to Buy</a>`;
+                window.cart = [];
+                window.renderCart();
+            }
+        });
+
+        window.logout = function() {
+            signOut(auth).then(() => {
+                localStorage.removeItem('mdcare_auth');
+                window.location.href = 'index.html';
+            });
+        };
+
+        window.cart = [];
+        
+        window.toggleCartModal = function() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        };
+
+        window.addToCart = function(id, name, price, img) {
+            if (!window.isLoggedIn) { window.showToast("Login Required", "Please login from the home page to add items to your cart.", "error"); return; }
+            
+            const item = window.cart.find(i => i.id === id);
+            if(item) item.qty++;
+            else window.cart.push({ id, name, price, img, qty: 1 });
+            window.saveCart();
+            window.renderCart();
+            window.showToast("Added", `${name} added to cart!`, "success");
+        };
+
+        window.removeFromCart = function(id) {
+            window.cart = window.cart.filter(i => i.id !== id);
+            window.saveCart();
+            window.renderCart();
+            if(window.cart.length === 0) window.toggleCartModal();
+        };
+
+        window.renderCart = function() {
+            const list = document.getElementById('cart-items-list');
+            const totalEl = document.getElementById('cart-total');
+            const countEl = document.getElementById('cart-count');
+            
+            let total = 0;
+            let count = 0;
+            list.innerHTML = '';
+            
+            window.cart.forEach(item => {
+                total += item.price * item.qty;
+                count += item.qty;
+                list.innerHTML += `
+                    <div class="flex items-center gap-4 mb-4 border-b border-slate-100 pb-4">
+                        <img src="${item.img}" class="w-16 h-16 object-cover rounded-lg border border-slate-200">
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-secondary text-sm">${item.name}</h4>
+                            <p class="text-primary font-bold text-sm">₹${item.price} x ${item.qty}</p>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-700 transition p-2 bg-red-50 rounded-md"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            
+            if(window.cart.length === 0) list.innerHTML = '<p class="text-slate-500 text-center py-4">Your cart is currently empty.</p>';
+            totalEl.innerText = `₹${total}`;
+            if(countEl) countEl.innerText = count;
+            
+            const btn = document.getElementById('floating-cart-btn');
+            if(count > 0) btn.classList.remove('hidden');
+            else btn.classList.add('hidden');
+        };
+
+        // Fetch Medicines from Firestore
+        onSnapshot(query(collection(db, "medicines"), orderBy("createdAt", "desc")), (snapshot) => {
+            const grid = document.getElementById('medicines-grid');
+            grid.innerHTML = '';
+            if (snapshot.empty) {
+                grid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10">No medicines currently listed in the pharmacy.</div>';
+                return;
+            }
+            
+            snapshot.forEach(docSnap => {
+                const med = { id: docSnap.id, ...docSnap.data() };
+                grid.innerHTML += `
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col items-center text-center">
+                        <img src="${med.imageUrl}" class="w-32 h-32 object-cover rounded-xl mb-4 border border-slate-200 shadow-sm bg-white p-1">
+                        <h3 class="font-bold text-secondary text-lg mb-1">${med.name}</h3>
+                        <p class="text-xl font-bold text-primary mb-4 mt-auto">₹${med.price}</p>
+                        <button onclick="addToCart('${med.id}', '${med.name.replace(/'/g, "\\'")}', ${med.price}, '${med.imageUrl}')" class="w-full bg-slate-200 text-slate-700 hover:text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-primary transition shadow-sm"><i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart</button>
+                    </div>
+                `;
+            });
+        });
+
+        window.proceedToOrder = function() {
+            if(!window.isLoggedIn) { window.showToast("Login Required", "Please login to place an order.", "error"); return; }
+            if(window.cart.length === 0) return;
+            
+            document.getElementById('checkout-email').value = auth.currentUser.email || "";
+            
+            if (window.currentUserProfile) {
+                if (window.currentUserProfile.phone && !document.getElementById('checkout-phone').value) {
+                    document.getElementById('checkout-phone').value = window.currentUserProfile.phone;
+                }
+                if (window.currentUserProfile.address && !document.getElementById('checkout-street').value) {
+                    document.getElementById('checkout-street').value = window.currentUserProfile.address;
+                }
+            }
+            
+            window.toggleCartModal();
+            window.toggleCheckoutModal();
+        };
+
+        window.toggleCheckoutModal = function() {
+            document.getElementById('checkout-modal').classList.toggle('hidden');
+        };
+
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const btn = document.getElementById('final-checkout-btn');
+                if (e.target.value === 'COD') {
+                    btn.innerHTML = 'Place Order (COD)';
+                } else {
+                    btn.innerHTML = 'Proceed to Payment';
+                }
+            });
+        });
+
+        document.getElementById('checkout-form')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if(!window.isLoggedIn || window.cart.length === 0) return;
+            
+            const btn = document.getElementById('final-checkout-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...';
+            btn.disabled = true;
+
+            const email = document.getElementById('checkout-email').value;
+            const phone = document.getElementById('checkout-phone').value;
+            const house = document.getElementById('checkout-house').value.trim();
+            const street = document.getElementById('checkout-street').value.trim();
+            const city = document.getElementById('checkout-city').value.trim();
+            const state = document.getElementById('checkout-state').value.trim();
+            const pincode = document.getElementById('checkout-pincode').value.trim();
+            const address = `${house}, ${street}, ${city}, ${state} - ${pincode}`;
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const totalAmount = window.cart.reduce((a, b) => a + (b.price * b.qty), 0);
+
+            const placeOrder = async (paymentId = null, status = "Pending") => {
+                try {
+                    await addDoc(collection(db, "medicine_orders"), {
+                        userId: auth.currentUser.uid,
+                        patientName: auth.currentUser.displayName || "Patient",
+                        email: email,
+                        phone: phone,
+                        address: address,
+                        items: window.cart,
+                        totalAmount: totalAmount,
+                        paymentMethod: paymentMethod,
+                        paymentId: paymentId,
+                        status: status,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    emailjs.send("service_iyt09jj", "template_xyclksp", {
+                        to_email: "mdcareadmin@gmail.com",
+                        subject: `New Pharmacy Order - MD Care`,
+                        html_message: `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
+                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
+                                </div>
+                                <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
+                                    <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                        <h3 style="margin: 0 0 5px 0; color: #115e59; font-size: 16px;">New Pharmacy Order</h3>
+                                        <p style="margin: 0; color: #134e4a; font-size: 14px;">A patient has placed a new medicine order.</p>
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${auth.currentUser.displayName || "Patient"}</td></tr>
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Email:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${email}</td></tr>
+                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Amount:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">₹${totalAmount} (${paymentMethod})</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>`
+                    }).catch(console.error);
+
+                    window.cart = []; window.saveCart(); window.renderCart(); 
+                    window.toggleCheckoutModal();
+                    window.showToast("Order Placed", "Your medicine order has been placed successfully!", "success");
+                    e.target.reset();
+                } catch(err) {
+                    window.showToast("Error", err.message, "error");
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            };
+            
+            if (paymentMethod === "Razorpay") {
+            const options = {
+                key: 'rzp_test_TYsRjAzzUjYqDk', // Using Razorpay test key
+                amount: totalAmount * 100, // Processed in paise
+                currency: 'INR',
+                name: 'MD Care Pharmacy',
+                description: 'Medicine Purchase',
+                handler: async function (response) {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Finalizing...';
+                        await placeOrder(response.razorpay_payment_id, "Paid");
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            window.showToast("Payment Cancelled", "Order process was cancelled.", "error");
+                            btn.innerHTML = originalText; btn.disabled = false;
+                        }
+                },
+                    prefill: { email: email, contact: phone, name: auth.currentUser.displayName },
+                theme: { color: '#0d9488' }
+            };
+                const rzp = new window.Razorpay(options); 
+                rzp.open();
+            } else {
+                await placeOrder(null, "Pending");
+            }
+        });
+    </script>
+</body>
+</html>

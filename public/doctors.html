@@ -82,6 +82,7 @@
                     <a href="doctors.html" class="text-primary transition font-bold">Doctors</a>
                     <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
                     <a href="careers.html" class="text-slate-600 hover:text-primary transition font-medium">Careers</a>
+                    <a href="medicine.html" class="text-slate-600 hover:text-primary transition font-medium">Pharmacy</a>
                     <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                     
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
@@ -98,6 +99,7 @@
                 <a href="doctors.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Doctors</a>
                 <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
                 <a href="careers.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Careers</a>
+                <a href="medicine.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Pharmacy</a>
                 <a href="index.html#appointment" class="block w-fit mx-3 text-center bg-primary text-white px-6 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
@@ -236,6 +238,15 @@
         // --- Global State ---
         window.isLoggedIn = localStorage.getItem('mdcare_auth') === 'true';
 
+        window.doctorsList = [];
+        onSnapshot(collection(db, "doctors"), (snapshot) => {
+            window.doctorsList = [];
+            snapshot.forEach(docSnap => {
+                window.doctorsList.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            if (typeof window.applyFilters === 'function') window.applyFilters();
+        });
+
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         btn.addEventListener('click', () => menu.classList.toggle('hidden'));
@@ -330,10 +341,6 @@
             document.body.style.overflow = 'auto';
         };
 
-        window.doctorsList.forEach((doc, index) => {
-            doc.id = index;
-        });
-
         const grid = document.getElementById('doctors-grid');
         
         window.renderDoctors = function(docsToRender) {
@@ -366,7 +373,6 @@
             });
         };
         
-        window.renderDoctors(window.doctorsList);
 
         window.applyFilters = function() {
             const searchTerm = document.getElementById('doctor-search').value.toLowerCase();
@@ -388,8 +394,9 @@
         document.getElementById('doctor-fav-filter').addEventListener('change', window.applyFilters);
 
         window.currentModalDocName = '';
-        window.openDoctorProfile = function(idx) {
-            const doc = window.doctorsList[idx];
+        window.openDoctorProfile = function(id) {
+            const doc = window.doctorsList.find(d => d.id === id);
+            if (!doc) return;
             window.currentModalDocName = doc.name;
             document.getElementById('doc-modal-img').src = doc.img;
             document.getElementById('doc-modal-dept').textContent = doc.displayDept || doc.dept;

@@ -12,6 +12,7 @@
     <script type="text/javascript">
         (function() { emailjs.init("gqsi4BuYQKW6vRvtt"); })();
     </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -114,6 +115,7 @@
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
                     <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
                     <a href="careers.html" class="text-slate-600 hover:text-primary transition font-medium">Careers</a>
+                    <a href="medicine.html" class="text-slate-600 hover:text-primary transition font-medium">Pharmacy</a>
                     <button onclick="handleAppointmentClick()" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
                     
                     <!-- Auth buton -->
@@ -133,6 +135,7 @@
                 <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
                 <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
                 <a href="careers.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Careers</a>
+                <a href="medicine.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Pharmacy</a>
                 <button onclick="handleAppointmentClick()" class="block w-fit mx-3 text-center bg-primary text-white px-6 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</button>
                 <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col">
                 </div>
@@ -906,6 +909,46 @@
 
         const pendingToast = sessionStorage.getItem('mdcare_pendingToast');
         
+        window.consultancyFees = {};
+        getDoc(doc(db, "settings", "general")).then(d => {
+            if(d.exists()) {
+                window.consultancyFees = d.data().consultancyFees || {};
+                if (d.data().consultancyFee !== undefined && Object.keys(window.consultancyFees).length === 0) {
+                    const depts = ["Cardiology", "Neurology", "Orthopedics", "Pediatrics", "Oncology", "Dermatology", "Ophthalmology", "Psychiatry"];
+                    depts.forEach(dept => window.consultancyFees[dept] = d.data().consultancyFee);
+                }
+            }
+        }).catch(e => console.error(e));
+
+        window.doctorsList = [];
+        onSnapshot(collection(db, "doctors"), (snapshot) => {
+            window.doctorsList = [];
+            snapshot.forEach(docSnap => {
+                window.doctorsList.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            if (window.renderDoctorsSlider) window.renderDoctorsSlider();
+            
+            // Auto-update booking forms if a department is pre-selected
+            ['', 'sec-'].forEach(prefix => {
+                const deptSelect = document.getElementById(prefix + 'department-select');
+                const docSelect = document.getElementById(prefix + 'doctor-select');
+                if (deptSelect && docSelect && deptSelect.value) {
+                    const currentDoc = docSelect.value;
+                    docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
+                    const filteredDocs = window.doctorsList.filter(d => d.dept === deptSelect.value);
+                    if (filteredDocs.length > 0) {
+                        docSelect.disabled = false;
+                        filteredDocs.forEach(d => {
+                            const option = document.createElement('option');
+                            option.value = d.name; option.textContent = d.name;
+                            docSelect.appendChild(option);
+                        });
+                        if (filteredDocs.find(d => d.name === currentDoc)) docSelect.value = currentDoc;
+                    } else { docSelect.disabled = true; }
+                }
+            });
+        });
+
         window.hospitalHolidays = [];
         window.hospitalHolidaysMap = {};
         onSnapshot(collection(db, "hospital_holidays"), (snapshot) => {
@@ -1203,12 +1246,12 @@
         window.renderDoctorsSlider = function() {
             slider.innerHTML = '';
             const favs = JSON.parse(localStorage.getItem('mdcare_favs') || '[]');
-            window.doctorsList.forEach((doc, index) => {
+            window.doctorsList.forEach(doc => {
                 const isFav = favs.includes(doc.name);
                 const favBadge = isFav ? `<div class="absolute top-3 right-3 z-20 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-heart text-red-500"></i></div>` : '';
                 const card = document.createElement('div');
                 card.className = "flex-none w-[280px] sm:w-[300px] snap-center bg-slate-50 rounded-2xl overflow-hidden hover:shadow-xl transition cursor-pointer group border border-slate-100 relative";
-                card.onclick = () => window.openDoctorProfile(index);
+                card.onclick = () => window.openDoctorProfile(doc.id);
                 card.innerHTML = `
                     <div class="relative overflow-hidden h-64">
                         <img src="${doc.img}" alt="${doc.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
@@ -1247,8 +1290,9 @@
         }
 
         window.currentModalDocName = '';
-        window.openDoctorProfile = function(idx) {
-            const doc = window.doctorsList[idx];
+        window.openDoctorProfile = function(id) {
+            const doc = window.doctorsList.find(d => d.id === id);
+            if (!doc) return;
             window.currentModalDocName = doc.name;
             document.getElementById('doc-modal-img').src = doc.img;
             document.getElementById('doc-modal-dept').textContent = doc.displayDept || doc.dept;
@@ -1403,17 +1447,14 @@
                 const currentTimeSelection = timeSel.value;
 
                 let validSlots = [...window.allTimeSlots];
-                try {
-                    const scheduleDoc = await getDoc(doc(db, "doctor_schedules", docSelect.value));
-                    if (scheduleDoc.exists()) {
-                        const data = scheduleDoc.data();
-                        const startIdx = window.allTimeSlots.indexOf(data.startTime);
-                        const endIdx = window.allTimeSlots.indexOf(data.endTime);
-                        if(startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) {
-                            validSlots = window.allTimeSlots.slice(startIdx, endIdx + 1);
-                        }
+                const docData = window.doctorsList.find(d => d.name === docSelect.value);
+                if (docData && docData.startTime && docData.endTime) {
+                    const startIdx = window.allTimeSlots.indexOf(docData.startTime);
+                    const endIdx = window.allTimeSlots.indexOf(docData.endTime);
+                    if(startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) {
+                        validSlots = window.allTimeSlots.slice(startIdx, endIdx + 1);
                     }
-                } catch(e) {}
+                }
                 
                 timeSel.innerHTML = '<option value="" disabled selected>Select Time</option>';
                 validSlots.forEach(slot => {
@@ -1526,58 +1567,94 @@
                     const snapBlockCheck = await getDocs(qBlockCheck);
                     snapBlockCheck.forEach(d => { if (d.data().time === timeSel.value || d.data().time === "All Day") throw new Error("SLOT_UNAVAILABLE"); });
                     
-                    const serialDocId = (9999999999999 - Date.now()).toString();
-                    await setDoc(doc(db, "appointments", serialDocId), {
-                            userId: auth.currentUser.uid,
-                            patientName: patientName,
-                            email: auth.currentUser.email,
-                            emailVerified: auth.currentUser.emailVerified,
-                            phone: e.target.querySelector('input[type="tel"]').value,
-                            department: deptSelect.value,
-                            doctor: docSelect.value,
-                            date: dateSel.value,
-                            time: timeSel.value,
-                            message: e.target.querySelector('textarea').value,
-                            status: "Pending",
-                            createdAt: serverTimestamp()
-                        });
+                    const fee = window.consultancyFees[deptSelect.value] !== undefined ? window.consultancyFees[deptSelect.value] : 0;
                     
-                    await emailjs.send("service_iyt09jj", "template_xyclksp", {
-                        to_email: "mdcareadmin@gmail.com",
-                        subject: `New Appointment Booking: ${dateSel.value} at ${timeSel.value} - MD Care`,
-                        html_message: `
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
-                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
-                            <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
-                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
-                                </div>
-                            <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
-                                    <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
-                                    <h3 style="margin: 0 0 5px 0; color: #115e59; font-size: 16px;">New Appointment Request</h3>
-                                    <p style="margin: 0; color: #134e4a; font-size: 14px;">A patient has requested a new consultation.</p>
+                    const executeBooking = async (paymentId = null) => {
+                        const serialDocId = (9999999999999 - Date.now()).toString();
+                        await setDoc(doc(db, "appointments", serialDocId), {
+                                userId: auth.currentUser.uid,
+                                patientName: patientName,
+                                email: auth.currentUser.email,
+                                emailVerified: auth.currentUser.emailVerified,
+                                phone: e.target.querySelector('input[type="tel"]').value,
+                                department: deptSelect.value,
+                                doctor: docSelect.value,
+                                date: dateSel.value,
+                                time: timeSel.value,
+                                message: e.target.querySelector('textarea').value,
+                                status: "Pending",
+                                paymentId: paymentId,
+                                amountPaid: fee,
+                                createdAt: serverTimestamp()
+                            });
+                        
+                        await emailjs.send("service_iyt09jj", "template_xyclksp", {
+                            to_email: "mdcareadmin@gmail.com",
+                            subject: `New Appointment Booking: ${dateSel.value} at ${timeSel.value} - MD Care`,
+                            html_message: `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
+                                <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0d9488;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #0d9488;">Admin Alerts</span></h1>
                                     </div>
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${patientName}</td></tr>
-                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Patient Email:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${auth.currentUser.email}</td></tr>
-                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Department:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${deptSelect.value}</td></tr>
-                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Doctor:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0d9488; font-weight: 600;">${docSelect.value}</td></tr>
-                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Date:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${dateSel.value}</td></tr>
-                                        <tr><td style="padding: 12px 0; color: #64748b;">Time:</td><td style="padding: 12px 0; color: #0f172a; font-weight: 600;">${timeSel.value}</td></tr>
-                                    </table>
+                                <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
+                                        <div style="background-color: #f0fdfa; border-left: 4px solid #0d9488; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                        <h3 style="margin: 0 0 5px 0; color: #115e59; font-size: 16px;">New Appointment Request</h3>
+                                        <p style="margin: 0; color: #134e4a; font-size: 14px;">A patient has requested a new consultation.</p>
+                                        </div>
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${patientName}</td></tr>
+                                            <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Patient Email:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${auth.currentUser.email}</td></tr>
+                                            <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Department:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${deptSelect.value}</td></tr>
+                                            <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Doctor:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0d9488; font-weight: 600;">${docSelect.value}</td></tr>
+                                            <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Date:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${dateSel.value}</td></tr>
+                                            <tr><td style="padding: 12px 0; color: #64748b;">Time:</td><td style="padding: 12px 0; color: #0f172a; font-weight: 600;">${timeSel.value}</td></tr>
+                                        </table>
+                                    </div>
+                                    <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                        <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                                    </div>
                                 </div>
-                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                    <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
-                                </div>
-                            </div>
-                        </div>`
-                    });
-                    
-                    if(prefix === '') window.closeModal('appointment-modal');
-                    window.openModal('success-modal');
-                    e.target.reset();
-                    docSelect.disabled = true;
-                    docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>';
-                    avlMsg.innerHTML = '';
+                            </div>`
+                        });
+                        
+                        if(prefix === '') window.closeModal('appointment-modal');
+                        window.openModal('success-modal');
+                        e.target.reset(); docSelect.disabled = true; docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>'; avlMsg.innerHTML = '';
+                    };
+
+                    if (fee > 0) {
+                        const options = {
+                            key: 'rzp_test_TYsRjAzzUjYqDk', // Replace with your actual Test Key
+                            amount: fee * 100,
+                            currency: 'INR',
+                            name: 'MD Care Hospital',
+                            description: 'Consultation Fee',
+                            handler: async function (response) {
+                                try {
+                                    subBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Finalizing...';
+                                    await executeBooking(response.razorpay_payment_id);
+                                } catch (error) {
+                                    window.showToast("Error", error.message, "error");
+                                } finally {
+                                    subBtn.innerHTML = originalBtnText; subBtn.disabled = false;
+                                }
+                            },
+                            modal: {
+                                ondismiss: function() {
+                                    window.showToast("Payment Cancelled", "Booking process was cancelled.", "error");
+                                    subBtn.innerHTML = originalBtnText; subBtn.disabled = false;
+                                }
+                            },
+                            prefill: { name: patientName, email: auth.currentUser.email, contact: e.target.querySelector('input[type="tel"]').value },
+                            theme: { color: '#0d9488' }
+                        };
+                        const rzp = new window.Razorpay(options);
+                        rzp.open();
+                    } else {
+                        await executeBooking(null);
+                        subBtn.innerHTML = originalBtnText; subBtn.disabled = false;
+                    }
                 } catch (error) {
                     if (error.message === "SLOT_ALREADY_BOOKED") {
                         window.showToast("Slot Unavailable", "Sorry, this exact slot was just booked by someone else. Please select a different time.", "error");
