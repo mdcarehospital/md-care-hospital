@@ -438,9 +438,14 @@
                             <label class="block text-sm font-medium text-slate-700 mb-2">Additional Message (Optional)</label>
                             <textarea rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="Describe your medical concern..."></textarea>
                         </div>
-                        <button type="submit" id="confirm-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-lg">
-                            Confirm Booking
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button type="submit" id="confirm-btn-online" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition shadow-lg">
+                            Pay and Book
                         </button>
+                        <button type="submit" id="confirm-btn-offline" class="w-full bg-slate-100 text-primary font-bold py-3 rounded-lg hover:bg-slate-200 transition shadow-lg border border-slate-200">
+                            Pay at Hospital
+                        </button>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -1414,9 +1419,15 @@
             const dateSel = document.getElementById(prefix + 'date-select');
             const timeSel = document.getElementById(prefix + 'time-select');
             const avlMsg = document.getElementById(prefix + 'availability-message');
-            const subBtn = document.getElementById(prefix + 'confirm-btn');
+            const onlineBtn = document.getElementById(prefix + 'confirm-btn-online');
+            const offlineBtn = document.getElementById(prefix + 'confirm-btn-offline');
             const bookingForm = document.getElementById(prefix + 'booking-form');
             
+            const setButtonsDisabled = (disabled) => {
+                if(onlineBtn) { onlineBtn.disabled = disabled; disabled ? onlineBtn.classList.add('opacity-50', 'cursor-not-allowed') : onlineBtn.classList.remove('opacity-50', 'cursor-not-allowed'); }
+                if(offlineBtn) { offlineBtn.disabled = disabled; disabled ? offlineBtn.classList.add('opacity-50', 'cursor-not-allowed') : offlineBtn.classList.remove('opacity-50', 'cursor-not-allowed'); }
+            };
+
             if (!bookingForm) return;
 
             deptSelect.addEventListener('change', function() {
@@ -1476,7 +1487,7 @@
                 const holidayReason = window.hospitalHolidaysMap && window.hospitalHolidaysMap[dateSel.value] ? window.hospitalHolidaysMap[dateSel.value] : "a hospital holiday";
                 const reason = dObj.getDay() === 0 ? "Sunday is closed." : `This date is closed for ${holidayReason}.`;
                     avlMsg.innerHTML = `<span class='text-red-500'><i class='fa-solid fa-circle-xmark mr-1'></i> ${reason} Please select another date.</span>`;
-                    subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    setButtonsDisabled(true);
                     timeSel.disabled = true;
                     return;
                 } else {
@@ -1484,7 +1495,7 @@
                 }
 
                 avlMsg.innerHTML = "<span class='text-slate-500'><i class='fa-solid fa-spinner fa-spin mr-1'></i> Checking available slots...</span>";
-                subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                setButtonsDisabled(true);
 
                 try {
                     const q = query(collection(db, "appointments"), where("date", "==", dateSel.value));
@@ -1508,7 +1519,7 @@
                         else bookedTimes.push(data.time);
                     });
                     
-                    if (isAllDayBlocked) { avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-ban mr-1'></i> Doctor is unavailable on this day. Please select another date.</span>"; subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed'); timeSel.disabled = true; return; }
+                    if (isAllDayBlocked) { avlMsg.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-ban mr-1'></i> Doctor is unavailable on this day. Please select another date.</span>"; setButtonsDisabled(true); timeSel.disabled = true; return; }
 
                     Array.from(timeSel.options).forEach(opt => {
                         if(bookedTimes.includes(opt.value)) {
@@ -1523,16 +1534,16 @@
 
                     if(timeSel.value) {
                         avlMsg.innerHTML = "<span class='text-primary'><i class='fa-solid fa-circle-check mr-1'></i> This slot is available!</span>";
-                        subBtn.disabled = false; subBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        setButtonsDisabled(false);
                     } else {
                         avlMsg.innerHTML = "<span class='text-slate-500'><i class='fa-solid fa-circle-info mr-1'></i> Please select an available time.</span>";
-                        subBtn.disabled = true; subBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        setButtonsDisabled(true);
                     }
                 } catch (error) {
                     console.error("Error checking availability:", error);
                     if(timeSel.value) {
                         avlMsg.innerHTML = "<span class='text-primary'><i class='fa-solid fa-circle-check mr-1'></i> Ready to book!</span>";
-                        subBtn.disabled = false; subBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        setButtonsDisabled(false);
                     } else {
                         avlMsg.innerHTML = "";
                     }
@@ -1550,9 +1561,11 @@
                     return;
                 }
                 
-                const originalBtnText = subBtn.innerHTML;
-                subBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...';
-                subBtn.disabled = true;
+                const submitter = e.submitter;
+                const method = submitter?.id.includes('offline') ? 'hospital' : 'online';
+                const originalBtnText = submitter.innerHTML;
+                submitter.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...';
+                setButtonsDisabled(true);
 
                 const patientName = e.target.querySelectorAll('input[type="text"]')[0].value;
 
@@ -1584,7 +1597,8 @@
                                 message: e.target.querySelector('textarea').value,
                                 status: "Pending",
                                 paymentId: paymentId,
-                                amountPaid: fee,
+                        amountPaid: method === 'online' ? fee : 0,
+                        paymentStatus: method === 'online' ? "Paid" : "Unpaid",
                                 createdAt: serverTimestamp()
                             });
                         
@@ -1623,27 +1637,27 @@
                         e.target.reset(); docSelect.disabled = true; docSelect.innerHTML = '<option value="" disabled selected>Select Doctor</option>'; avlMsg.innerHTML = '';
                     };
 
-                    if (fee > 0) {
+            if (fee > 0 && method === 'online') {
                         const options = {
-                            key: 'rzp_test_TYsRjAzzUjYqDk', // Replace with your actual Test Key
+                    key: window.RAZORPAY_KEY,
                             amount: fee * 100,
                             currency: 'INR',
                             name: 'MD Care Hospital',
                             description: 'Consultation Fee',
                             handler: async function (response) {
                                 try {
-                                    subBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Finalizing...';
+                            submitter.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Finalizing...';
                                     await executeBooking(response.razorpay_payment_id);
                                 } catch (error) {
                                     window.showToast("Error", error.message, "error");
                                 } finally {
-                                    subBtn.innerHTML = originalBtnText; subBtn.disabled = false;
+                            submitter.innerHTML = originalBtnText; setButtonsDisabled(false);
                                 }
                             },
                             modal: {
                                 ondismiss: function() {
                                     window.showToast("Payment Cancelled", "Booking process was cancelled.", "error");
-                                    subBtn.innerHTML = originalBtnText; subBtn.disabled = false;
+                            submitter.innerHTML = originalBtnText; setButtonsDisabled(false);
                                 }
                             },
                             prefill: { name: patientName, email: auth.currentUser.email, contact: e.target.querySelector('input[type="tel"]').value },
@@ -1653,7 +1667,7 @@
                         rzp.open();
                     } else {
                         await executeBooking(null);
-                        subBtn.innerHTML = originalBtnText; subBtn.disabled = false;
+                submitter.innerHTML = originalBtnText; setButtonsDisabled(false);
                     }
                 } catch (error) {
                     if (error.message === "SLOT_ALREADY_BOOKED") {
@@ -1666,8 +1680,8 @@
                         window.showToast("Booking Failed", error.message, "error");
                     }
                 } finally {
-                    subBtn.innerHTML = originalBtnText;
-                    subBtn.disabled = false;
+            submitter.innerHTML = originalBtnText;
+            setButtonsDisabled(false);
                 }
             });
             

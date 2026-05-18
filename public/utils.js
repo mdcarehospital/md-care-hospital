@@ -1,3 +1,6 @@
+// --- GLOBAL CONFIGURATIONS ---
+window.RAZORPAY_KEY = 'rzp_test_SquAoGtYIAPOi3';
+
 // Theme Logic
 function adaptTheme() {
     const savedTheme = localStorage.getItem('mdcare_theme');
@@ -131,4 +134,99 @@ window.togglePasswordVisibility = function(inputId, iconId) {
         icon.classList.remove("fa-eye-slash", "text-primary");
         icon.classList.add("fa-eye");
     }
+};
+
+// Shared Components Loader (Optional usage to reduce HTML duplication)
+window.loadSharedComponents = function(activePage = 'home') {
+    const navbarHTML = `
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
+                        <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
+                        <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Hospital</span></span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
+                    <a href="index.html" class="${activePage === 'home' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">Home</a>
+                    <a href="about.html" class="${activePage === 'about' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">About</a>
+                    <a href="departments.html" class="${activePage === 'departments' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">Departments</a>
+                    <a href="doctors.html" class="${activePage === 'doctors' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">Doctors</a>
+                    <a href="blog.html" class="${activePage === 'blog' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">Blog</a>
+                    <a href="careers.html" class="${activePage === 'careers' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">Careers</a>
+                    <a href="medicine.html" class="${activePage === 'pharmacy' ? 'text-primary font-bold' : 'text-slate-600 hover:text-primary font-medium'} transition">Pharmacy</a>
+                    <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                    
+                    <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
+                    <div id="auth-nav-container" class="flex items-center space-x-4"></div>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="index.html" class="block px-3 py-2 ${activePage === 'home' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">Home</a>
+                <a href="about.html" class="block px-3 py-2 ${activePage === 'about' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">About</a>
+                <a href="departments.html" class="block px-3 py-2 ${activePage === 'departments' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">Departments</a>
+                <a href="doctors.html" class="block px-3 py-2 ${activePage === 'doctors' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 ${activePage === 'blog' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">Blog</a>
+                <a href="careers.html" class="block px-3 py-2 ${activePage === 'careers' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">Careers</a>
+                <a href="medicine.html" class="block px-3 py-2 ${activePage === 'pharmacy' ? 'text-primary font-bold' : 'text-slate-600'} hover:bg-slate-50 rounded-md">Pharmacy</a>
+                <a href="index.html#appointment" class="block w-fit mx-3 text-center bg-primary text-white px-6 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 animate-glow-pulse">Book Appointment</a>
+                <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col"></div>
+            </div>
+        </div>
+    </nav>`;
+
+    const footerHTML = `
+    <footer class="bg-secondary text-white pt-16 pb-8 border-t-4 border-primary mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6"><i class="fa-solid fa-house-medical text-3xl text-primary"></i><span class="font-bold text-2xl">MD Care <span class="text-primary">Hospital</span></span></div>
+                    <p class="text-gray-400 mb-6">Providing exceptional medical care to our community with compassion, integrity, and advanced medical expertise.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Quick Links</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="index.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Home</a></li>
+                        <li><a href="about.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> About Us</a></li>
+                        <li><a href="departments.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Departments</a></li>
+                        <li><a href="doctors.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Doctors</a></li>
+                        <li><a href="blog.html" class="hover:text-primary transition"><i class="fa-solid fa-angle-right mr-2"></i> Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Contact Info</h3>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start"><a href="https://maps.app.goo.gl/VHmDEL9wXsqcp3o66?g_st=aw" target="_blank" rel="noopener noreferrer" class="flex items-start hover:text-primary transition group"><i class="fa-solid fa-location-dot mt-1 mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span class="text-sm">Street-3, Danishmandan,<br/>Basti Bawa khel, JALANDHAR,<br/>PUNJAB, Pincode: 144021</span></a></li>
+                        <li class="flex items-center"><a href="tel:8091919997" class="flex items-center hover:text-primary transition group"><i class="fa-solid fa-phone mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span>8091919997</span></a></li>
+                        <li class="flex items-center"><a href="mailto:mdcareadmin@gmail.com" class="flex items-center hover:text-primary transition group"><i class="fa-solid fa-envelope mr-3 text-primary text-xl group-hover:scale-110 transition"></i><span>mdcareadmin@gmail.com</span></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6 text-white border-b-2 border-primary pb-2 inline-block">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" target="_blank" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#E1306C] transition text-2xl text-[#E1306C] hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" target="_blank" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition text-2xl text-[#25D366] hover:text-white"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="#" target="_blank" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition text-2xl text-[#1877F2] hover:text-white"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2015 MD Care Hospital. All Rights Reserved. | <a href="admin.html" class="hover:text-primary transition">Admin Portal</a></p>
+            </div>
+        </div>
+    </footer>`;
+
+    const headerTarget = document.getElementById('shared-navbar');
+    const footerTarget = document.getElementById('shared-footer');
+    if (headerTarget) headerTarget.outerHTML = navbarHTML;
+    if (footerTarget) footerTarget.outerHTML = footerHTML;
 };

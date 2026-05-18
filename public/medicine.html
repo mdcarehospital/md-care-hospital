@@ -34,6 +34,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-4">
                 <div class="flex items-center gap-2 md:gap-4">
+                    <button onclick="toggleTheme()" class="text-slate-500 hover:text-primary transition text-xl w-8 h-8 flex items-center justify-center focus:outline-none flex-shrink-0" title="Toggle Theme">
+                        <i class="fa-solid fa-moon theme-icon-moon"></i><i class="fa-solid fa-sun theme-icon-sun hidden"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-primary focus:outline-none flex-shrink-0">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
                     <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-2 md:ml-0">
                         <i class="fa-solid fa-house-medical text-[28px] md:text-3xl text-primary"></i>
                         <span class="font-bold text-[22px] md:text-2xl text-secondary whitespace-nowrap">MD Care <span class="text-primary">Pharmacy</span></span>
@@ -41,13 +47,29 @@
                 </div>
                 <div class="hidden md:flex space-x-4 lg:space-x-8 items-center">
                     <a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Home</a>
+                    <a href="about.html" class="text-slate-600 hover:text-primary transition font-medium">About</a>
                     <a href="departments.html" class="text-slate-600 hover:text-primary transition font-medium">Departments</a>
                     <a href="doctors.html" class="text-slate-600 hover:text-primary transition font-medium">Doctors</a>
+                    <a href="blog.html" class="text-slate-600 hover:text-primary transition font-medium">Blog</a>
+                    <a href="careers.html" class="text-slate-600 hover:text-primary transition font-medium">Careers</a>
                     <a href="medicine.html" class="text-primary font-bold transition">Pharmacy</a>
                     <a href="index.html#appointment" class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-teal-700 transition shadow-lg">Book Appointment</a>
                     <div class="border-l border-gray-300 h-6 mx-2 hidden lg:block"></div>
                     <div id="auth-nav-container" class="flex items-center space-x-4"></div>
                 </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Home</a>
+                <a href="about.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
+                <a href="departments.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Departments</a>
+                <a href="doctors.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="blog.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Blog</a>
+                <a href="careers.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Careers</a>
+                <a href="medicine.html" class="block px-3 py-2 text-primary font-bold hover:bg-slate-50 rounded-md">Pharmacy</a>
+                <a href="index.html#appointment" class="block w-fit mx-3 text-center bg-primary text-white px-6 py-2 mt-2 rounded-full font-bold hover:bg-teal-700 transition shadow-lg">Book Appointment</a>
+                <div id="mobile-auth-container" class="border-t border-gray-200 mt-2 pt-2 flex flex-col"></div>
             </div>
         </div>
     </nav>
@@ -142,22 +164,22 @@
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyBWp-8CEFAr2cSrcSHEZu7jnaUWUU9DHtY",
-            authDomain: "md-care-hospital.firebaseapp.com",
-            projectId: "md-care-hospital",
-            storageBucket: "md-care-hospital.firebasestorage.app",
-            messagingSenderId: "214966558089",
-            appId: "1:214966558089:web:d49f400adb427614089558"
-        };
+        import { app, auth, db } from "./firebase-config.js";
+        import "./auth.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { collection, addDoc, getDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        document.addEventListener('click', (event) => {
+            if (!menu.classList.contains('hidden') && !menu.contains(event.target) && !btn.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        window.isAdmin = false;
 
         window.saveCart = function() {
             if (auth.currentUser) {
@@ -177,28 +199,45 @@
 
         window.isLoggedIn = false;
         window.currentUserProfile = null;
+
+        function updateAuthUI() {
+            const desktopAuth = document.getElementById('auth-nav-container');
+            const mobileAuth = document.getElementById('mobile-auth-container');
+            if(window.isLoggedIn) {
+                const picUrl = localStorage.getItem('mdcare_profilePic');
+                const userInitial = localStorage.getItem('mdcare_userInitial') || 'U';
+                const avatarHtml = picUrl ? `<img src="${picUrl}" class="w-full h-full object-cover">` : userInitial;
+                const dashboardLink = window.isAdmin ? 'admin.html' : 'profile.html';
+                const dashboardText = window.isAdmin ? 'Admin Dashboard' : 'Profile Dashboard';
+                
+                if(desktopAuth) desktopAuth.innerHTML = `<div class="flex items-center gap-3"><a href="${dashboardLink}" class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-md hover:bg-teal-700 transition overflow-hidden">${avatarHtml}</a><a href="${dashboardLink}" class="text-slate-700 font-bold hover:text-primary transition">${dashboardText}</a><button onclick="window.logout(this)" class="text-sm font-bold text-slate-500 hover:text-red-500 transition border-l border-gray-300 pl-3 ml-1">Logout</button></div>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="${dashboardLink}" class="block w-full text-left px-3 py-2 text-secondary font-bold hover:bg-slate-50 rounded-md">${dashboardText}</a><button onclick="window.logout(this)" class="block w-full text-left px-3 py-2 text-red-500 font-bold hover:bg-slate-50 rounded-md">Logout</button>`;
+            } else {
+                if(desktopAuth) desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login</a><a href="index.html" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition">Register</a>`;
+                if(mobileAuth) mobileAuth.innerHTML = `<a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Login</a><a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md text-left">Register</a>`;
+            }
+        }
+
         onAuthStateChanged(auth, async (user) => {
             window.isLoggedIn = !!user;
-            const desktopAuth = document.getElementById('auth-nav-container');
             if(window.isLoggedIn) {
-                desktopAuth.innerHTML = `<button onclick="window.logout()" class="text-sm font-bold text-red-500 hover:text-red-700 transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>`;
+                window.isAdmin = user.email === 'mdcareadmin@gmail.com';
+                localStorage.setItem('mdcare_userInitial', (user.displayName || "U").charAt(0).toUpperCase());
                 window.loadCart();
                 getDoc(doc(db, "users", user.uid)).then(docSnap => {
-                    if(docSnap.exists()) window.currentUserProfile = docSnap.data();
+                    if(docSnap.exists()) {
+                        window.currentUserProfile = docSnap.data();
+                        if (window.currentUserProfile.role === 'admin') window.isAdmin = true;
+                    }
+                    updateAuthUI();
                 });
             } else {
-                desktopAuth.innerHTML = `<a href="index.html" class="text-slate-600 hover:text-primary transition font-medium">Login to Buy</a>`;
+                window.isAdmin = false;
                 window.cart = [];
                 window.renderCart();
+                updateAuthUI();
             }
         });
-
-        window.logout = function() {
-            signOut(auth).then(() => {
-                localStorage.removeItem('mdcare_auth');
-                window.location.href = 'index.html';
-            });
-        };
 
         window.cart = [];
         
@@ -294,6 +333,10 @@
                 }
             }
             
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked');
+            const btn = document.getElementById('final-checkout-btn');
+            if (btn && selectedMethod) btn.innerHTML = selectedMethod.value === 'COD' ? 'Place Order (COD)' : 'Proceed to Payment';
+
             window.toggleCartModal();
             window.toggleCheckoutModal();
         };
@@ -387,7 +430,7 @@
             
             if (paymentMethod === "Razorpay") {
             const options = {
-                key: 'rzp_test_TYsRjAzzUjYqDk', // Using Razorpay test key
+                key: window.RAZORPAY_KEY,
                 amount: totalAmount * 100, // Processed in paise
                 currency: 'INR',
                 name: 'MD Care Pharmacy',
@@ -411,6 +454,8 @@
                 await placeOrder(null, "Pending");
             }
         });
+
+        updateAuthUI();
     </script>
 </body>
 </html>

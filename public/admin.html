@@ -115,16 +115,16 @@
             <!-- Tab Navigation -->
             <div class="lg:col-span-3">
                 <div class="flex overflow-x-auto gap-2 mb-2 pb-2 no-scrollbar">
-                    <button onclick="switchAdminTab('tab-dashboard', this)" class="admin-tab-btn active bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm shadow-sm whitespace-nowrap"><i class="fa-solid fa-chart-line mr-1"></i> Dashboard</button>
+                    <button onclick="switchAdminTab('tab-dashboard', this)" class="admin-tab-btn active bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm shadow-sm whitespace-nowrap"><i class="fa-solid fa-chart-line mr-1"></i> Bookiings</button>
+                    <button onclick="switchAdminTab('tab-orders', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-box mr-1"></i> Orders</button>
+                    <button onclick="switchAdminTab('tab-applications', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-briefcase mr-1"></i> Applications</button>
+                    <button onclick="switchAdminTab('tab-pharmacy', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-pills mr-1"></i> Pharmacy & Prices</button>
                     <button onclick="switchAdminTab('tab-availability', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-calendar-xmark mr-1"></i> Availability</button>
                     <button onclick="switchAdminTab('tab-doctors', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-user-doctor mr-1"></i> Doctors</button>
+                    <button onclick="switchAdminTab('tab-users', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-users mr-1"></i> Users</button>
+                    <button onclick="switchAdminTab('tab-admins', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-user-shield mr-1"></i> Admins</button>
                     <button onclick="switchAdminTab('tab-blogs', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-newspaper mr-1"></i> Blogs</button>
                     <button onclick="switchAdminTab('tab-reviews', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-star mr-1"></i> Reviews</button>
-                    <button onclick="switchAdminTab('tab-users', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-users mr-1"></i> Users</button>
-                    <button onclick="switchAdminTab('tab-applications', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-briefcase mr-1"></i> Applications</button>
-                    <button onclick="switchAdminTab('tab-orders', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-box mr-1"></i> Orders</button>
-                    <button onclick="switchAdminTab('tab-admins', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-user-shield mr-1"></i> Admins</button>
-                    <button onclick="switchAdminTab('tab-pharmacy', this)" class="admin-tab-btn bg-white text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg font-bold text-sm border border-slate-200 whitespace-nowrap"><i class="fa-solid fa-pills mr-1"></i> Pharmacy & Prices</button>
                 </div>
             </div>
 
@@ -638,6 +638,12 @@
                                 <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
                                 <input type="text" id="filter-user-search" oninput="renderAdminUsers()" placeholder="Search name, email..." class="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm min-w-[200px]">
                             </div>
+                            <select id="filter-user-role" onchange="renderAdminUsers()" class="px-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-primary outline-none text-sm bg-white">
+                                <option value="">All Roles</option>
+                                <option value="user">User</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="admin">Admin</option>
+                            </select>
                             <button onclick="loadAdminUsers()" class="text-sm font-bold text-primary hover:text-teal-700 transition whitespace-nowrap"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
                         </div>
                     </div>
@@ -1135,8 +1141,35 @@
                                             </div>`
                                         });
                                     }
+                                    emailjs.send("service_iyt09jj", "template_xyclksp", {
+                                        to_email: "mdcareadmin@gmail.com",
+                                        subject: `Appointment Expired: ${data.patientName} on ${data.date} - MD Care`,
+                                        html_message: `
+                                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
+                                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                                <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #64748b;">
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #94a3b8;">Admin Alerts</span></h1>
+                                                </div>
+                                                <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
+                                                    <div style="background-color: #f8fafc; border-left: 4px solid #94a3b8; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                                        <h3 style="margin: 0 0 5px 0; color: #475569; font-size: 16px;">Appointment Expired</h3>
+                                                        <p style="margin: 0; color: #64748b; font-size: 14px;">An appointment has naturally expired.</p>
+                                                    </div>
+                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${data.patientName || 'Patient'}</td></tr>
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Doctor:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0d9488; font-weight: 600;">${data.doctor || 'N/A'}</td></tr>
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Date:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${data.date}</td></tr>
+                                                        <tr><td style="padding: 12px 0; color: #64748b;">Time:</td><td style="padding: 12px 0; color: #0f172a; font-weight: 600;">${data.time}</td></tr>
+                                                    </table>
+                                                </div>
+                                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                                    <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                                                </div>
+                                            </div>
+                                        </div>`
+                                    });
                                 }).catch(e => console.error("Auto-expire update failed:", e));
-                            } else if (displayStatus === 'Confirmed' && !data.reminderSent && (aptDate - now) <= 6 * 60 * 60 * 1000) {
+                            } else if (displayStatus === 'Confirmed' && !data.reminderSent && (aptDate - now) <= 4 * 60 * 60 * 1000) {
                                 updateDoc(doc(db, "appointments", id), { reminderSent: true }).then(() => {
                                     if (data.email) {
                                         emailjs.send("service_iyt09jj", "template_xyclksp", {
@@ -1152,7 +1185,7 @@
                                                         <p style="margin-top: 0;">Dear <strong style="color: #0f172a;">${data.patientName || 'Patient'}</strong>,</p>
                                                         <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
                                                             <h3 style="margin: 0 0 5px 0; color: #0369a1; font-size: 16px;">Appointment Reminder</h3>
-                                                            <p style="margin: 0; color: #0c4a6e; font-size: 14px;">This is a friendly reminder for your upcoming appointment in less than 6 hours.</p>
+                                                            <p style="margin: 0; color: #0c4a6e; font-size: 14px;">This is a friendly reminder for your upcoming appointment in less than 4 hours.</p>
                                                         </div>
                                                         <p>Your appointment is scheduled on <strong>${data.date}</strong> at <strong>${data.time}</strong> with <strong>${data.doctor}</strong>.</p>
                                                         <p>Please ensure you arrive at least 15 minutes early. If you need to cancel or reschedule, please do so from your patient dashboard or contact the front desk.</p>
@@ -1167,6 +1200,34 @@
                                             </div>`
                                         });
                                     }
+                                    emailjs.send("service_iyt09jj", "template_xyclksp", {
+                                        to_email: "mdcareadmin@gmail.com",
+                                        subject: `Upcoming Appointment Reminder: ${data.patientName} on ${data.date} at ${data.time} - MD Care`,
+                                        html_message: `
+                                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 15px; border-radius: 16px;">
+                                            <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+                                                <div style="background-color: #1e293b; padding: 20px 15px; text-align: center; border-bottom: 6px solid #0ea5e9;">
+                                                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">MD Care <span style="color: #38bdf8;">Admin Alerts</span></h1>
+                                                </div>
+                                                <div style="padding: 20px 15px; color: #334155; line-height: 1.6; font-size: 14px;">
+                                                    <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0;">
+                                                        <h3 style="margin: 0 0 5px 0; color: #0369a1; font-size: 16px;">Upcoming Appointment</h3>
+                                                        <p style="margin: 0; color: #0c4a6e; font-size: 14px;">Patient ${data.patientName} has an appointment in less than 4 hours.</p>
+                                                    </div>
+                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 35%;">Patient Name:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${data.patientName || 'Patient'}</td></tr>
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Department:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${data.department || 'N/A'}</td></tr>
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Doctor:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0d9488; font-weight: 600;">${data.doctor || 'N/A'}</td></tr>
+                                                        <tr><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Date:</td><td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${data.date}</td></tr>
+                                                        <tr><td style="padding: 12px 0; color: #64748b;">Time:</td><td style="padding: 12px 0; color: #0f172a; font-weight: 600;">${data.time}</td></tr>
+                                                    </table>
+                                                </div>
+                                                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                                    <p style="margin: 0; color: #64748b; font-size: 15px;">This is an automated message from the MD Care Patient Portal.</p>
+                                                </div>
+                                            </div>
+                                        </div>`
+                                    });
                                 }).catch(e => console.error("Auto-reminder update failed:", e));
                                 data.reminderSent = true;
                             }
@@ -2516,7 +2577,8 @@
         window.renderAdminUsers = function() {
             const tbody = document.getElementById('admin-users-list');
             const search = document.getElementById('filter-user-search').value.toLowerCase();
-            const filtered = allUsersData.filter(u => !search || (u.name && u.name.toLowerCase().includes(search)) || (u.email && u.email.toLowerCase().includes(search)));
+            const filterRole = document.getElementById('filter-user-role').value;
+            const filtered = allUsersData.filter(u => (!search || (u.name && u.name.toLowerCase().includes(search)) || (u.email && u.email.toLowerCase().includes(search))) && (!filterRole || u.role === filterRole || (!u.role && filterRole === 'user')));
             document.getElementById('users-count').textContent = filtered.length;
             tbody.innerHTML = '';
             if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400">No users found.</td></tr>'; return; }

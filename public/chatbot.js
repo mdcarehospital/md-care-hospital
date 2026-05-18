@@ -31,6 +31,8 @@
     const form = document.getElementById('md-chat-form');
     const input = document.getElementById('md-chat-input');
 
+    let chatMemory = [];
+
     document.getElementById('md-chat-toggle').onclick = () => {
         chatWindow.classList.toggle('hidden');
         if (!chatWindow.classList.contains('hidden')) {
@@ -72,6 +74,9 @@
         appendMessage(text, 'user');
         input.value = '';
 
+        chatMemory.push({ role: 'user', content: text });
+        if (chatMemory.length > 10) chatMemory = chatMemory.slice(-10);
+
         const typingId = 'typing-' + Date.now();
         const typingDiv = document.createElement('div');
         typingDiv.id = typingId;
@@ -104,7 +109,8 @@
             ${docsInfo}
             Page context: ${pageContext}`;
             
-            const context = systemPrompt + "\n\nUser asks: " + text;
+            let historyStr = chatMemory.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n');
+            const context = systemPrompt + "\n\nRecent Conversation:\n" + historyStr;
             
             const res = await fetch('/api/chat', {
                 method: 'POST',
@@ -120,6 +126,8 @@
                 appendMessage("Error: " + (data.error || "Server issue."), 'bot');
             } else {
                 appendMessage(data.reply, 'bot');
+                chatMemory.push({ role: 'assistant', content: data.reply });
+                if (chatMemory.length > 10) chatMemory = chatMemory.slice(-10);
             }
         } catch (err) {
             const tDiv = document.getElementById(typingId);
