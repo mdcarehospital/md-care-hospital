@@ -94,8 +94,8 @@ window.allTimeSlots = ["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM
 
 window.doctorsList = [];
 window.sampleDoctorsList = [
-    { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry", displayDept: "Psychiatry (Director)", qual: "VNGP (Psychiatry)", displayTitle: "VNGP (Psychiatry) - Director", exp: "23+ Years", email: "director@mdcare.com", img: "images/nadim.jpeg", bio: "Hospital Director and leading specialist in Psychiatry. Committed to clinical excellence and compassionate patient care." },
     { name: "Dr. M D Sheikh", dept: "Cardiology", qual: "Website Developer", exp: "15+ Years", email: "mdcareadmin@gmail.com", img: "images/myphoto.jpeg", bio: "Specializes in interventional cardiology and advanced heart failure treatments. Renowned for performing complex angioplasties with a 99% success rate." },
+    { name: "Dr. Mohd Nadim Ansari", dept: "Psychiatry", displayDept: "Psychiatry (Director)", qual: "VNGP (Psychiatry)", displayTitle: "VNGP (Psychiatry) - Director", exp: "23+ Years", email: "director@mdcare.com", img: "images/nadim.jpeg", bio: "Hospital Director and leading specialist in Psychiatry. Committed to clinical excellence and compassionate patient care." },
     { name: "Dr. Neha Verma", dept: "Cardiology", qual: "MBBS, MS, Fellowship in Cardiac Surgery", exp: "10 Years", email: "neha.verma@mdcare.com", img: "images/femaled2.avif", bio: "Expert in pediatric cardiology and minimally invasive cardiac surgeries. A leading voice in preventive cardiovascular healthcare." },
     { name: "Dr. Arjun Patel", dept: "Cardiology", qual: "MBBS, MD (Cardiology)", exp: "8 Years", email: "arjun.patel@mdcare.com", img: "images/maled3.avif", bio: "Dedicated to echocardiography and non-invasive diagnostics. Passionate about managing chronic heart conditions." },
     { name: "Dr. Anil Kapoor", dept: "Neurology", qual: "MBBS, DM (Neurology)", exp: "20 Years", email: "anil.kapoor@mdcare.com", img: "images/maled4.avif", bio: "Senior neurologist specializing in stroke management, epilepsy, and neurodegenerative disorders. Heads the stroke trauma unit." },
@@ -120,6 +120,27 @@ window.sampleDoctorsList = [
     { name: "Dr. Aisha Ali", dept: "Psychiatry", qual: "MBBS, DPM", exp: "10 Years", email: "aisha.ali@mdcare.com", img: "images/femaled23.avif", bio: "Child and adolescent psychiatrist. Expert in managing ADHD, autism spectrum, and behavioral issues." },
     { name: "Dr. Manish Sen", dept: "Psychiatry", qual: "MBBS, MD", exp: "16 Years", email: "manish.sen@mdcare.com", img: "images/maled24.avif", bio: "Addiction specialist running the hospital's renowned de-addiction and rehabilitation clinic." }
 ];
+
+// Sorting utility to enforce specific doctor ordering
+window.sortDoctors = function(docsArray) {
+    const getOrder = (name) => {
+        if (!name) return 999;
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes("m d sheikh") || lowerName.includes("sheikh")) return 1;
+        if (lowerName.includes("mohd nadim ansari") || lowerName.includes("nadim ansari")) return 2;
+        return 999;
+    };
+
+    return docsArray.sort((a, b) => {
+        const orderA = getOrder(a.name);
+        const orderB = getOrder(b.name);
+        
+        if (orderA !== orderB) {
+            return orderA - orderB;
+        }
+        return 0; 
+    });
+};
 
 // Password visibility toggle logic
 window.togglePasswordVisibility = function(inputId, iconId) {

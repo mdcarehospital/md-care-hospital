@@ -54,6 +54,7 @@
         html.dark .text-blue-500, html.dark .text-blue-600, html.dark .text-blue-700 { color: #60a5fa !important; }
         html.dark .text-purple-700 { color: #c084fc !important; }
         html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .hover\:bg-red-500:hover { background-color: #ef4444 !important; color: #ffffff !important; }
         html.dark .even\:bg-slate-50:nth-child(even) { background-color: #0f172a !important; }
         html.dark .even\:bg-slate-100:nth-child(even) { background-color: #334155 !important; }
         html.dark .theme-icon-moon { display: none !important; }
@@ -203,7 +204,7 @@
     <!-- Application Modal -->
     <div id="application-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop transition-opacity p-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg relative animate-pop-in">
-            <button onclick="closeModal('application-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-secondary text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeModal('application-modal')" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 text-slate-500 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition-all duration-300 shadow-sm z-50"><i class="fa-solid fa-xmark text-xl"></i></button>
             <h2 class="text-2xl font-bold text-secondary mb-2">Apply for <span id="job-title-display" class="text-primary">Position</span></h2>
             <p class="text-slate-500 text-sm mb-6">Fill out the form below and our HR team will get back to you.</p>
             
@@ -390,32 +391,21 @@
             }
 
             // Step 2: Send Email Notification
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending Email...';
-            try {
-                await emailjs.send("service_iyt09jj", "template_xyclksp", {
-                    to_email: "mdcareadmin@gmail.com",
-                    subject: `New Job Application: ${applicationData.jobTitle} - MD Care`,
-                    html_message: `
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px;">
-                        <h2>New Job Application Received</h2>
-                        <p><strong>Position:</strong> ${applicationData.jobTitle}</p>
-                        <p><strong>Applicant Name:</strong> ${applicationData.name}</p>
-                        <p><strong>Email:</strong> ${applicationData.email}</p>
-                        <p><strong>Phone:</strong> ${applicationData.phone}</p>
-                        <p><strong>Experience:</strong> ${applicationData.experience} Years</p>
-                        <p><strong>Qualification:</strong> ${applicationData.qualification}</p>
-                        <p><strong>Cover Letter:</strong><br>${applicationData.coverLetter}</p>
-                    </div>`
-                });
-            } catch (err) {
-                console.error("EmailJS Error:", err);
-                window.showToast("Partial Success", "Application saved, but email notification failed.", "warning");
-                window.closeModal('application-modal');
-                e.target.reset();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                return;
-            }
+            emailjs.send("service_iyt09jj", "template_xyclksp", {
+                to_email: "mdcareadmin@gmail.com",
+                subject: `New Job Application: ${applicationData.jobTitle} - MD Care`,
+                html_message: `
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px;">
+                    <h2>New Job Application Received</h2>
+                    <p><strong>Position:</strong> ${applicationData.jobTitle}</p>
+                    <p><strong>Applicant Name:</strong> ${applicationData.name}</p>
+                    <p><strong>Email:</strong> ${applicationData.email}</p>
+                    <p><strong>Phone:</strong> ${applicationData.phone}</p>
+                    <p><strong>Experience:</strong> ${applicationData.experience} Years</p>
+                    <p><strong>Qualification:</strong> ${applicationData.qualification}</p>
+                    <p><strong>Cover Letter:</strong><br>${applicationData.coverLetter}</p>
+                </div>`
+            }).catch(console.error);
 
             window.showToast("Application Submitted", "Your application has been received successfully!", "success");
             window.closeModal('application-modal');
